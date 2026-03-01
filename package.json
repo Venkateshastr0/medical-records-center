@@ -1,19 +1,71 @@
 {
   "name": "medical-records-center",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Medical Records Center - HIPAA Compliant Patient Management System",
+  "main": "main.js",
   "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "dist": "npm run build-win",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "medical",
+    "records",
+    "hipaa",
+    "patient-management"
+  ],
+  "author": "Venkatesh M Astro",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "crypto-js": "^4.2.0",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "nodemailer": "^8.0.0",
+    "sharp": "^0.34.5",
     "socket.io": "^4.8.3",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "electron": "^40.1.0",
+    "electron-builder": "^26.7.0"
+  },
+  "build": {
+    "appId": "com.medicalrecords.center",
+    "productName": "Medical Records Center",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "server/**/*",
+      "client/**/*",
+      "assets/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "assets/icon.png",
+      "forceCodeSigning": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Medical Records Center"
+    },
+    "mac": {
+      "icon": "assets/icon.png",
+      "category": "public.app-category.medical"
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "category": "Medical"
+    }
   }
 }

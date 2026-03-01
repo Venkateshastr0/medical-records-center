@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Insurance Agent Dashboard - MedRecord Center</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0da6f2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Fix cursor issues */
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        span,
+        div,
+        label {
+            cursor: default !important;
+        }
+
+        button,
+        .cursor-pointer,
+        [role="button"],
+        a,
+        button *,
+        .cursor-pointer *,
+        [role="button"] *,
+        a * {
+            cursor: pointer !important;
+        }
+
+        input,
+        textarea,
+        [contenteditable="true"] {
+            cursor: text !important;
+        }
+
+        select {
+            cursor: pointer !important;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            cursor: pointer !important;
+        }
+
+        /* Prevent text selection on non-editable elements */
+        .no-select,
+        button,
+        .cursor-pointer,
+        [role="button"],
+        a {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Allow text selection only on content */
+        .selectable {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d171c] dark:text-white">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+        <!-- TopNavBar -->
+        <header
+            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e7eff4] dark:border-slate-800 bg-white dark:bg-background-dark px-10 py-3 sticky top-0 z-50">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-4 text-[#0d171c] dark:text-white">
+                    <div class="size-6 text-primary">
+                        <span class="material-symbols-outlined text-3xl">medical_services</span>
+                    </div>
+                    <h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">MedRecord Center</h2>
+                </div>
+                <nav class="flex items-center gap-9">
+                    <a href="#"
+                        class="nav-link text-[#0d171c] dark:text-white text-sm font-medium leading-normal border-b-2 border-primary pb-1"
+                        data-page="overview">Dashboard</a>
+                    <a href="#"
+                        class="nav-link text-[#0d171c] dark:text-white/70 text-sm font-medium leading-normal hover:text-primary transition-colors"
+                        data-page="requests">Access Requests</a>
+                    <a href="#"
+                        class="nav-link text-[#0d171c] dark:text-white/70 text-sm font-medium leading-normal hover:text-primary transition-colors"
+                        data-page="approved">Approved Records</a>
+                    <a href="#"
+                        class="nav-link text-[#0d171c] dark:text-white/70 text-sm font-medium leading-normal hover:text-primary transition-colors"
+                        data-page="settings">Settings</a>
+                </nav>
+            </div>
+            <div class="flex flex-1 justify-end gap-6 items-center">
+                <label class="flex flex-col min-w-40 h-10 max-w-64">
+                    <div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-[#e7eff4] dark:bg-slate-800">
+                        <div class="text-[#49819c] dark:text-slate-400 flex items-center justify-center pl-4">
+                            <span class="material-symbols-outlined text-xl">search</span>
+                        </div>
+                        <input id="globalSearch"
+                            class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:ring-0 text-sm font-normal px-2"
+                            placeholder="Search claims or records..." type="text" />
+                    </div>
+                </label>
+                <div class="flex items-center gap-3">
+                    <div class="bg-primary/10 p-2 rounded-full text-primary">
+                        <span class="material-symbols-outlined">notifications</span>
+                    </div>
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-slate-200 dark:border-slate-700"
+                        data-alt="Professional profile picture of insurance agent"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBSnCMqCLUd_hRzMdE0iUhiecKS_O-nZ5X6ogyNiorP0FbD15fpdZqUpjv4CJZ_ZuF0TjrD4Sj8nfWdgoeEoAhXjFELjYHuOtXwXX4RBRGOV2vSWgQbr4lGT1DqrgG9brMEyDoWJrikTQPPNfAxGlAaCL-ejIaq3S0GQ0uZtB9efUwqS60hPaIe-a7XF3peMleE21cMqwQJBL7c1NtqhI2RYQifEloVgJ2u2vx3ShuiuC2jjrf-qvU8Kwpxae8LawG-4uoh4h-yedc");'>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex flex-1">
+            <!-- SideNavBar -->
+            <aside
+                class="w-64 border-r border-[#e7eff4] dark:border-slate-800 bg-white dark:bg-background-dark hidden lg:flex flex-col p-4 shrink-0">
+                <div class="flex flex-col gap-6">
+                    <div class="flex flex-col px-3">
+                        <h1 class="text-[#0d171c] dark:text-white text-base font-bold leading-normal">Agent Portal</h1>
+                        <p class="text-[#49819c] dark:text-slate-400 text-xs font-medium uppercase tracking-wider">
+                            MetLife Group A</p>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <a href="#"
+                            class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary"
+                            data-page="overview">
+                            <span class="material-symbols-outlined text-[22px]">grid_view</span>
+                            <p class="text-sm font-semibold">Overview</p>
+                        </a>
+                        <a href="#"
+                            class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                            data-page="messenger">
+                            <span class="material-symbols-outlined text-[22px]">chat</span>
+                            <p class="text-sm font-medium">Messenger</p>
+                        </a>
+                        <a href="#"
+                            class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                            data-page="requests">
+                            <span class="material-symbols-outlined text-[22px]">pending_actions</span>
+                            <p class="text-sm font-medium">My Requests</p>
+                        </a>
+                        <a href="#"
+                            class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                            data-page="claims">
+                            <span class="material-symbols-outlined text-[22px]">fact_check</span>
+                            <p class="text-sm font-medium">Claim Reviews</p>
+                        </a>
+                        <a href="#"
+                            class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                            data-page="documents">
+                            <span class="material-symbols-outlined text-[22px]">folder_open</span>
+                            <p class="text-sm font-medium">Documents</p>
+                        </a>
+                        <a href="#"
+                            class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                            data-page="audit">
+                            <span class="material-symbols-outlined text-[22px]">history</span>
+                            <p class="text-sm font-medium">Audit Log</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800">
+                    <div id="logoutBtn"
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 cursor-pointer">
+                        <span class="material-symbols-outlined text-[22px]">logout</span>
+                        <p class="text-sm font-medium">Log out</p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto">
+                <div class="max-w-6xl mx-auto px-6 py-8">
+                    <!-- PageHeading -->
+                    <div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+                        <div class="flex flex-col gap-2">
+                            <p id="pageTitle"
+                                class="text-[#0d171c] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">
+                                Insurance Dashboard</p>
+                            <p id="pageSubtitle" class="text-[#49819c] dark:text-slate-400 text-base font-normal">Manage
+                                healthcare access requests and review processed medical claims.</p>
+                        </div>
+                        <button id="requestAccessBtn"
+                            class="flex min-w-[140px] items-center gap-2 justify-center rounded-lg h-11 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+                            <span class="material-symbols-outlined text-lg">add</span>
+                            <span>Request Access</span>
+                        </button>
+                    </div>
+
+                    <!-- Page Content -->
+                    <div id="pageContent">
+                        <!-- Content will be dynamically loaded here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Request Access Modal -->
+    <div id="requestModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-background-dark rounded-xl p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">Request Medical Record Access</h3>
+            <form id="requestForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Patient Name</label>
+                    <input type="text" id="patientName" class="w-full p-2 border rounded-lg"
+                        placeholder="Enter patient name" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Claim ID</label>
+                    <input type="text" id="claimId" class="w-full p-2 border rounded-lg" placeholder="Enter claim ID"
+                        required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Reason for Access</label>
+                    <select id="accessReason" class="w-full p-2 border rounded-lg" required>
+                        <option value="">Select reason...</option>
+                        <option value="claim_processing">Claim Processing</option>
+                        <option value="verification">Medical Verification</option>
+                        <option value="appeal">Claim Appeal</option>
+                        <option value="audit">Audit Review</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Additional Notes</label>
+                    <textarea id="notes" class="w-full p-2 border rounded-lg" rows="3"
+                        placeholder="Enter any additional information..."></textarea>
+                </div>
+                <div class="flex gap-2 justify-end">
+                    <button type="button" id="cancelRequestBtn" class="px-4 py-2 border rounded-lg">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/socket-client.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/messenger.js"></script>
+    <script src="../js/insurance-dashboard.js"></script>
+</body>
+
+</html>

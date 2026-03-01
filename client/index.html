@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>MRC Login</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0da6f2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Ubuntu", "Inter"],
+                        "ubuntu-medium": ["Ubuntu", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+                },
+            }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Loading Animations */
+        .size-1 {
+            font-size: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .size-7 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            line-height: 1.2;
+        }
+
+        .size-9 {
+            font-size: clamp(4rem, 10vw, 6rem);
+            line-height: 1.2;
+        }
+
+        @keyframes iconAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes iconReduce {
+            0% {
+                font-size: clamp(4rem, 10vw, 6rem);
+            }
+            100% {
+                font-size: clamp(3rem, 8vw, 5rem);
+            }
+        }
+
+        @keyframes slideFromBehind {
+            0% {
+                opacity: 0;
+                transform: translateZ(-50px) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translateZ(0) scale(1);
+            }
+        }
+
+        @keyframes moveToHeader {
+            0% {
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                top: 0;
+                left: 0;
+                transform: translate(0, 0) scale(0.3);
+            }
+        }
+
+        @keyframes fadeInContent {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-appear {
+            animation: iconAppear 0.5s ease-out forwards;
+        }
+
+        .icon-reduce {
+            animation: iconReduce 0.3s ease-out 0.5s forwards;
+        }
+
+        .text-appear {
+            animation: slideFromBehind 0.8s ease-out 0.8s forwards;
+        }
+
+        .move-to-header {
+            animation: moveToHeader 1s ease-out 1.6s forwards;
+        }
+
+        .content-fade-in {
+            animation: fadeInContent 1s ease-out 1.6s forwards;
+        }
+
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Fix cursor issues */
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        span,
+        div,
+        label {
+            cursor: default !important;
+        }
+
+        button,
+        .cursor-pointer,
+        [role="button"],
+        a,
+        button *,
+        .cursor-pointer *,
+        [role="button"] *,
+        a * {
+            cursor: pointer !important;
+        }
+
+        input,
+        textarea,
+        [contenteditable="true"] {
+            cursor: text !important;
+        }
+
+        select {
+            cursor: pointer !important;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            cursor: pointer !important;
+        }
+
+        /* Prevent text selection on non-editable elements */
+        .no-select,
+        button,
+        .cursor-pointer,
+        [role="button"],
+        a {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Allow text selection only on content */
+        .selectable {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col">
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="fixed inset-0 bg-gradient-to-br from-blue-50 to-teal-50 dark:from-slate-900 dark:to-slate-950 flex items-center justify-center z-50">
+        <div class="relative">
+            <!-- Medical Icon -->
+            <div id="loadingIcon" class="text-primary size-9 opacity-0">
+                <span class="material-symbols-outlined">health_metrics</span>
+            </div>
+            
+            <!-- MRC Text -->
+            <div id="loadingText" class="text-[#0d171c] dark:text-white size-7 font-ubuntu-medium opacity-0 absolute inset-0 flex items-center justify-center">
+                MRC
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content (Initially Hidden) -->
+    <div id="mainContent" class="opacity-0">
+        <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+            <div class="layout-container flex h-full grow flex-col">
+                <div class="w-full flex justify-center">
+                    <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+                        <header
+                            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7eff4] dark:border-b-slate-800 px-10 py-3">
+                            <div class="flex items-center gap-4 text-[#0d171c] dark:text-white">
+                                <div class="size-6 text-primary flex items-center justify-center">
+                                    <span class="material-symbols-outlined">health_metrics</span>
+                                </div>
+                                <h2
+                                    class="text-[#0d171c] dark:text-white text-lg font-ubuntu-medium leading-tight tracking-[-0.015em]">
+                                    MRC</h2>
+                            </div>
+                            <button
+                                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                <span class="truncate">Help Center</span>
+                            </button>
+                        </header>
+                    </div>
+                </div>
+
+                <main
+                    class="flex-1 flex items-center justify-center p-6 bg-gradient-to-br from-blue-50 to-teal-50 dark:from-slate-900 dark:to-slate-950">
+                    <div
+                        class="w-full max-w-[480px] bg-white dark:bg-slate-900 rounded-xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-800">
+                        <div class="@container">
+                            <div class="@[480px]:px-0">
+                                <div class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden min-h-[160px]"
+                                    data-alt="Modern clean hospital interior with blue lighting"
+                                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBUQjf9tXtu4gkeauvSyhtHpbiDBVjGOjP4creiJBSZSh9gDjGV0wtM3SBgsKZEMCOWwa3tlgfGpUJY6w8ta15mMJACmsKzBYglazdk3jg_vl0KL6dYVpIyPIj9p6L5m_JReM5QC5AQBSS3AhDbwB97mfTgTb-PDilrOAV8V8x4JWhI5oWu_2Y-NRFHZQc3ByI1WI-VpU3Wi4v05cOVdI_IGvP_6xVq2NKRg2Wl2qT9MGYo3ofVewO3P6dFhGmToY25AFQQp715j6I");'>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-8">
+                            <h1
+                                class="text-[#0d171c] dark:text-white tracking-light text-[28px] font-bold leading-tight text-center pb-2">
+                                Secure Access Portal</h1>
+                            <p
+                                class="text-[#49819c] dark:text-slate-400 text-sm font-normal leading-normal pb-8 text-center">
+                                Enter your credentials to manage patient documentation</p>
+
+                            <form id="loginForm" class="space-y-4">
+                                <div class="flex flex-col gap-1">
+                                    <label
+                                        class="text-[#0d171c] dark:text-slate-200 text-sm font-medium leading-normal">Professional
+                                        ID / Username</label>
+                                    <input id="username"
+                                        class="form-input flex w-full rounded-lg text-[#0d171c] dark:text-white focus:outline-0 focus:ring-1 focus:ring-primary border border-[#cee0e8] dark:border-slate-700 bg-white dark:bg-slate-800 h-12 px-4 text-sm font-normal placeholder:text-[#49819c]/60"
+                                        placeholder="Username" type="text" required />
+                                </div>
+
+                                <div class="flex flex-col gap-1">
+                                    <label
+                                        class="text-[#0d171c] dark:text-slate-200 text-sm font-medium leading-normal">Password</label>
+                                    <input id="password"
+                                        class="form-input flex w-full rounded-lg text-[#0d171c] dark:text-white focus:outline-0 focus:ring-1 focus:ring-primary border border-[#cee0e8] dark:border-slate-700 bg-white dark:bg-slate-800 h-12 px-4 text-sm font-normal placeholder:text-[#49819c]/60"
+                                        placeholder="••••••••" type="password" required />
+                                </div>
+
+                                <div class="flex items-center justify-between pt-2">
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input id="remember"
+                                            class="rounded text-primary focus:ring-primary border-[#cee0e8] dark:border-slate-700 bg-white dark:bg-slate-800"
+                                            type="checkbox" />
+                                        <span class="text-xs text-[#49819c] dark:text-slate-400">Remember device</span>
+                                    </label>
+
+                                </div>
+
+                                <button id="loginBtn" type="submit"
+                                    class="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] mt-6 transition-opacity hover:opacity-90 disabled:opacity-50">
+                                    <span id="loginBtnText">Authenticate</span>
+                                    <span id="loginSpinner"
+                                        class="material-symbols-outlined loading-spinner hidden">refresh</span>
+                                </button>
+                                <div class="flex gap-4">
+                                    <a id="forgotPasswordLink"
+                                        class="text-xs text-primary font-semibold hover:underline cursor-pointer">Forgot
+                                        Password?</a>
+                                </div>
+                            </form>
+
+                            <div
+                                class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col items-center gap-2">
+                                <button id="requestAccessBtn" type="button"
+                                    class="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] mt-2 transition-opacity hover:opacity-90 disabled:opacity-50">
+                                    <span>Register user</span>
+                                </button>
+                                <p
+                                    class="text-[11px] text-[#49819c] dark:text-slate-500 text-center uppercase tracking-widest font-bold">
+                                    Secure Verification</p>
+                                <div class="flex gap-6 opacity-60">
+                                    <span class="material-symbols-outlined text-2xl text-slate-400">verified_user</span>
+                                    <span
+                                        class="material-symbols-outlined text-2xl text-slate-400">enhanced_encryption</span>
+                                    <span class="material-symbols-outlined text-2xl text-slate-400">lock_person</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <footer
+                    class="w-full py-4 px-10 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-[12px] text-[#49819c] dark:text-slate-500">
+                    <p>© 2024 HealthPath Systems. HIPAA Compliant MRC Portal.</p>
+                    <div class="flex gap-4">
+                        <a class="hover:text-primary" href="#">Privacy Policy</a>
+                        <a class="hover:text-primary" href="#">Terms of Service</a>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-md mx-4">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-[#0d171c] dark:text-white">Reset Password</h2>
+                    <button id="closeForgotModalBtn"
+                        class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+
+            <form id="forgotPasswordForm" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-[#0d171c] dark:text-white mb-2">Email Address</label>
+                    <input type="email" id="forgotEmail" name="email" required
+                        class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-sm"
+                        placeholder="Enter your registered email">
+                </div>
+
+                <div class="text-sm text-slate-600 dark:text-slate-400">
+                    Enter your email address and we'll send you instructions to reset your password.
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" id="cancelForgotBtn"
+                        class="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                        Cancel
+                    </button>
+                    <button type="submit" id="submitForgotBtn"
+                        class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50">
+                        <span id="submitForgotBtnText">Send Reset Link</span>
+                        <span id="submitForgotSpinner"
+                            class="material-symbols-outlined loading-spinner hidden text-sm">refresh</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="registrationModal"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-[#0d171c] dark:text-white">Request Access</h2>
+                    <button id="closeModalBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+
+            <form id="registrationForm" class="p-6 space-y-6">
+                <!-- Personal Information -->
+                <div class="space-y-4">
+                    <h3 class="text-sm font-medium text-[#0d171c] dark:text-white">Personal Information</h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-[#0d171c] dark:text-white mb-2">Full
+                                Name</label>
+                            <input type="text" id="regName" name="name" required
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-sm"
+                                placeholder="Enter your full name">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-[#0d171c] dark:text-white mb-2">Email
+                                Address</label>
+                            <input type="email" id="regEmail" name="email" required
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-sm"
+                                placeholder="Enter your email">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-[#0d171c] dark:text-white mb-2">Phone
+                                Number</label>
+                            <input type="tel" id="regPhone" name="phone" required
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-sm"
+                                placeholder="Enter your phone number">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-[#0d171c] dark:text-white mb-2">IP Address (for
+                                SIP Communication)</label>
+                            <input type="text" id="regIpAddress" name="ipAddress" required
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-sm"
+                                placeholder="e.g., 192.168.1.100">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-[#0d171c] dark:text-white mb-2">Username</label>
+                            <input type="text" id="regUsername" name="username" required
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-sm"
+                                placeholder="Choose a username">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Information -->
+                <div class="space-y-4">
+                    <h3 class="text-sm font-medium text-[#0d171c] dark:text-white">Professional Information</h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-[#0d171c] dark:text-white mb-2">Role</label>
+                            <select id="regRole" name="role" required
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-sm">
+                                <option value="">Select your role</option>
+                                <option value="Doctor">Medical Doctor</option>
+                                <option value="Admin">System Administrator</option>
+                                <option value="Insurance">Insurance Professional</option>
+                                <option value="Lawyer">Legal Professional</option>
+                                <option value="Developer">System Developer</option>
+                                <option value="Team Lead">Team Lead</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-[#0d171c] dark:text-white mb-2">Organization</label>
+                            <input type="text" id="regOrganization" name="organization" required
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-sm"
+                                placeholder="Enter your organization name">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-[#0d171c] dark:text-white mb-2">Business
+                                License</label>
+                            <input type="text" id="regBusinessLicense" name="businessLicense"
+                                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800 text-sm"
+                                placeholder="Business license (if applicable)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms and Submit -->
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <input type="checkbox" id="regTerms" name="terms" required
+                            class="mt-1 w-4 h-4 text-primary border-slate-300 rounded focus:ring-primary">
+                        <label for="regTerms" class="ml-2 text-sm text-slate-600 dark:text-slate-400">
+                            I agree to the terms and conditions and understand that my request will be reviewed by
+                            system administrators.
+                        </label>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button type="button" id="cancelRegBtn"
+                            class="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                            Cancel
+                        </button>
+                        <button type="submit" id="submitRegBtn"
+                            class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50">
+                            <span id="submitRegBtnText">Submit Request</span>
+                            <span id="submitRegSpinner"
+                                class="material-symbols-outlined loading-spinner hidden text-sm">refresh</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-900 rounded-xl p-6 w-full max-w-md mx-4">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                    <span class="material-symbols-outlined text-3xl text-green-600">check_circle</span>
+                </div>
+                <h3 class="text-xl font-bold text-[#0d171c] dark:text-white mb-2">Registration Submitted!</h3>
+                <p class="text-slate-600 dark:text-slate-400 mb-6">
+                    Your registration request has been submitted successfully. You will receive an email once your
+                    account is approved by the system administrator.
+                </p>
+                <button onclick="closeSuccessModal()"
+                    class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
+                    Got it
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/socket-client.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/loading-animation.js"></script>
+    <script src="js/login.js"></script>
+</body>
+
+</html>

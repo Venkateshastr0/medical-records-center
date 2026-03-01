@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Doctor Dashboard - Medical Records Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0da6f2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d171c] dark:text-white min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 flex-shrink-0 border-r border-[#cee0e8] dark:border-[#2d3a43] bg-white dark:bg-[#16252d] flex flex-col justify-between p-4">
+<div class="flex flex-col gap-8">
+<!-- User Profile Section -->
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 border-2 border-primary/20" data-alt="Professional headshot of a male doctor in medical attire" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA2cMB2M_EnWTrcnTYqo6cBs_12oabpAqOIG3oPo-EhFnoty__Q9x8zR5j1cunRz5_zxHf_1Rm5i7ANDcfST6kNtlF3akCxHy1ocd8kYkbj5IMKEZjcMlRp8MVL5o2pmGtDY0BS2GNLTOONObZNKSzul3JCftYzgmzxQngOI3AMSyeFo4Tcw93uAuNbh_6kvi3iMwyRCK_F4JCaCY_VWEUR5oCsufoxnCVwOIo8mEI5Wgu1rnL1R7wmrzjp5O5wDzqhrGRL8OhT234");'>
+</div>
+<div class="flex flex-col overflow-hidden">
+<h1 class="text-[#0d171c] dark:text-white text-base font-bold leading-tight truncate">Dr. Julian Smith</h1>
+<p class="text-[#49819c] dark:text-[#8ab4c9] text-xs font-medium truncate">Chief Medical Officer</p>
+</div>
+</div>
+<!-- Nav Links -->
+<nav class="flex flex-col gap-2">
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined text-[24px]">group</span>
+<p class="text-sm font-semibold leading-normal">Patients</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#49819c] dark:text-[#8ab4c9] hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[24px]">folder_shared</span>
+<p class="text-sm font-semibold leading-normal">Records</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#49819c] dark:text-[#8ab4c9] hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[24px]">lock_person</span>
+<p class="text-sm font-semibold leading-normal">Permissions</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#49819c] dark:text-[#8ab4c9] hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+<p class="text-sm font-semibold leading-normal">Settings</p>
+</div>
+</nav>
+</div>
+<div class="pt-4 border-t border-[#cee0e8] dark:border-[#2d3a43]">
+<div class="flex items-center gap-3 px-3 py-2 text-red-500 cursor-pointer">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-bold">Sign Out</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-y-auto bg-background-light dark:bg-background-dark">
+<!-- Top Heading Area -->
+<header class="flex flex-wrap items-center justify-between gap-4 p-8">
+<div class="flex flex-col">
+<h2 class="text-[#0d171c] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Dashboard</h2>
+<p class="text-[#49819c] dark:text-[#8ab4c9] font-medium">Welcome back, Dr. Smith. Here is your overview.</p>
+</div>
+<button class="flex min-w-[140px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">cloud_upload</span>
+<span class="truncate">Quick Upload</span>
+</button>
+</header>
+<!-- Stats Section -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-8 py-4">
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-[#cee0e8] dark:border-[#2d3a43] bg-white dark:bg-[#16252d] shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-[#49819c] dark:text-[#8ab4c9] text-sm font-bold uppercase tracking-wider">Today's Appointments</p>
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+</div>
+<p class="text-[#0d171c] dark:text-white tracking-tight text-3xl font-black leading-tight">12</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-[#cee0e8] dark:border-[#2d3a43] bg-white dark:bg-[#16252d] shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-[#49819c] dark:text-[#8ab4c9] text-sm font-bold uppercase tracking-wider">Pending Reports</p>
+<span class="material-symbols-outlined text-orange-400">pending_actions</span>
+</div>
+<p class="text-[#0d171c] dark:text-white tracking-tight text-3xl font-black leading-tight">05</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-[#cee0e8] dark:border-[#2d3a43] bg-white dark:bg-[#16252d] shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-[#49819c] dark:text-[#8ab4c9] text-sm font-bold uppercase tracking-wider">Active Files</p>
+<span class="material-symbols-outlined text-green-500">description</span>
+</div>
+<p class="text-[#0d171c] dark:text-white tracking-tight text-3xl font-black leading-tight">142</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-[#cee0e8] dark:border-[#2d3a43] bg-white dark:bg-[#16252d] shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-[#49819c] dark:text-[#8ab4c9] text-sm font-bold uppercase tracking-wider">Storage Used</p>
+<span class="material-symbols-outlined text-purple-500">database</span>
+</div>
+<p class="text-[#0d171c] dark:text-white tracking-tight text-3xl font-black leading-tight">82%</p>
+</div>
+</section>
+<!-- Content Area: Table Section -->
+<section class="px-8 py-6 flex-1">
+<div class="bg-white dark:bg-[#16252d] rounded-xl border border-[#cee0e8] dark:border-[#2d3a43] overflow-hidden shadow-sm flex flex-col">
+<div class="p-6 border-b border-[#cee0e8] dark:border-[#2d3a43] flex items-center justify-between">
+<h2 class="text-[#0d171c] dark:text-white text-xl font-bold leading-tight">Patient Records</h2>
+<div class="relative w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#49819c] text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-background-light dark:bg-background-dark border-none rounded-lg text-sm focus:ring-2 focus:ring-primary" placeholder="Search patients..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto @container">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-background-light dark:bg-background-dark/50">
+<th class="px-6 py-4 text-[#0d171c] dark:text-white text-xs font-bold uppercase tracking-wider">Patient Name</th>
+<th class="px-6 py-4 text-[#0d171c] dark:text-white text-xs font-bold uppercase tracking-wider">Date of Birth</th>
+<th class="px-6 py-4 text-[#0d171c] dark:text-white text-xs font-bold uppercase tracking-wider">Last Visit</th>
+<th class="px-6 py-4 text-[#0d171c] dark:text-white text-xs font-bold uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-right text-[#0d171c] dark:text-white text-xs font-bold uppercase tracking-wider">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#cee0e8] dark:divide-[#2d3a43]">
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">JD</div>
+<span class="text-[#0d171c] dark:text-white font-semibold">John Doe</span>
+</div>
+</td>
+<td class="px-6 py-5 text-[#49819c] dark:text-[#8ab4c9] text-sm">May 12, 1985</td>
+<td class="px-6 py-5 text-[#49819c] dark:text-[#8ab4c9] text-sm">Oct 24, 2023</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-bold">Stable</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:text-primary/70 font-bold text-sm tracking-wide">View Details</button>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-500 font-bold text-xs">JS</div>
+<span class="text-[#0d171c] dark:text-white font-semibold">Jane Smith</span>
+</div>
+</td>
+<td class="px-6 py-5 text-[#49819c] dark:text-[#8ab4c9] text-sm">Sep 20, 1992</td>
+<td class="px-6 py-5 text-[#49819c] dark:text-[#8ab4c9] text-sm">Oct 22, 2023</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 text-xs font-bold">Urgent</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:text-primary/70 font-bold text-sm tracking-wide">View Details</button>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 font-bold text-xs">RB</div>
+<span class="text-[#0d171c] dark:text-white font-semibold">Robert Brown</span>
+</div>
+</td>
+<td class="px-6 py-5 text-[#49819c] dark:text-[#8ab4c9] text-sm">Jan 15, 1978</td>
+<td class="px-6 py-5 text-[#49819c] dark:text-[#8ab4c9] text-sm">Oct 20, 2023</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-xs font-bold">In-review</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:text-primary/70 font-bold text-sm tracking-wide">View Details</button>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-500 font-bold text-xs">EW</div>
+<span class="text-[#0d171c] dark:text-white font-semibold">Emily Wilson</span>
+</div>
+</td>
+<td class="px-6 py-5 text-[#49819c] dark:text-[#8ab4c9] text-sm">Mar 05, 1990</td>
+<td class="px-6 py-5 text-[#49819c] dark:text-[#8ab4c9] text-sm">Oct 19, 2023</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-bold">Stable</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:text-primary/70 font-bold text-sm tracking-wide">View Details</button>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 font-bold text-xs">MK</div>
+<span class="text-[#0d171c] dark:text-white font-semibold">Michael Knight</span>
+</div>
+</td>
+<td class="px-6 py-5 text-[#49819c] dark:text-[#8ab4c9] text-sm">Nov 22, 1965</td>
+<td class="px-6 py-5 text-[#49819c] dark:text-[#8ab4c9] text-sm">Oct 18, 2023</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 text-xs font-bold">Pending Lab</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:text-primary/70 font-bold text-sm tracking-wide">View Details</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-[#cee0e8] dark:border-[#2d3a43] flex items-center justify-between">
+<p class="text-sm text-[#49819c] dark:text-[#8ab4c9]">Showing 5 of 1,248 patients</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 rounded border border-[#cee0e8] dark:border-[#2d3a43] text-sm font-bold text-[#49819c] dark:text-[#8ab4c9] hover:bg-background-light dark:hover:bg-background-dark">Previous</button>
+<button class="px-3 py-1 rounded border border-[#cee0e8] dark:border-[#2d3a43] text-sm font-bold text-[#49819c] dark:text-[#8ab4c9] hover:bg-background-light dark:hover:bg-background-dark">Next</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

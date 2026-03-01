@@ -1,0 +1,59 @@
+const sharp = require('sharp');
+const fs = require('fs');
+const path = require('path');
+
+// Create a simple health metrics icon as SVG
+const svgIcon = `
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="256" height="256" rx="48" fill="#2563eb"/>
+<!-- Health Metrics Icon - based on Material Symbols 'health_metrics' -->
+<g transform="translate(128, 128)">
+  <!-- Heart rate monitor line -->
+  <path d="M -80 -20 L -60 -20 L -50 -40 L -40 0 L -30 -30 L -20 20 L -10 -10 L 0 -20 L 20 -20 L 40 -20 L 60 -20 L 80 -20" 
+        stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Heart shape -->
+  <path d="M 0 10 C -10 0, -30 0, -30 15 C -30 30, 0 50, 0 50 C 0 50, 30 30, 30 15 C 30 0, 10 0, 0 10Z" 
+        fill="white"/>
+  
+  <!-- Plus symbols for medical -->
+  <g stroke="white" stroke-width="6" stroke-linecap="round">
+    <line x1="-60" y1="-50" x2="-40" y2="-50"/>
+    <line x1="-50" y1="-60" x2="-50" y2="-40"/>
+    
+    <line x1="40" y1="-50" x2="60" y2="-50"/>
+    <line x1="50" y1="-60" x2="50" y2="-40"/>
+    
+    <line x1="-60" y1="40" x2="-40" y2="40"/>
+    <line x1="-50" y1="30" x2="-50" y2="50"/>
+    
+    <line x1="40" y1="40" x2="60" y2="40"/>
+    <line x1="50" y1="30" x2="50" y2="50"/>
+  </g>
+</g>
+</svg>
+`;
+
+async function convertSvgToPng() {
+  try {
+    console.log('Converting SVG to PNG...');
+    
+    // Convert SVG to PNG using sharp
+    const pngBuffer = await sharp(Buffer.from(svgIcon))
+      .png()
+      .resize(256, 256)
+      .toBuffer();
+    
+    // Save the PNG file
+    const outputPath = path.join(__dirname, 'assets', 'icon.png');
+    fs.writeFileSync(outputPath, pngBuffer);
+    
+    console.log('✅ Icon successfully converted to PNG!');
+    console.log(`📁 Saved to: ${outputPath}`);
+    
+  } catch (error) {
+    console.error('❌ Error converting icon:', error);
+  }
+}
+
+convertSvgToPng();

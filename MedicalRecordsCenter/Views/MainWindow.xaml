@@ -1,0 +1,251 @@
+<Window x:Class="MedicalRecordsCenter.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:vm="clr-namespace:MedicalRecordsCenter.ViewModels"
+        Title="Medical Records Center"
+        Height="800"
+        Width="1200"
+        MinHeight="600"
+        MinWidth="900"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Background="{StaticResource BackgroundBrush}">
+    
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" 
+                Background="{StaticResource SurfaceBrush}" 
+                BorderBrush="#E0E0E0" 
+                BorderThickness="0,0,0,1">
+            <Grid Height="60">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Logo and Title -->
+                <StackPanel Grid.Column="0" 
+                            Orientation="Horizontal" 
+                            VerticalAlignment="Center"
+                            Margin="20,0">
+                    <materialDesign:PackIcon Kind="HospitalBox" 
+                                            Foreground="{StaticResource PrimaryBrush}"
+                                            Width="32" 
+                                            Height="32"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,10,0" />
+                    <TextBlock Text="MRC" 
+                               FontFamily="{StaticResource UbuntuMediumFont}"
+                               FontSize="24"
+                               FontWeight="Medium"
+                               Foreground="#0d171c"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+
+                <!-- User Info -->
+                <StackPanel Grid.Column="2" 
+                            Orientation="Horizontal" 
+                            VerticalAlignment="Center"
+                            Margin="20,0">
+                    <TextBlock Text="{Binding CurrentUser.Name}" 
+                               FontFamily="{StaticResource UbuntuFont}"
+                               FontSize="14"
+                               Foreground="#666"
+                               VerticalAlignment="Center"
+                               Margin="0,0,15,0" />
+                    <Button Style="{StaticResource MaterialDesignIconButton}"
+                            Command="{Binding LogoutCommand}"
+                            ToolTip="Logout">
+                        <materialDesign:PackIcon Kind="Logout" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Navigation Menu -->
+            <Border Grid.Column="0" 
+                    Background="{StaticResource SurfaceBrush}" 
+                    BorderBrush="#E0E0E0" 
+                    BorderThickness="0,0,1,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+                        
+                        <!-- Patient Management -->
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                Command="{Binding NavigateToPatientManagementCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="AccountMultiple" 
+                                                        Margin="0,0,10,0" />
+                                <TextBlock Text="Patient Management" />
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Medical Records -->
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                Command="{Binding NavigateToMedicalRecordsCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="FileDocument" 
+                                                        Margin="0,0,10,0" />
+                                <TextBlock Text="Medical Records" />
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Appointments -->
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                Command="{Binding NavigateToAppointmentsCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Calendar" 
+                                                        Margin="0,0,10,0" />
+                                <TextBlock Text="Appointments" />
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Prescriptions -->
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                Command="{Binding NavigateToPrescriptionsCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Medicine" 
+                                                        Margin="0,0,10,0" />
+                                <TextBlock Text="Prescriptions" />
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Lab Results -->
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                Command="{Binding NavigateToLabResultsCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="TestTube" 
+                                                        Margin="0,0,10,0" />
+                                <TextBlock Text="Lab Results" />
+                            </StackPanel>
+                        </Button>
+
+                        <Separator Margin="10,20" />
+
+                        <!-- Security Dashboard -->
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                Command="{Binding NavigateToSecurityCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Security" 
+                                                        Margin="0,0,10,0" />
+                                <TextBlock Text="Security Dashboard" />
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Audit Logs -->
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                Command="{Binding NavigateToAuditCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="History" 
+                                                        Margin="0,0,10,0" />
+                                <TextBlock Text="Audit Logs" />
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Settings -->
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                Command="{Binding NavigateToSettingsCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Settings" 
+                                                        Margin="0,0,10,0" />
+                                <TextBlock Text="Settings" />
+                            </StackPanel>
+                        </Button>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Content Area -->
+            <ContentControl Grid.Column="1" 
+                            Content="{Binding CurrentView}" 
+                            Margin="20" />
+
+        </Grid>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" 
+                Background="{StaticResource SurfaceBrush}" 
+                BorderBrush="#E0E0E0" 
+                BorderThickness="0,1,0,0">
+            <Grid Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Status Message -->
+                <TextBlock Grid.Column="0" 
+                           Text="{Binding StatusMessage}" 
+                           FontFamily="{StaticResource UbuntuFont}"
+                           FontSize="12"
+                           Foreground="#666"
+                           VerticalAlignment="Center"
+                           Margin="10,0" />
+
+                <!-- Connection Status -->
+                <StackPanel Grid.Column="1" 
+                            Orientation="Horizontal" 
+                            VerticalAlignment="Center"
+                            Margin="10,0">
+                    <Ellipse Width="8" 
+                             Height="8" 
+                             Fill="{Binding ConnectionStatus, Converter={StaticResource StatusColorConverter}}" />
+                    <TextBlock Text="{Binding ConnectionStatus}" 
+                               FontFamily="{StaticResource UbuntuFont}"
+                               FontSize="12"
+                               Foreground="#666"
+                               Margin="5,0,10,0" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+    </Grid>
+</Window>

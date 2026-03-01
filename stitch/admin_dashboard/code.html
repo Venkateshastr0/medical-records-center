@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard - Medical Records CRM</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0da6f2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d171c] dark:text-white">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 flex-shrink-0 border-r border-[#e7eff4] dark:border-gray-800 bg-white dark:bg-background-dark flex flex-col justify-between p-4">
+<div class="flex flex-col gap-6">
+<div class="flex gap-3 items-center">
+<div class="bg-primary rounded-lg p-2 text-white">
+<span class="material-symbols-outlined">health_and_safety</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-[#0d171c] dark:text-white text-base font-bold leading-tight">MedRec CRM</h1>
+<p class="text-[#49819c] dark:text-gray-400 text-xs font-normal">System Administrator</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#49819c] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+<p class="text-sm font-medium">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">group</span>
+<p class="text-sm font-bold">User Management</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#49819c] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">description</span>
+<p class="text-sm font-medium">Records Access</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#49819c] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">history</span>
+<p class="text-sm font-medium">System Logs</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#49819c] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+<p class="text-sm font-medium">Security Settings</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3 px-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Professional headshot of system administrator" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCLudiU95NOmnMGUqbh1rf1vB9KYAwJgz5dHLaHr3BDf0Oq-l7Ex-Lo6vJ1gUpVnbVudRTR8RnGiU_CtcYsDJtDq-jy3yaXZQv7jq3WhIwma-NA95Az7HmSe4dJqJhP2AAk9qw_ZWUuIeJTzDsCM5-n3Z72IDpERus1uIGyw7ByR5Ey4f2jFFjgUNRrlR1cSdgLQSC1V5LeKJi3Pn6rhc0CJzOaZv9I1wXwjk2U0FxiCfRAuQFcjzoKFO8XLq62S7hlASKsZKLgHZ0");'></div>
+<div class="overflow-hidden">
+<p class="text-sm font-bold truncate">Alex Morgan</p>
+<p class="text-xs text-[#49819c] truncate">alex.m@medrec.com</p>
+</div>
+</div>
+<button class="flex w-full items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-all">
+<span class="truncate">New System Audit</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between border-b border-[#e7eff4] dark:border-gray-800 bg-white dark:bg-background-dark px-8 py-3 sticky top-0 z-10">
+<div class="flex items-center gap-4 flex-1">
+<label class="flex items-center w-full max-w-md h-10 bg-[#e7eff4] dark:bg-gray-800 rounded-lg px-3">
+<span class="material-symbols-outlined text-[#49819c] mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-[#49819c]" placeholder="Global search for records, users or logs..." type="text"/>
+</label>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center size-10 rounded-lg bg-[#e7eff4] dark:bg-gray-800 text-[#0d171c] dark:text-white">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center size-10 rounded-lg bg-[#e7eff4] dark:bg-gray-800 text-[#0d171c] dark:text-white">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="h-8 w-[1px] bg-[#e7eff4] dark:bg-gray-800 mx-2"></div>
+<button class="flex items-center gap-2 px-4 h-10 bg-primary text-white rounded-lg text-sm font-bold">
+<span class="material-symbols-outlined text-base">person_add</span>
+<span>Add New User</span>
+</button>
+</div>
+</header>
+<!-- Page Body -->
+<div class="p-8 flex flex-col gap-8">
+<!-- Page Heading -->
+<div class="flex flex-col gap-2">
+<h2 class="text-[#0d171c] dark:text-white text-3xl font-black tracking-tight">System Management</h2>
+<p class="text-[#49819c] dark:text-gray-400 text-base">Control access levels and monitor core system activities.</p>
+</div>
+<!-- Tabs -->
+<div class="border-b border-[#cee0e8] dark:border-gray-800">
+<div class="flex gap-8">
+<a class="border-b-2 border-primary text-[#0d171c] dark:text-white pb-3 pt-2" href="#">
+<p class="text-sm font-bold">User Management</p>
+</a>
+<a class="border-b-2 border-transparent text-[#49819c] dark:text-gray-400 pb-3 pt-2 hover:text-primary transition-colors" href="#">
+<p class="text-sm font-bold">System Logs</p>
+</a>
+<a class="border-b-2 border-transparent text-[#49819c] dark:text-gray-400 pb-3 pt-2 hover:text-primary transition-colors" href="#">
+<p class="text-sm font-bold">API Integration</p>
+</a>
+<a class="border-b-2 border-transparent text-[#49819c] dark:text-gray-400 pb-3 pt-2 hover:text-primary transition-colors" href="#">
+<p class="text-sm font-bold">Security &amp; Compliance</p>
+</a>
+</div>
+</div>
+<!-- Main Content: Active Users Table -->
+<section class="bg-white dark:bg-background-dark border border-[#e7eff4] dark:border-gray-800 rounded-xl overflow-hidden shadow-sm">
+<div class="p-4 border-b border-[#e7eff4] dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/30">
+<h3 class="font-bold text-lg">Active System Users</h3>
+<div class="flex gap-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#49819c] text-sm">filter_list</span>
+<select class="pl-9 pr-8 py-1.5 text-xs bg-white dark:bg-gray-800 border-[#e7eff4] dark:border-gray-700 rounded-lg focus:ring-primary">
+<option>All Roles</option>
+<option>Doctor</option>
+<option>Admin</option>
+<option>Insurance Agent</option>
+</select>
+</div>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm border-collapse">
+<thead>
+<tr class="bg-gray-50 dark:bg-gray-900/50 text-[#49819c] font-medium border-b border-[#e7eff4] dark:border-gray-800">
+<th class="px-6 py-4">User</th>
+<th class="px-6 py-4">Role</th>
+<th class="px-6 py-4">Last Active</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#e7eff4] dark:divide-gray-800">
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">SM</div>
+<div>
+<p class="font-bold">Dr. Sarah Miller</p>
+<p class="text-xs text-[#49819c]">sarah.m@hospital.com</p>
+</div>
+</td>
+<td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-bold">Doctor</span></td>
+<td class="px-6 py-4 text-[#49819c]">12 mins ago</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5">
+<div class="size-2 rounded-full bg-green-500"></div>
+<span class="text-xs font-medium">Online</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-[#49819c] hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="size-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-700 font-bold text-xs">JH</div>
+<div>
+<p class="font-bold">James Henderson</p>
+<p class="text-xs text-[#49819c]">james.h@insureco.com</p>
+</div>
+</td>
+<td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-bold">Insurance Agent</span></td>
+<td class="px-6 py-4 text-[#49819c]">2 hours ago</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5">
+<div class="size-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+<span class="text-xs font-medium text-[#49819c]">Offline</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-[#49819c] hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="size-8 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-700 font-bold text-xs">RL</div>
+<div>
+<p class="font-bold">Robert Lawson</p>
+<p class="text-xs text-[#49819c]">lawson.r@legalfirm.net</p>
+</div>
+</td>
+<td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs font-bold">Lawyer</span></td>
+<td class="px-6 py-4 text-[#49819c]">Yesterday, 4:30 PM</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5">
+<div class="size-2 rounded-full bg-green-500"></div>
+<span class="text-xs font-medium">Online</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-[#49819c] hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-gray-50/50 dark:bg-gray-900/30 text-center">
+<button class="text-primary text-sm font-bold hover:underline">View all 148 active users</button>
+</div>
+</section>
+<!-- Secondary Content: System Logs -->
+<section class="flex flex-col gap-4">
+<div class="flex justify-between items-end">
+<div class="flex flex-col gap-1">
+<h3 class="text-xl font-bold">Recent System Logs</h3>
+<p class="text-sm text-[#49819c]">Monitoring real-time security and operational events.</p>
+</div>
+<button class="text-sm font-bold text-[#49819c] flex items-center gap-1 border border-[#cee0e8] dark:border-gray-800 rounded-lg px-3 py-1.5 hover:bg-white dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-sm">download</span> Export Logs
+                        </button>
+</div>
+<div class="grid grid-cols-1 gap-3">
+<!-- Log Entry: Error -->
+<div class="bg-white dark:bg-background-dark border-l-4 border-red-500 border-y border-r border-[#e7eff4] dark:border-gray-800 rounded-r-lg p-4 flex items-center gap-4">
+<div class="bg-red-100 dark:bg-red-900/20 p-2 rounded-lg text-red-600 dark:text-red-400">
+<span class="material-symbols-outlined">error</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-0.5">
+<span class="text-xs font-bold text-red-600 uppercase tracking-wider">Error</span>
+<span class="text-xs text-[#49819c]">14:02:45</span>
+</div>
+<p class="text-sm font-medium">Unauthorized access attempt detected from IP 192.168.1.105</p>
+<p class="text-xs text-[#49819c] mt-1">Source: Authentication Module / Login Endpoint</p>
+</div>
+</div>
+<!-- Log Entry: Warning -->
+<div class="bg-white dark:bg-background-dark border-l-4 border-amber-500 border-y border-r border-[#e7eff4] dark:border-gray-800 rounded-r-lg p-4 flex items-center gap-4">
+<div class="bg-amber-100 dark:bg-amber-900/20 p-2 rounded-lg text-amber-600 dark:text-amber-400">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-0.5">
+<span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Warning</span>
+<span class="text-xs text-[#49819c]">13:58:12</span>
+</div>
+<p class="text-sm font-medium">Database connection latency above 500ms threshold</p>
+<p class="text-xs text-[#49819c] mt-1">Source: Database Manager / Primary Cluster</p>
+</div>
+</div>
+<!-- Log Entry: Info -->
+<div class="bg-white dark:bg-background-dark border-l-4 border-primary border-y border-r border-[#e7eff4] dark:border-gray-800 rounded-r-lg p-4 flex items-center gap-4">
+<div class="bg-primary/10 p-2 rounded-lg text-primary">
+<span class="material-symbols-outlined">info</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-0.5">
+<span class="text-xs font-bold text-primary uppercase tracking-wider">Info</span>
+<span class="text-xs text-[#49819c]">13:45:30</span>
+</div>
+<p class="text-sm font-medium">Daily automated backup completed successfully</p>
+<p class="text-xs text-[#49819c] mt-1">Source: Storage Service / Backup Routine</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

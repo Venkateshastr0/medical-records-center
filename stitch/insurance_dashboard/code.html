@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Insurance Agent Dashboard - MedRecord Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0da6f2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d171c] dark:text-white">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e7eff4] dark:border-slate-800 bg-white dark:bg-background-dark px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-[#0d171c] dark:text-white">
+<div class="size-6 text-primary">
+<span class="material-symbols-outlined text-3xl">medical_services</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">MedRecord Center</h2>
+</div>
+<nav class="flex items-center gap-9">
+<a class="text-[#0d171c] dark:text-white text-sm font-medium leading-normal border-b-2 border-primary pb-1" href="#">Dashboard</a>
+<a class="text-[#0d171c] dark:text-white/70 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Access Requests</a>
+<a class="text-[#0d171c] dark:text-white/70 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Approved Records</a>
+<a class="text-[#0d171c] dark:text-white/70 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-[#e7eff4] dark:bg-slate-800">
+<div class="text-[#49819c] dark:text-slate-400 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:ring-0 text-sm font-normal px-2" placeholder="Search claims or records..." value=""/>
+</div>
+</label>
+<div class="flex items-center gap-3">
+<div class="bg-primary/10 p-2 rounded-full text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-slate-200 dark:border-slate-700" data-alt="Professional profile picture of insurance agent" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBSnCMqCLUd_hRzMdE0iUhiecKS_O-nZ5X6ogyNiorP0FbD15fpdZqUpjv4CJZ_ZuF0TjrD4Sj8nfWdgoeEoAhXjFELjYHuOtXwXX4RBRGOV2vSWgQbr4lGT1DqrgG9brMEyDoWJrikTQPPNfAxGlAaCL-ejIaq3S0GQ0uZtB9efUwqS60hPaIe-a7XF3peMleE21cMqwQJBL7c1NtqhI2RYQifEloVgJ2u2vx3ShuiuC2jjrf-qvU8Kwpxae8LawG-4uoh4h-yedc");'>
+</div>
+</div>
+</div>
+</header>
+<div class="flex flex-1">
+<!-- SideNavBar -->
+<aside class="w-64 border-r border-[#e7eff4] dark:border-slate-800 bg-white dark:bg-background-dark hidden lg:flex flex-col p-4 shrink-0">
+<div class="flex flex-col gap-6">
+<div class="flex flex-col px-3">
+<h1 class="text-[#0d171c] dark:text-white text-base font-bold leading-normal">Agent Portal</h1>
+<p class="text-[#49819c] dark:text-slate-400 text-xs font-medium uppercase tracking-wider">MetLife Group A</p>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[22px]">grid_view</span>
+<p class="text-sm font-semibold">Overview</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[22px]">pending_actions</span>
+<p class="text-sm font-medium">My Requests</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[22px]">fact_check</span>
+<p class="text-sm font-medium">Claim Reviews</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[22px]">folder_open</span>
+<p class="text-sm font-medium">Documents</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[22px]">history</span>
+<p class="text-sm font-medium">Audit Log</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 cursor-pointer">
+<span class="material-symbols-outlined text-[22px]">logout</span>
+<p class="text-sm font-medium">Log out</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto">
+<div class="max-w-6xl mx-auto px-6 py-8">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between items-end gap-4 mb-8">
+<div class="flex flex-col gap-2">
+<p class="text-[#0d171c] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Insurance Dashboard</p>
+<p class="text-[#49819c] dark:text-slate-400 text-base font-normal">Manage healthcare access requests and review processed medical claims.</p>
+</div>
+<button class="flex min-w-[140px] items-center gap-2 justify-center rounded-lg h-11 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined text-lg">add</span>
+<span>Request Access</span>
+</button>
+</div>
+<!-- Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900 border border-[#cee0e8] dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Pending Requests</p>
+<span class="material-symbols-outlined text-primary">schedule</span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<p class="text-[#0d171c] dark:text-white tracking-tight text-3xl font-bold">24</p>
+<p class="text-[#078836] text-sm font-bold bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded">+12%</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900 border border-[#cee0e8] dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Approved Records</p>
+<span class="material-symbols-outlined text-green-500">verified_user</span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<p class="text-[#0d171c] dark:text-white tracking-tight text-3xl font-bold">142</p>
+<p class="text-[#e73508] text-sm font-bold bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded">-5%</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-900 border border-[#cee0e8] dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Total Claims</p>
+<span class="material-symbols-outlined text-orange-500">assignment</span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<p class="text-[#0d171c] dark:text-white tracking-tight text-3xl font-bold">856</p>
+<p class="text-[#078836] text-sm font-bold bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded">+8%</p>
+</div>
+</div>
+</div>
+<!-- SectionHeader -->
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-[#0d171c] dark:text-white text-2xl font-bold tracking-tight">Recent Access Requests</h2>
+<div class="flex gap-2">
+<button class="p-2 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined text-xl">filter_list</span>
+</button>
+<button class="p-2 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined text-xl">sort</span>
+</button>
+</div>
+</div>
+<!-- Claims Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Claim ID: #CLM-8821</span>
+<h3 class="font-bold text-lg text-slate-800 dark:text-white">Johnathan Miller</h3>
+</div>
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 flex items-center gap-1 uppercase">
+<span class="material-symbols-outlined text-[12px] fill-1">fiber_manual_record</span> Pending
+                                    </span>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">local_hospital</span>
+<span>St. Mary's General Hospital</span>
+</div>
+<div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">event</span>
+<span>Requested: Oct 12, 2023</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold py-2 rounded-lg transition-colors">View Details</button>
+<button class="px-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+<span class="material-symbols-outlined text-sm">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Claim ID: #CLM-9012</span>
+<h3 class="font-bold text-lg text-slate-800 dark:text-white">Sarah Thompson</h3>
+</div>
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 flex items-center gap-1 uppercase">
+<span class="material-symbols-outlined text-[12px] fill-1">check_circle</span> Approved
+                                    </span>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">local_hospital</span>
+<span>City Medical Center</span>
+</div>
+<div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">event</span>
+<span>Approved: Oct 10, 2023</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-white text-xs font-bold py-2 rounded-lg hover:bg-primary/90 transition-colors">Access Records</button>
+<button class="px-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+<span class="material-symbols-outlined text-sm text-slate-400">download</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-md transition-shadow opacity-90">
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Claim ID: #CLM-7443</span>
+<h3 class="font-bold text-lg text-slate-800 dark:text-white">Michael Chen</h3>
+</div>
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 flex items-center gap-1 uppercase">
+<span class="material-symbols-outlined text-[12px] fill-1">cancel</span> Denied
+                                    </span>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">local_hospital</span>
+<span>Northwest Orthopedics</span>
+</div>
+<div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">info</span>
+<span>Reason: Missing Consent Form</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 border border-primary text-primary text-xs font-bold py-2 rounded-lg hover:bg-primary/5 transition-colors">Resubmit Request</button>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Claim ID: #CLM-9233</span>
+<h3 class="font-bold text-lg text-slate-800 dark:text-white">Emily Rodriguez</h3>
+</div>
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 flex items-center gap-1 uppercase">
+<span class="material-symbols-outlined text-[12px] fill-1">fiber_manual_record</span> Pending
+                                    </span>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">local_hospital</span>
+<span>Green Valley Clinic</span>
+</div>
+<div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">event</span>
+<span>Requested: Oct 14, 2023</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold py-2 rounded-lg transition-colors">View Details</button>
+<button class="px-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+<span class="material-symbols-outlined text-sm">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Claim ID: #CLM-8110</span>
+<h3 class="font-bold text-lg text-slate-800 dark:text-white">Robert Wilson</h3>
+</div>
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 flex items-center gap-1 uppercase">
+<span class="material-symbols-outlined text-[12px] fill-1">check_circle</span> Approved
+                                    </span>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">local_hospital</span>
+<span>Summit Cardiology</span>
+</div>
+<div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">event</span>
+<span>Approved: Oct 13, 2023</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-primary text-white text-xs font-bold py-2 rounded-lg hover:bg-primary/90 transition-colors">Access Records</button>
+<button class="px-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+<span class="material-symbols-outlined text-sm text-slate-400">download</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 6 - Empty State Mock -->
+<div class="border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl flex flex-col items-center justify-center p-8 bg-slate-50/50 dark:bg-slate-900/20 group cursor-pointer hover:border-primary/50 transition-colors">
+<div class="size-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-3 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">add</span>
+</div>
+<p class="text-sm font-bold text-slate-500 dark:text-slate-400">New Request</p>
+</div>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-center gap-2 mt-10 pb-10">
+<button class="size-9 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="size-9 rounded-lg bg-primary text-white font-bold text-sm">1</button>
+<button class="size-9 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 text-sm font-medium">2</button>
+<button class="size-9 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 text-sm font-medium">3</button>
+<button class="size-9 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

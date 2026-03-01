@@ -1,0 +1,25 @@
+{
+  "name": "medical-records-client",
+  "version": "1.0.0",
+  "description": "Medical Records Center - Frontend Client",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --port=8080 --host=localhost",
+    "dev": "live-server --port=8080 --host=localhost --watch=.",
+    "build": "echo 'Build process would go here'"
+  },
+  "keywords": [
+    "medical",
+    "records",
+    "dashboard",
+    "healthcare"
+  ],
+  "author": "Medical Records Team",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io-client": "^4.8.3"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.0"
+  }
+}

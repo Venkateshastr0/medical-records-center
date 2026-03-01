@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">Registration & Notification Test</h1>
+        
+        <div class="bg-white rounded-lg shadow p-4 mb-4">
+            <h2 class="text-lg font-semibold mb-2">Test Registration</h2>
+            <p class="text-sm text-gray-600 mb-4">Fill out the form to test registration without "purpose of access" field.</p>
+            
+            <form id="testRegistrationForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Full Name</label>
+                        <input type="text" id="testName" required class="w-full border p-2 rounded" placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Email</label>
+                        <input type="email" id="testEmail" required class="w-full border p-2 rounded" placeholder="john@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Phone</label>
+                        <input type="tel" id="testPhone" required class="w-full border p-2 rounded" placeholder="+1234567890">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">IP Address (for SIP)</label>
+                        <input type="text" id="testIpAddress" required class="w-full border p-2 rounded" placeholder="192.168.1.100">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Username</label>
+                        <input type="text" id="testUsername" required class="w-full border p-2 rounded" placeholder="johndoe">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Role</label>
+                        <select id="testRole" required class="w-full border p-2 rounded">
+                            <option value="">Select Role</option>
+                            <option value="Doctor">Medical Doctor</option>
+                            <option value="Admin">System Administrator</option>
+                            <option value="Insurance">Insurance Professional</option>
+                            <option value="Lawyer">Legal Professional</option>
+                            <option value="Developer">System Developer</option>
+                            <option value="Team Lead">Team Lead</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Organization</label>
+                        <input type="text" id="testOrganization" required class="w-full border p-2 rounded" placeholder="Hospital Inc">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Business License</label>
+                    <input type="text" id="testBusinessLicense" class="w-full border p-2 rounded" placeholder="Optional">
+                </div>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Submit Registration</button>
+            </form>
+            <div id="registrationStatus" class="mt-4"></div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4 mb-4">
+            <h2 class="text-lg font-semibold mb-2">Notification Monitor</h2>
+            <p class="text-sm text-gray-600 mb-4">Monitor incoming notifications in real-time.</p>
+            <div id="notificationLog" class="bg-gray-50 rounded p-3 h-40 overflow-y-auto font-mono text-sm">
+                <div class="text-gray-500">Waiting for notifications...</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+            <h2 class="text-lg font-semibold mb-2">Test Instructions</h2>
+            <ol class="list-decimal list-inside space-y-2 text-sm">
+                <li><strong>Normal User Registration:</strong> Select "Medical Doctor", "Insurance Professional", "Legal Professional", or "Team Lead" as role. Notification should go to Admin.</li>
+                <li><strong>Admin Registration:</strong> Select "System Administrator" as role. Notification should go to Developer.</li>
+                <li><strong>Developer Registration:</strong> Select "System Developer" as role. Notification should go to Developer.</li>
+                <li>Check the server console for notification routing logs.</li>
+                <li>Monitor the notification log above for real-time updates.</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="client/js/socket-client.js"></script>
+    <script src="client/js/utils.js"></script>
+    <script>
+        let notificationCount = 0;
+
+        // Connect to server
+        medClient.connect();
+
+        // Override notification handler
+        medClient.onNotification = function(notification) {
+            notificationCount++;
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${notification.title}: ${notification.message}`;
+            
+            const logDiv = document.getElementById('notificationLog');
+            logDiv.innerHTML = `<div class="text-green-600">${logEntry}</div>` + logDiv.innerHTML;
+            
+            console.log('Notification received:', notification);
+        };
+
+        // Handle form submission
+        document.getElementById('testRegistrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const statusDiv = document.getElementById('registrationStatus');
+            statusDiv.innerHTML = '<div class="text-blue-500">Submitting registration...</div>';
+            
+            const formData = {
+                name: document.getElementById('testName').value,
+                email: document.getElementById('testEmail').value,
+                phone: document.getElementById('testPhone').value,
+                ipAddress: document.getElementById('testIpAddress').value,
+                username: document.getElementById('testUsername').value,
+                role: document.getElementById('testRole').value,
+                organization: document.getElementById('testOrganization').value,
+                businessLicense: document.getElementById('testBusinessLicense').value
+            };
+
+            try {
+                medClient.submitRegistration(formData, (response) => {
+                    if (response.success) {
+                        statusDiv.innerHTML = `
+                            <div class="text-green-600">
+                                ✅ Registration successful! 
+                                Registration ID: ${response.registrationId}
+                                <br><small>${response.message}</small>
+                            </div>
+                        `;
+                        
+                        // Clear form
+                        this.reset();
+                    } else {
+                        statusDiv.innerHTML = `<div class="text-red-600">❌ Error: ${response.message}</div>`;
+                    }
+                });
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="text-red-600">❌ Error: ${error.message}</div>`;
+            }
+        });
+
+        // Add initial log entry
+        setTimeout(() => {
+            if (medClient.isConnected) {
+                const logDiv = document.getElementById('notificationLog');
+                logDiv.innerHTML = '<div class="text-green-600">Connected to server. Ready to receive notifications.</div>';
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

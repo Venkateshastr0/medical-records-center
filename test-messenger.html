@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messenger Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">Messenger Test</h1>
+        
+        <div class="bg-white rounded-lg shadow p-4 mb-4">
+            <h2 class="text-lg font-semibold mb-2">Login Test</h2>
+            <input type="text" id="username" placeholder="Username" class="border p-2 rounded mr-2">
+            <input type="password" id="password" placeholder="Password" class="border p-2 rounded mr-2">
+            <button onclick="testLogin()" class="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
+            <div id="loginStatus" class="mt-2"></div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4">
+            <h2 class="text-lg font-semibold mb-2">Messenger UI Test</h2>
+            <div id="messengerContainer"></div>
+        </div>
+    </div>
+
+    <script src="client/js/socket-client.js"></script>
+    <script src="client/js/utils.js"></script>
+    <script src="client/js/messenger.js"></script>
+    <script>
+        function testLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const statusDiv = document.getElementById('loginStatus');
+            
+            if (!username || !password) {
+                statusDiv.innerHTML = '<span class="text-red-500">Please enter username and password</span>';
+                return;
+            }
+            
+            // Simple test login
+            medClient.connect();
+            
+            // Simulate login
+            setTimeout(() => {
+                medClient.currentUser = {
+                    id: 1,
+                    name: 'Test User',
+                    role: 'Doctor'
+                };
+                
+                statusDiv.innerHTML = '<span class="text-green-500">Logged in successfully!</span>';
+                
+                // Initialize messenger
+                setTimeout(() => {
+                    if (window.Messenger) {
+                        window.Messenger.init('messengerContainer');
+                    } else {
+                        statusDiv.innerHTML += '<br><span class="text-red-500">Messenger module not loaded</span>';
+                    }
+                }, 1000);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

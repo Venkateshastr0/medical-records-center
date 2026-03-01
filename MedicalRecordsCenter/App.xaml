@@ -1,0 +1,36 @@
+<Application x:Class="MedicalRecordsCenter.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             StartupUri="Views\MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Material Design Themes -->
+                <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="Blue" SecondaryColor="Orange" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                
+                <!-- Custom Styles -->
+                <ResourceDictionary Source="Styles\ButtonStyles.xaml" />
+                <ResourceDictionary Source="Styles\CardStyles.xaml" />
+                <ResourceDictionary Source="Styles\TextStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Global Colors -->
+            <SolidColorBrush x:Key="PrimaryBrush" Color="#0da6f2" />
+            <SolidColorBrush x:Key="SecondaryBrush" Color="#FF8C00" />
+            <SolidColorBrush x:Key="BackgroundBrush" Color="#f5f7f8" />
+            <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="ErrorBrush" Color="#F44336" />
+            <SolidColorBrush x:Key="SuccessBrush" Color="#4CAF50" />
+            <SolidColorBrush x:Key="WarningBrush" Color="#FF9800" />
+            
+            <!-- Global Fonts -->
+            <FontFamily x:Key="UbuntuFont">pack://application:,,,/Assets/Fonts/Ubuntu-Regular.ttf#Ubuntu</FontFamily>
+            <FontFamily x:Key="UbuntuMediumFont">pack://application:,,,/Assets/Fonts/Ubuntu-Medium.ttf#Ubuntu</FontFamily>
+            <FontFamily x:Key="UbuntuBoldFont">pack://application:,,,/Assets/Fonts/Ubuntu-Bold.ttf#Ubuntu</FontFamily>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

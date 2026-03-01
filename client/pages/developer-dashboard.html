@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Developer Dashboard - MedRecord Center</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00ff88",
+                        "secondary": "#00ccff",
+                        "accent": "#ff00ff",
+                        "warning": "#ffaa00",
+                        "danger": "#ff4444",
+                        "success": "#00ff00",
+                        "bg-dark": "#0a0a0a",
+                        "bg-darker": "#050505",
+                        "bg-panel": "#1a1a1a",
+                        "bg-hover": "#2a2a2a",
+                        "border-dark": "#333333",
+                        "text-primary": "#ffffff",
+                        "text-secondary": "#cccccc",
+                        "text-muted": "#888888",
+                        "terminal": "#000000",
+                        "terminal-green": "#00ff00",
+                        "terminal-blue": "#0088ff",
+                        "terminal-red": "#ff0000"
+                    },
+                    fontFamily: {
+                        "mono": ["JetBrains Mono", "monospace"],
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                    animation: {
+                        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                        "glow": "glow 2s ease-in-out infinite alternate",
+                        "terminal-blink": "terminal-blink 1s infinite"
+                    },
+                    keyframes: {
+                        glow: {
+                            "0%": { boxShadow: "0 0 5px rgba(0, 255, 136, 0.5)" },
+                            "100%": { boxShadow: "0 0 20px rgba(0, 255, 136, 0.8)" }
+                        },
+                        "terminal-blink": {
+                            "0%, 50%": { opacity: "1" },
+                            "51%, 100%": { opacity: "0" }
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 100%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .terminal-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .glow-text {
+            text-shadow: 0 0 10px currentColor;
+        }
+        .cyber-border {
+            border: 1px solid #333;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        }
+        .cyber-grid {
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        .status-online {
+            animation: pulse 2s infinite;
+        }
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 255, 136, 0.1) 100%);
+        }
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+        }
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 3px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="bg-dark text-primary min-h-screen">
+    <div class="matrix-rain"></div>
+    
+    <!-- Terminal Header -->
+    <header class="bg-darker border-b border-dark sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-2xl">terminal</span>
+                        <div class="terminal-font">
+                            <span class="text-terminal-green">root@medrecord</span>
+                            <span class="text-muted">:~$</span>
+                            <span class="text-primary">./developer-dashboard</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs terminal-font">
+                        <span class="text-terminal-green">●</span>
+                        <span class="text-primary">SYSTEM ONLINE</span>
+                        <span class="text-muted">|</span>
+                        <span class="text-terminal-blue">CPU: 24%</span>
+                        <span class="text-muted">|</span>
+                        <span class="text-terminal-blue">RAM: 2.1GB</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="refreshBtn" class="px-3 py-1 bg-panel border border-dark rounded text-xs terminal-font hover:bg-hover transition-colors">
+                        <span class="material-symbols-outlined text-sm">refresh</span>
+                        REFRESH
+                    </button>
+                    <button id="logoutBtn" class="px-3 py-1 bg-danger/20 border border-danger/50 rounded text-xs terminal-font text-danger hover:bg-danger/30 transition-colors">
+                        <span class="material-symbols-outlined text-sm">logout</span>
+                        LOGOUT
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex h-screen pt-16">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-darker border-r border-dark flex flex-col">
+            <div class="p-4">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-2xl">code</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-primary">Developer</h3>
+                        <p class="text-xs text-muted terminal-font">SYSTEM_ADMIN</p>
+                    </div>
+                </div>
+                
+                <nav class="space-y-2">
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg bg-panel border border-primary/30 text-primary" data-page="overview">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <span class="text-sm">System Overview</span>
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-panel transition-colors" data-page="security">
+                        <span class="material-symbols-outlined">security</span>
+                        <span class="text-sm">Security Monitor</span>
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-panel transition-colors" data-page="logs">
+                        <span class="material-symbols-outlined">terminal</span>
+                        <span class="text-sm">System Logs</span>
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-panel transition-colors" data-page="performance">
+                        <span class="material-symbols-outlined">speed</span>
+                        <span class="text-sm">Performance</span>
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-panel transition-colors" data-page="admin">
+                        <span class="material-symbols-outlined">admin_panel_settings</span>
+                        <span class="text-sm">Admin Control</span>
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-panel transition-colors" data-page="api">
+                        <span class="material-symbols-outlined">api</span>
+                        <span class="text-sm">API Monitor</span>
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-panel transition-colors" data-page="messenger">
+                        <span class="material-symbols-outlined">chat</span>
+                        <span class="text-sm">Messenger</span>
+                    </a>
+                </nav>
+            </div>
+            
+            <div class="mt-auto p-4 border-t border-dark">
+                <div class="space-y-3">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-muted">UPTIME</span>
+                        <span class="text-terminal-green">99.98%</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-muted">VERSION</span>
+                        <span class="text-primary">v2.1.0</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-muted">LAST DEPLOY</span>
+                        <span class="text-muted">2h ago</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-hidden">
+            <div class="h-full overflow-y-auto scrollbar-thin cyber-grid">
+                <div class="container mx-auto px-6 py-6">
+                    <!-- Page Header -->
+                    <div class="mb-6">
+                        <h1 id="pageTitle" class="text-3xl font-bold text-primary mb-2">System Overview</h1>
+                        <p id="pageSubtitle" class="text-muted">Real-time system monitoring and control</p>
+                    </div>
+
+                    <!-- Content Area -->
+                    <div id="pageContent">
+                        <!-- Dynamic content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alertModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="bg-panel border border-dark rounded-xl p-6 max-w-md w-full mx-4">
+            <div class="flex items-center gap-3 mb-4">
+                <span id="alertIcon" class="material-symbols-outlined text-2xl">warning</span>
+                <h3 id="alertTitle" class="text-lg font-bold text-primary">System Alert</h3>
+            </div>
+            <p id="alertMessage" class="text-secondary mb-4">Alert message</p>
+            <button onclick="closeAlertModal()" class="w-full px-4 py-2 bg-primary text-dark font-medium rounded-lg hover:bg-primary/90 transition-colors">
+                ACKNOWLEDGE
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/socket-client.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/messenger.js"></script>
+    <script src="../js/developer-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Reception - Medical Records Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900">
+    <!-- Header -->
+    <header class="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined text-primary text-2xl mr-3">medical_services</span>
+                    <h1 class="text-xl font-semibold text-slate-900 dark:text-white">Hospital Reception</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
+                        <span class="material-symbols-outlined text-slate-600 dark:text-slate-400">notifications</span>
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-sm text-slate-600 dark:text-slate-400">Sarah Johnson</span>
+                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium">SJ</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Quick Actions -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Quick Actions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <button onclick="openPatientRegistration()" class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+                    <span class="material-symbols-outlined text-primary text-3xl mb-3">person_add</span>
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Register Patient</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Add new patient</p>
+                </button>
+                
+                <button onclick="openPatientSearch()" class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+                    <span class="material-symbols-outlined text-blue-600 text-3xl mb-3">search</span>
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Search Patient</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Find existing patient</p>
+                </button>
+                
+                <button onclick="openAppointmentScheduling()" class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+                    <span class="material-symbols-outlined text-green-600 text-3xl mb-3">calendar_month</span>
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Schedule Appointment</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Book appointments</p>
+                </button>
+                
+                <button onclick="openReports()" class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+                    <span class="material-symbols-outlined text-purple-600 text-3xl mb-3">description</span>
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Reports</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Daily reports</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Today's Overview -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="lg:col-span-2">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Today's Patients</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-3">
+                                    <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">person</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-slate-900 dark:text-white">John Doe</p>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400">Check-up • 9:00 AM</p>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs rounded-full">In Progress</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mr-3">
+                                    <span class="material-symbols-outlined text-purple-600 dark:text-purple-400">person</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-slate-900 dark:text-white">Jane Smith</p>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400">Follow-up • 10:30 AM</p>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs rounded-full">Waiting</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mr-3">
+                                    <span class="material-symbols-outlined text-green-600 dark:text-green-400">person</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-slate-900 dark:text-white">Robert Johnson</p>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400">Consultation • 2:00 PM</p>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">Scheduled</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="space-y-6">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Today's Statistics</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <span class="material-symbols-outlined text-blue-600 mr-2">people</span>
+                                <span class="text-sm text-slate-600 dark:text-slate-400">Total Patients</span>
+                            </div>
+                            <span class="text-2xl font-bold text-slate-900 dark:text-white">24</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <span class="material-symbols-outlined text-green-600 mr-2">check_circle</span>
+                                <span class="text-sm text-slate-600 dark:text-slate-400">Completed</span>
+                            </div>
+                            <span class="text-2xl font-bold text-green-600">18</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <span class="material-symbols-outlined text-yellow-600 mr-2">schedule</span>
+                                <span class="text-sm text-slate-600 dark:text-slate-400">Pending</span>
+                            </div>
+                            <span class="text-2xl font-bold text-yellow-600">6</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <span class="material-symbols-outlined text-purple-600 mr-2">event_available</span>
+                                <span class="text-sm text-slate-600 dark:text-slate-400">Appointments</span>
+                            </div>
+                            <span class="text-2xl font-bold text-purple-600">12</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button class="w-full text-left px-4 py-3 bg-slate-50 dark:bg-slate-700 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">
+                            <div class="flex items-center">
+                                <span class="material-symbols-outlined text-primary mr-3">upload_file</span>
+                                <span class="text-sm font-medium text-slate-900 dark:text-white">Import Patient List</span>
+                            </div>
+                        </button>
+                        
+                        <button class="w-full text-left px-4 py-3 bg-slate-50 dark:bg-slate-700 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">
+                            <div class="flex items-center">
+                                <span class="material-symbols-outlined text-primary mr-3">download</span>
+                                <span class="text-sm font-medium text-slate-900 dark:text-white">Export Reports</span>
+                            </div>
+                        </button>
+                        
+                        <button class="w-full text-left px-4 py-3 bg-slate-50 dark:bg-slate-700 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">
+                            <div class="flex items-center">
+                                <span class="material-symbols-outlined text-primary mr-3">print</span>
+                                <span class="text-sm font-medium text-slate-900 dark:text-white">Print Today's Schedule</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Patient Registration Modal -->
+    <div id="patientModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-slate-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white">Patient Registration</h3>
+                    <button onclick="closePatientModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <form id="patientForm" class="space-y-6">
+                    <!-- Personal Information -->
+                    <div>
+                        <h4 class="text-lg font-medium text-slate-900 dark:text-white mb-4">Personal Information</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">First Name *</label>
+                                <input type="text" name="firstName" required class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Last Name *</label>
+                                <input type="text" name="lastName" required class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Date of Birth *</label>
+                                <input type="date" name="dateOfBirth" required class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Gender *</label>
+                                <select name="gender" required class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800">
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div>
+                        <h4 class="text-lg font-medium text-slate-900 dark:text-white mb-4">Contact Information</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Phone Number *</label>
+                                <input type="tel" name="phone" required class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email Address</label>
+                                <input type="email" name="email" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Address</label>
+                                <textarea name="address" rows="3" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medical Information -->
+                    <div>
+                        <h4 class="text-lg font-medium text-slate-900 dark:text-white mb-4">Medical Information</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Blood Group</label>
+                                <select name="bloodGroup" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800">
+                                    <option value="">Select Blood Group</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Allergies</label>
+                                <input type="text" name="allergies" placeholder="e.g., Penicillin, Peanuts" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Medical History</label>
+                                <textarea name="medicalHistory" rows="4" placeholder="Previous illnesses, surgeries, chronic conditions..." class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Contact -->
+                    <div>
+                        <h4 class="text-lg font-medium text-slate-900 dark:text-white mb-4">Emergency Contact</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Contact Name *</label>
+                                <input type="text" name="emergencyContactName" required class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Contact Phone *</label>
+                                <input type="tel" name="emergencyContactPhone" required class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Relationship</label>
+                                <input type="text" name="emergencyContactRelation" placeholder="e.g., Spouse, Parent, Sibling" class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-slate-800">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="flex justify-end space-x-4 pt-6 border-t border-slate-200 dark:border-slate-700">
+                        <button type="button" onclick="closePatientModal()" class="px-6 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
+                            Register Patient
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/socket-client.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        // Initialize socket client
+        const medClient = new MedicalClient();
+        medClient.connect();
+
+        // Modal functions
+        function openPatientRegistration() {
+            document.getElementById('patientModal').classList.remove('hidden');
+        }
+
+        function closePatientModal() {
+            document.getElementById('patientModal').classList.add('hidden');
+            document.getElementById('patientForm').reset();
+        }
+
+        function openPatientSearch() {
+            showNotification('Patient search coming soon!', 'info');
+        }
+
+        function openAppointmentScheduling() {
+            showNotification('Appointment scheduling coming soon!', 'info');
+        }
+
+        function openReports() {
+            showNotification('Reports section coming soon!', 'info');
+        }
+
+        // Patient form submission
+        document.getElementById('patientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const patientData = Object.fromEntries(formData);
+            
+            // Add timestamp and receptionist info
+            patientData.registeredBy = 'Sarah Johnson';
+            patientData.registrationDate = new Date().toISOString();
+            patientData.status = 'Active';
+            
+            // Send to server
+            medClient.emit('registerPatient', patientData, function(response) {
+                if (response.success) {
+                    showNotification('Patient registered successfully!', 'success');
+                    closePatientModal();
+                    // Refresh patient list
+                    loadTodayPatients();
+                } else {
+                    showNotification('Failed to register patient: ' + response.message, 'error');
+                }
+            });
+        });
+
+        // Load today's patients
+        function loadTodayPatients() {
+            medClient.emit('getTodayPatients', {}, function(response) {
+                if (response.success) {
+                    // Update UI with patient data
+                    console.log('Today\'s patients:', response.patients);
+                }
+            });
+        }
+
+        // Initialize
+        medClient.onConnect = function() {
+            console.log('Reception dashboard connected');
+            loadTodayPatients();
+        };
+
+        medClient.onConnectionError = function(error) {
+            showNotification('Failed to connect to server', 'error');
+        };
+    </script>
+</body>
+</html>
