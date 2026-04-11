@@ -1,0 +1,707 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+  :root {
+    --s0: hsl(222,28%,8%);
+    --s1: hsl(222,24%,11%);
+    --s2: hsl(222,20%,14%);
+    --s3: hsl(222,18%,18%);
+    --bd: hsl(222,18%,22%);
+    --tp: hsl(210,20%,96%);
+    --ts: hsl(215,15%,60%);
+    --tm: hsl(215,12%,40%);
+    --brand: hsl(210,100%,56%);
+    --success: hsl(152,69%,42%);
+    --warning: hsl(38,95%,55%);
+    --danger: hsl(0,72%,58%);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .page {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--s0);
+    min-height: 640px;
+    padding: 1.5rem;
+    color: var(--tp);
+    -webkit-font-smoothing: antialiased;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  /* ── Identity block (always visible) ── */
+  .identity-block {
+    background: var(--s1);
+    border: 1px solid var(--bd);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .id-banner {
+    height: 64px;
+    background: linear-gradient(135deg, hsl(222,40%,15%), hsl(240,35%,18%));
+    position: relative; overflow: hidden;
+  }
+  .id-banner::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      60deg,
+      hsl(210,100%,56%,0.04) 0px, hsl(210,100%,56%,0.04) 1px,
+      transparent 1px, transparent 18px
+    );
+  }
+  .id-main {
+    padding: 0 1.25rem 1.25rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-top: -22px;
+    position: relative;
+  }
+  .id-avatar {
+    width: 52px; height: 52px; border-radius: 12px;
+    background: linear-gradient(135deg, hsl(210,100%,56%), hsl(250,100%,65%));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 800; color: white;
+    border: 3px solid var(--s1);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    flex-shrink: 0;
+  }
+  .id-info { padding-top: 26px; flex: 1; min-width: 0; }
+  .id-name { font-size: 1rem; font-weight: 700; color: var(--tp); letter-spacing: -0.01em; }
+  .id-meta { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; flex-wrap: wrap; }
+  .id-dept { font-size: 0.75rem; color: var(--ts); }
+
+  .id-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--bd);
+  }
+  .id-stat { padding: 0.75rem 1.25rem; border-right: 1px solid var(--bd); }
+  .id-stat:last-child { border-right: none; }
+  .id-stat-val { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .id-stat-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--tm); margin-top: 0.1rem; }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.2rem;
+    padding: 0.15rem 0.5rem; border-radius: 99px;
+    font-size: 0.67rem; font-weight: 700; letter-spacing: 0.03em;
+  }
+  .badge-purple { background: hsl(250,100%,65%,0.15); color: hsl(250,100%,78%); }
+  .badge-blue   { background: hsl(210,100%,56%,0.15); color: hsl(210,100%,72%); }
+  .badge-green  { background: hsl(152,69%,42%,0.15);  color: hsl(152,69%,62%); }
+  .badge-orange { background: hsl(38,95%,55%,0.15);   color: hsl(38,95%,68%); }
+  .badge-red    { background: hsl(0,72%,58%,0.15);    color: hsl(0,72%,70%); }
+  .badge-gray   { background: var(--s3); color: var(--tm); }
+
+  /* ── View container ── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── HOME: option cards grid ── */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.625rem;
+  }
+  .option-card {
+    background: var(--s1);
+    border: 1px solid var(--bd);
+    border-radius: 12px;
+    padding: 1rem 1.125rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 0.875rem;
+    position: relative; overflow: hidden;
+  }
+  .option-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--card-accent, var(--brand));
+    border-radius: 12px 12px 0 0;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .option-card:hover { border-color: var(--card-accent, var(--brand)); background: var(--s2); }
+  .option-card:hover::after { opacity: 0.7; }
+  .option-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .option-icon .material-symbols-outlined { font-size: 18px; }
+  .option-label { font-size: 0.84rem; font-weight: 600; color: var(--tp); }
+  .option-sub   { font-size: 0.7rem; color: var(--tm); margin-top: 0.15rem; }
+  .option-chevron {
+    margin-left: auto; color: var(--tm);
+    font-size: 18px; flex-shrink: 0;
+  }
+
+  /* ── DETAIL: back bar ── */
+  .back-bar {
+    display: flex; align-items: center; gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .back-btn {
+    display: flex; align-items: center; gap: 0.25rem;
+    background: transparent; border: none; cursor: pointer;
+    color: var(--ts); font-size: 0.8rem; font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    padding: 0.3rem 0.5rem; border-radius: 7px;
+    transition: all 0.15s;
+  }
+  .back-btn:hover { background: var(--s3); color: var(--tp); }
+  .back-btn .material-symbols-outlined { font-size: 17px; }
+  .back-title { font-size: 0.95rem; font-weight: 700; color: var(--tp); }
+
+  /* ── Section card ── */
+  .section-card {
+    background: var(--s1); border: 1px solid var(--bd); border-radius: 12px; overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  .section-card:last-child { margin-bottom: 0; }
+  .section-head {
+    padding: 0.875rem 1.25rem; border-bottom: 1px solid var(--bd);
+    background: var(--s2); display: flex; align-items: center; justify-content: space-between;
+  }
+  .section-head-left { display: flex; align-items: center; gap: 0.625rem; }
+  .sh-icon {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: hsl(210,100%,56%,0.1);
+    display: flex; align-items: center; justify-content: center; color: var(--brand);
+  }
+  .sh-icon .material-symbols-outlined { font-size: 14px; }
+  .sh-title { font-size: 0.875rem; font-weight: 600; color: var(--tp); }
+  .sh-sub   { font-size: 0.7rem; color: var(--tm); margin-top: 1px; }
+  .section-body { padding: 1.25rem; }
+
+  /* ── Form ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+  .form-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--tm); }
+  .form-input {
+    background: var(--s2); border: 1px solid var(--bd);
+    border-radius: 8px; padding: 0.55rem 0.875rem;
+    font-size: 0.84rem; color: var(--tp); outline: none;
+    font-family: 'Inter', sans-serif; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .form-input::placeholder { color: var(--tm); }
+  .form-input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px hsl(210,100%,56%,0.12); }
+  .form-input[readonly] { color: var(--ts); cursor: default; }
+  .form-input.editable { background: var(--s3); border-color: hsl(210,100%,56%,0.35); color: var(--tp); }
+
+  /* ── Info rows ── */
+  .info-row {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem 0; border-bottom: 1px solid var(--bd);
+  }
+  .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .info-row:first-child { padding-top: 0; }
+  .info-ico {
+    width: 30px; height: 30px; border-radius: 7px; background: var(--s2);
+    display: flex; align-items: center; justify-content: center; color: var(--tm); flex-shrink: 0;
+  }
+  .info-ico .material-symbols-outlined { font-size: 14px; }
+  .info-lbl { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--tm); }
+  .info-val { font-size: 0.84rem; color: var(--tp); font-weight: 500; margin-top: 0.1rem; }
+
+  /* ── Permissions ── */
+  .perm-row {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem 1rem; background: var(--s2);
+    border-radius: 8px; border: 1px solid var(--bd);
+    margin-bottom: 0.5rem;
+  }
+  .perm-row:last-child { margin-bottom: 0; }
+  .perm-ico { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .perm-ico .material-symbols-outlined { font-size: 14px; }
+  .perm-name { font-size: 0.82rem; font-weight: 600; color: var(--tp); }
+  .perm-desc { font-size: 0.69rem; color: var(--tm); margin-top: 1px; }
+
+  /* ── Activity ── */
+  .act-item {
+    display: flex; align-items: center; gap: 0.875rem;
+    padding: 0.75rem 0; border-bottom: 1px solid var(--bd);
+  }
+  .act-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .act-item:first-child { padding-top: 0; }
+  .act-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-green  { background: var(--success); box-shadow: 0 0 0 3px hsl(152,69%,42%,0.15); }
+  .dot-blue   { background: var(--brand);   box-shadow: 0 0 0 3px hsl(210,100%,56%,0.15); }
+  .dot-orange { background: var(--warning); box-shadow: 0 0 0 3px hsl(38,95%,55%,0.15); }
+  .dot-red    { background: var(--danger);  box-shadow: 0 0 0 3px hsl(0,72%,58%,0.15); }
+  .act-action { font-size: 0.82rem; font-weight: 600; color: var(--tp); }
+  .act-detail { font-size: 0.71rem; color: var(--ts); margin-top: 0.1rem; }
+  .act-time   { margin-left: auto; font-size: 0.71rem; color: var(--tm); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.45rem 0.875rem; border-radius: 8px;
+    font-size: 0.8rem; font-weight: 500; border: none;
+    cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif;
+  }
+  .btn .material-symbols-outlined { font-size: 15px; }
+  .btn-primary { background: var(--brand); color: white; box-shadow: 0 2px 8px hsl(210,100%,56%,0.3); }
+  .btn-primary:hover { background: hsl(210,100%,62%); transform: translateY(-1px); box-shadow: 0 4px 14px hsl(210,100%,56%,0.4); }
+  .btn-ghost { background: var(--s2); color: var(--ts); border: 1px solid var(--bd); }
+  .btn-ghost:hover { background: var(--s3); color: var(--tp); }
+  .btn-danger { background: transparent; color: var(--danger); border: 1px solid hsl(0,72%,58%,0.3); }
+  .btn-danger:hover { background: hsl(0,72%,58%,0.08); border-color: hsl(0,72%,58%,0.5); }
+
+  /* ── Save bar ── */
+  .save-bar {
+    display: none; align-items: center; justify-content: space-between;
+    padding: 0.75rem 1rem; margin-bottom: 0.75rem;
+    background: hsl(210,100%,56%,0.06); border: 1px solid hsl(210,100%,56%,0.2);
+    border-radius: 10px; gap: 1rem;
+  }
+  .save-bar.visible { display: flex; }
+  .save-bar-text { font-size: 0.8rem; color: hsl(210,100%,72%); font-weight: 500; display: flex; align-items: center; gap: 0.4rem; }
+  .save-bar-text .material-symbols-outlined { font-size: 15px; }
+
+  /* ── 2FA card ── */
+  .twofa-row {
+    display: flex; align-items: center; gap: 0.875rem;
+    padding: 0.875rem 1rem; background: hsl(210,100%,56%,0.05);
+    border: 1px solid hsl(210,100%,56%,0.15); border-radius: 10px;
+  }
+  .twofa-ico { width: 34px; height: 34px; border-radius: 8px; background: hsl(210,100%,56%,0.12); display: flex; align-items: center; justify-content: center; color: var(--brand); flex-shrink: 0; }
+  .twofa-ico .material-symbols-outlined { font-size: 17px; }
+
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--ts); }
+</style>
+
+<div class="page">
+
+  <!-- ── Always-visible identity block ── -->
+  <div class="identity-block">
+    <div class="id-banner"></div>
+    <div class="id-main">
+      <div class="id-avatar">SA</div>
+      <div class="id-info">
+        <div class="id-name">Dr. Sarah Ahmed</div>
+        <div class="id-meta">
+          <span class="badge badge-purple">admin</span>
+          <span class="id-dept">Cardiology Department</span>
+        </div>
+      </div>
+    </div>
+    <div class="id-stats">
+      <div class="id-stat">
+        <div class="id-stat-val">847</div>
+        <div class="id-stat-label">Logins</div>
+      </div>
+      <div class="id-stat">
+        <div class="id-stat-val">3.2y</div>
+        <div class="id-stat-label">Tenure</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HOME view ── -->
+  <div class="view active" id="view-home">
+    <div class="options-grid">
+
+      <div class="option-card" style="--card-accent:var(--brand)" onclick="go('personal')">
+        <div class="option-icon" style="background:hsl(210,100%,56%,0.1);color:hsl(210,100%,70%)">
+          <span class="material-symbols-outlined">person</span>
+        </div>
+        <div>
+          <div class="option-label">Personal Info</div>
+          <div class="option-sub">Name, email, phone</div>
+        </div>
+        <span class="material-symbols-outlined option-chevron">chevron_right</span>
+      </div>
+
+      <div class="option-card" style="--card-accent:hsl(250,100%,65%)" onclick="go('role')">
+        <div class="option-icon" style="background:hsl(250,100%,65%,0.12);color:hsl(250,100%,78%)">
+          <span class="material-symbols-outlined">badge</span>
+        </div>
+        <div>
+          <div class="option-label">Role & Department</div>
+          <div class="option-sub">Position, reporting</div>
+        </div>
+        <span class="material-symbols-outlined option-chevron">chevron_right</span>
+      </div>
+
+      <div class="option-card" style="--card-accent:hsl(152,69%,42%)" onclick="go('permissions')">
+        <div class="option-icon" style="background:hsl(152,69%,42%,0.12);color:hsl(152,69%,60%)">
+          <span class="material-symbols-outlined">shield</span>
+        </div>
+        <div>
+          <div class="option-label">Permissions</div>
+          <div class="option-sub">Access & capabilities</div>
+        </div>
+        <span class="material-symbols-outlined option-chevron">chevron_right</span>
+      </div>
+
+      <div class="option-card" style="--card-accent:hsl(38,95%,55%)" onclick="go('activity')">
+        <div class="option-icon" style="background:hsl(38,95%,55%,0.12);color:hsl(38,95%,68%)">
+          <span class="material-symbols-outlined">history</span>
+        </div>
+        <div>
+          <div class="option-label">Activity Log</div>
+          <div class="option-sub">Logins & actions</div>
+        </div>
+        <span class="material-symbols-outlined option-chevron">chevron_right</span>
+      </div>
+
+      <div class="option-card" style="--card-accent:hsl(0,72%,58%);grid-column:1/-1" onclick="go('security')">
+        <div class="option-icon" style="background:hsl(0,72%,58%,0.1);color:hsl(0,72%,68%)">
+          <span class="material-symbols-outlined">lock</span>
+        </div>
+        <div>
+          <div class="option-label">Security</div>
+          <div class="option-sub">Password, 2FA, danger zone</div>
+        </div>
+        <span class="material-symbols-outlined option-chevron">chevron_right</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PERSONAL INFO ── -->
+  <div class="view" id="view-personal">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Back
+      </button>
+      <span style="color:var(--bd)">·</span>
+      <span class="back-title">Personal Info</span>
+    </div>
+
+    <div class="save-bar" id="save-bar">
+      <div class="save-bar-text"><span class="material-symbols-outlined">edit</span>Unsaved changes</div>
+      <div style="display:flex;gap:0.5rem">
+        <button class="btn btn-ghost" onclick="cancelEdit()">Discard</button>
+        <button class="btn btn-primary" onclick="saveEdit()"><span class="material-symbols-outlined">save</span>Save</button>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sh-icon"><span class="material-symbols-outlined">person</span></div>
+          <div><div class="sh-title">Personal Information</div><div class="sh-sub">Your name and contact details</div></div>
+        </div>
+        <button class="btn btn-ghost" id="edit-btn" onclick="toggleEdit()" style="font-size:0.78rem;padding:0.35rem 0.7rem">
+          <span class="material-symbols-outlined">edit</span>Edit
+        </button>
+      </div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" id="fi-fname" value="Sarah" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" id="fi-lname" value="Ahmed" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input class="form-input" id="fi-email" value="s.ahmed@hospital.org" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input class="form-input" id="fi-phone" value="+1 (555) 012-3456" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Display Name</label>
+            <input class="form-input" id="fi-display" value="Dr. Sarah Ahmed" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Employee ID</label>
+            <input class="form-input" value="EMP-00142" readonly style="font-family:'JetBrains Mono',monospace">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ROLE & DEPARTMENT ── -->
+  <div class="view" id="view-role">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()"><span class="material-symbols-outlined">arrow_back</span>Back</button>
+      <span style="color:var(--bd)">·</span>
+      <span class="back-title">Role & Department</span>
+    </div>
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sh-icon" style="background:hsl(250,100%,65%,0.1);color:hsl(250,100%,78%)"><span class="material-symbols-outlined">badge</span></div>
+          <div><div class="sh-title">Role & Department</div><div class="sh-sub">Your position and organisational placement</div></div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="info-row">
+          <div class="info-ico"><span class="material-symbols-outlined">work</span></div>
+          <div><div class="info-lbl">Job Title</div><div class="info-val">Senior Cardiologist</div></div>
+          <span class="badge badge-blue" style="margin-left:auto">Clinical</span>
+        </div>
+        <div class="info-row">
+          <div class="info-ico"><span class="material-symbols-outlined">corporate_fare</span></div>
+          <div><div class="info-lbl">Department</div><div class="info-val">Cardiology</div></div>
+          <span class="badge badge-gray" style="margin-left:auto">Ward C</span>
+        </div>
+        <div class="info-row">
+          <div class="info-ico"><span class="material-symbols-outlined">manage_accounts</span></div>
+          <div><div class="info-lbl">System Role</div><div class="info-val">Administrator</div></div>
+          <span class="badge badge-purple" style="margin-left:auto">admin</span>
+        </div>
+        <div class="info-row">
+          <div class="info-ico"><span class="material-symbols-outlined">calendar_today</span></div>
+          <div><div class="info-lbl">Joined On</div><div class="info-val">14 March 2022</div></div>
+          <span class="mono" style="margin-left:auto">2022-03-14</span>
+        </div>
+        <div class="info-row">
+          <div class="info-ico"><span class="material-symbols-outlined">supervisor_account</span></div>
+          <div><div class="info-lbl">Reporting To</div><div class="info-val">Dr. Michael Torres — Chief of Medicine</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PERMISSIONS ── -->
+  <div class="view" id="view-permissions">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()"><span class="material-symbols-outlined">arrow_back</span>Back</button>
+      <span style="color:var(--bd)">·</span>
+      <span class="back-title">Permissions</span>
+    </div>
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sh-icon" style="background:hsl(152,69%,42%,0.1);color:hsl(152,69%,60%)"><span class="material-symbols-outlined">shield</span></div>
+          <div><div class="sh-title">Access & Permissions</div><div class="sh-sub">Capabilities granted to your account</div></div>
+        </div>
+        <span class="badge badge-purple">Admin tier</span>
+      </div>
+      <div class="section-body">
+        <div class="perm-row">
+          <div class="perm-ico" style="background:hsl(210,100%,56%,0.1);color:hsl(210,100%,70%)"><span class="material-symbols-outlined">group</span></div>
+          <div><div class="perm-name">User Management</div><div class="perm-desc">Create, edit and deactivate staff accounts</div></div>
+          <span class="badge badge-green" style="margin-left:auto">Granted</span>
+        </div>
+        <div class="perm-row">
+          <div class="perm-ico" style="background:hsl(152,69%,42%,0.1);color:hsl(152,69%,60%)"><span class="material-symbols-outlined">folder_shared</span></div>
+          <div><div class="perm-name">Patient Records</div><div class="perm-desc">Full read and write access to all records</div></div>
+          <span class="badge badge-green" style="margin-left:auto">Granted</span>
+        </div>
+        <div class="perm-row">
+          <div class="perm-ico" style="background:hsl(250,100%,65%,0.1);color:hsl(250,100%,78%)"><span class="material-symbols-outlined">analytics</span></div>
+          <div><div class="perm-name">Analytics & Reports</div><div class="perm-desc">Access hospital-wide statistics and exports</div></div>
+          <span class="badge badge-green" style="margin-left:auto">Granted</span>
+        </div>
+        <div class="perm-row">
+          <div class="perm-ico" style="background:hsl(38,95%,55%,0.1);color:hsl(38,95%,68%)"><span class="material-symbols-outlined">security</span></div>
+          <div><div class="perm-name">Security Logs</div><div class="perm-desc">View all system access and audit trails</div></div>
+          <span class="badge badge-green" style="margin-left:auto">Granted</span>
+        </div>
+        <div class="perm-row">
+          <div class="perm-ico" style="background:hsl(0,72%,58%,0.08);color:hsl(0,72%,68%)"><span class="material-symbols-outlined">medication</span></div>
+          <div><div class="perm-name">Pharmacy Override</div><div class="perm-desc">Override dispensing restrictions</div></div>
+          <span class="badge badge-red" style="margin-left:auto">Restricted</span>
+        </div>
+        <div class="perm-row">
+          <div class="perm-ico" style="background:var(--s3);color:var(--tm)"><span class="material-symbols-outlined">settings</span></div>
+          <div><div class="perm-name">System Configuration</div><div class="perm-desc">Modify global system settings</div></div>
+          <span class="badge badge-orange" style="margin-left:auto">Partial</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ACTIVITY LOG ── -->
+  <div class="view" id="view-activity">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()"><span class="material-symbols-outlined">arrow_back</span>Back</button>
+      <span style="color:var(--bd)">·</span>
+      <span class="back-title">Activity Log</span>
+    </div>
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sh-icon" style="background:hsl(38,95%,55%,0.1);color:hsl(38,95%,68%)"><span class="material-symbols-outlined">history</span></div>
+          <div><div class="sh-title">Recent Activity</div><div class="sh-sub">Your login history and account actions</div></div>
+        </div>
+        <button class="btn btn-ghost" style="font-size:0.75rem;padding:0.35rem 0.7rem">
+          <span class="material-symbols-outlined">download</span>Export
+        </button>
+      </div>
+      <div class="section-body">
+        <div class="act-item">
+          <div class="act-dot dot-green"></div>
+          <div><div class="act-action">Successful Login</div><div class="act-detail">Chrome · Windows · 192.168.1.42</div></div>
+          <div class="act-time">2024-12-01 09:14</div>
+        </div>
+        <div class="act-item">
+          <div class="act-dot dot-blue"></div>
+          <div><div class="act-action">Profile Updated</div><div class="act-detail">Phone number changed</div></div>
+          <div class="act-time">2024-11-30 14:22</div>
+        </div>
+        <div class="act-item">
+          <div class="act-dot dot-green"></div>
+          <div><div class="act-action">Successful Login</div><div class="act-detail">Safari · macOS · 192.168.1.18</div></div>
+          <div class="act-time">2024-11-30 08:47</div>
+        </div>
+        <div class="act-item">
+          <div class="act-dot dot-orange"></div>
+          <div><div class="act-action">User Approved</div><div class="act-detail">Granted access to Maya Krishnan</div></div>
+          <div class="act-time">2024-11-28 11:05</div>
+        </div>
+        <div class="act-item">
+          <div class="act-dot dot-red"></div>
+          <div><div class="act-action">Failed Login Attempt</div><div class="act-detail">Unknown device · 203.0.113.9</div></div>
+          <div class="act-time">2024-11-27 23:51</div>
+        </div>
+        <div class="act-item">
+          <div class="act-dot dot-green"></div>
+          <div><div class="act-action">Successful Login</div><div class="act-detail">Chrome · Windows · 192.168.1.42</div></div>
+          <div class="act-time">2024-11-27 09:02</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECURITY ── -->
+  <div class="view" id="view-security">
+    <div class="back-bar">
+      <button class="back-btn" onclick="goHome()"><span class="material-symbols-outlined">arrow_back</span>Back</button>
+      <span style="color:var(--bd)">·</span>
+      <span class="back-title">Security</span>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sh-icon"><span class="material-symbols-outlined">lock_reset</span></div>
+          <div><div class="sh-title">Change Password</div><div class="sh-sub">Use a strong, unique password</div></div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label">Current Password</label>
+            <input class="form-input" type="password" placeholder="Enter current password">
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input class="form-input" type="password" placeholder="Min. 12 characters">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input class="form-input" type="password" placeholder="Repeat new password">
+          </div>
+        </div>
+        <div style="margin-top:1rem;display:flex;justify-content:flex-end">
+          <button class="btn btn-primary"><span class="material-symbols-outlined">lock_reset</span>Update Password</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sh-icon"><span class="material-symbols-outlined">phonelink_lock</span></div>
+          <div><div class="sh-title">Two-Factor Authentication</div><div class="sh-sub">Extra layer of account protection</div></div>
+        </div>
+        <span class="badge badge-green">Enabled</span>
+      </div>
+      <div class="section-body">
+        <div class="twofa-row">
+          <div class="twofa-ico"><span class="material-symbols-outlined">smartphone</span></div>
+          <div style="flex:1">
+            <div style="font-size:0.84rem;font-weight:600;color:var(--tp)">Authenticator App</div>
+            <div style="font-size:0.71rem;color:var(--ts);margin-top:0.15rem">Google Authenticator · configured 2023-06-10</div>
+          </div>
+          <button class="btn btn-ghost" style="font-size:0.75rem;padding:0.35rem 0.7rem">Reconfigure</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card" style="border-color:hsl(0,72%,58%,0.2)">
+      <div class="section-head" style="border-bottom-color:hsl(0,72%,58%,0.15)">
+        <div class="section-head-left">
+          <div class="sh-icon" style="background:hsl(0,72%,58%,0.1);color:hsl(0,72%,68%)"><span class="material-symbols-outlined">warning</span></div>
+          <div><div class="sh-title" style="color:hsl(0,72%,70%)">Danger Zone</div><div class="sh-sub">Irreversible account actions</div></div>
+        </div>
+      </div>
+      <div class="section-body" style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+        <div>
+          <div style="font-size:0.84rem;font-weight:600;color:var(--tp)">Deactivate Account</div>
+          <div style="font-size:0.71rem;color:var(--tm);margin-top:0.2rem">Permanently disable your access. Requires admin re-approval to restore.</div>
+        </div>
+        <button class="btn btn-danger" style="flex-shrink:0"><span class="material-symbols-outlined">person_off</span>Deactivate</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const VIEWS = ['home','personal','role','permissions','activity','security'];
+const EDITABLE = ['fi-fname','fi-lname','fi-email','fi-phone','fi-display'];
+let origVals = {};
+let isEditing = false;
+
+function go(name) {
+  VIEWS.forEach(v => {
+    document.getElementById('view-' + v).classList.toggle('active', v === name);
+  });
+}
+
+function goHome() {
+  if (isEditing) cancelEdit();
+  go('home');
+}
+
+function toggleEdit() {
+  isEditing = !isEditing;
+  if (isEditing) {
+    EDITABLE.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      origVals[id] = el.value;
+      el.removeAttribute('readonly');
+      el.classList.add('editable');
+    });
+    document.getElementById('edit-btn').innerHTML = '<span class="material-symbols-outlined">close</span>Cancel';
+    document.getElementById('save-bar').classList.add('visible');
+  } else {
+    cancelEdit();
+  }
+}
+
+function cancelEdit() {
+  isEditing = false;
+  EDITABLE.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (origVals[id] !== undefined) el.value = origVals[id];
+    el.setAttribute('readonly', '');
+    el.classList.remove('editable');
+  });
+  const btn = document.getElementById('edit-btn');
+  if (btn) btn.innerHTML = '<span class="material-symbols-outlined">edit</span>Edit';
+  document.getElementById('save-bar').classList.remove('visible');
+}
+
+function saveEdit() {
+  isEditing = false;
+  EDITABLE.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    origVals[id] = el.value;
+    el.setAttribute('readonly', '');
+    el.classList.remove('editable');
+  });
+  const btn = document.getElementById('edit-btn');
+  if (btn) btn.innerHTML = '<span class="material-symbols-outlined">edit</span>Edit';
+  document.getElementById('save-bar').classList.remove('visible');
+}
+</script>

@@ -1,0 +1,11 @@
+pub mod auth;
+pub mod users;
+pub mod patients;
+pub mod medical_records;
+pub mod appointments;
+pub mod prescriptions;
+pub mod lab_results;
+pub mod audit;
+pub mod security;
+pub mod dashboard;
+pub mod system;

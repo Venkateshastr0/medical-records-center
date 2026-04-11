@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patient Details - Healthcare Management System</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex min-h-screen w-full flex-col">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4 lg:px-10">
+<div class="flex items-center gap-4">
+<div class="bg-primary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined">health_and_safety</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight">HealthCore Pro</h2>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-10 w-10 border-2 border-primary/20" data-alt="Profile picture of Dr. Sarah Smith" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBgOCeJ2Kp0d3R8SqK02YCf2ZN6s4LDKNBR99hhH38p7SlQqrYydWNR06bv9xDFkU9vgBrotz3IlMMNyfxWX5AcU6lvoEId5Zl59zCfs1-gHb1SJRTCzaCQpBsOaGgqZqCP3EFqmrDYLNjLZMlzIhfZYkh909RYdsL7vucIfS0gg3JkVXocRenesoRLxi7Vcvh708LgWe2IG0WAXOqKzcoYu2GWZzApOVMHj8e7vxsEaTpw257AfnBl28ydyDchCrkStcNPXyZrNqSK");'></div>
+<div class="hidden md:block text-left">
+<p class="text-sm font-semibold">Dr. S. Smith</p>
+<p class="text-xs text-slate-500">General Practitioner</p>
+</div>
+</div>
+</div>
+</header>
+<div class="flex flex-1 flex-col lg:flex-row">
+<!-- Sidebar Navigation -->
+<aside class="w-full lg:w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 lg:p-6 space-y-2">
+<div class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium">Dashboard</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg cursor-pointer">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium">Patients</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined">calendar_month</span>
+<p class="text-sm font-medium">Schedules</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium">Settings</p>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 bg-background-light dark:bg-background-dark p-6 lg:p-10">
+<div class="max-w-5xl mx-auto space-y-8">
+<!-- Patient Profile Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex flex-wrap gap-6 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl h-32 w-32 shadow-md border-4 border-white dark:border-slate-800" data-alt="Portrait of patient Johnathan Anderson" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAi5dm0WR01f9SVqwbrBC7dNASdMDR0q927sM7B-2Oz42A74x9v2Cimp2XGamposSTjzT7MGs9eEzn99j408-CBYZQSajH8QtCJxjqDELFtGobPdRJnzElnRuBbhIozGTPaUrwrsuwPBQMhY_Gs2peIQm-0mJgL3g221Az38DgwRTtDVNjuFQFvF7BGs9DWFOgohy6cLF4KX6qaw0C867TiHo3GYUm0JpabmE4sgIffsXwMQuDrqDJa9vTjPCAtiggLXNwnH-hw1B8H");'></div>
+<div class="flex flex-col justify-center">
+<div class="flex items-center gap-3 mb-1">
+<h1 class="text-2xl font-bold">Johnathan Anderson</h1>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">Active</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 font-medium">Patient ID: #HCP-98234-X</p>
+<div class="flex flex-wrap gap-x-6 gap-y-2 mt-3">
+<div class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-slate-400 text-lg">event</span>
+<span class="text-slate-600 dark:text-slate-300">Oct 24, 1985 (38 yrs)</span>
+</div>
+<div class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-slate-400 text-lg">call</span>
+<span class="text-slate-600 dark:text-slate-300">(555) 012-3456</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 font-semibold text-sm hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+                                Edit Profile
+                            </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white font-semibold text-sm hover:bg-primary/90 shadow-md transition-colors">
+<span class="material-symbols-outlined text-lg">add</span>
+                                New Record
+                            </button>
+</div>
+</div>
+<!-- Summary Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="flex items-start gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-sm font-semibold text-slate-500 dark:text-slate-400">Allergies</h3>
+<p class="text-base font-bold text-slate-800 dark:text-slate-100 mt-0.5">Penicillin, Peanuts, Latex</p>
+</div>
+</div>
+<div class="flex items-start gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-sm font-semibold text-slate-500 dark:text-slate-400">Blood Type</h3>
+<p class="text-base font-bold text-slate-800 dark:text-slate-100 mt-0.5">O+ (Positive)</p>
+</div>
+</div>
+<div class="flex items-start gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-600">
+<span class="material-symbols-outlined">history</span>
+</div>
+<div class="flex flex-col">
+<h3 class="text-sm font-semibold text-slate-500 dark:text-slate-400">Last Visit</h3>
+<p class="text-base font-bold text-slate-800 dark:text-slate-100 mt-0.5">Dec 14, 2023 - Routine Exam</p>
+</div>
+</div>
+</div>
+<!-- Tabs & Content -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 px-6">
+<nav class="flex gap-8 overflow-x-auto no-scrollbar">
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 py-4 text-sm font-semibold hover:text-slate-700 transition-colors whitespace-nowrap" href="#">
+                                    Medical History
+                                </a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 py-4 text-sm font-semibold hover:text-slate-700 transition-colors whitespace-nowrap" href="#">
+                                    Appointments
+                                </a>
+<a class="flex flex-col items-center justify-center border-b-2 border-primary text-primary py-4 text-sm font-bold whitespace-nowrap" href="#">
+                                    Prescriptions
+                                </a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 py-4 text-sm font-semibold hover:text-slate-700 transition-colors whitespace-nowrap" href="#">
+                                    Lab Results
+                                </a>
+</nav>
+</div>
+<div class="p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold">Current Medications</h3>
+<div class="flex gap-2">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined text-base">print</span> Print List
+                                    </button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20">
+<span class="material-symbols-outlined text-base">medication</span> Add Prescription
+                                    </button>
+</div>
+</div>
+<!-- Medications List -->
+<div class="space-y-4">
+<!-- Medication Item 1 -->
+<div class="flex items-center gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-2xl">pill</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="text-base font-bold truncate">Lisinopril</h4>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">10mg Oral Tablet</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Take 1 tablet by mouth once daily for hypertension.</p>
+</div>
+<div class="hidden md:flex flex-col items-end gap-1 px-4">
+<p class="text-xs font-semibold text-slate-500">Refills Remaining</p>
+<p class="text-sm font-bold">3 of 5</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Medication Item 2 -->
+<div class="flex items-center gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-2xl">pill</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="text-base font-bold truncate">Metformin HCl</h4>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">500mg Oral Tablet</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Take 1 tablet by mouth twice daily with meals for Type 2 Diabetes.</p>
+</div>
+<div class="hidden md:flex flex-col items-end gap-1 px-4">
+<p class="text-xs font-semibold text-slate-500">Refills Remaining</p>
+<p class="text-sm font-bold">1 of 3</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Medication Item 3 -->
+<div class="flex items-center gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-2xl">pill</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h4 class="text-base font-bold truncate">Atorvastatin Calcium</h4>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">20mg Oral Tablet</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Take 1 tablet by mouth daily at bedtime for high cholesterol.</p>
+</div>
+<div class="hidden md:flex flex-col items-end gap-1 px-4">
+<p class="text-xs font-semibold text-slate-500">Refills Remaining</p>
+<p class="text-sm font-bold">5 of 6</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Expired/Past Section -->
+<div class="mt-8">
+<h4 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-4">Recently Discontinued</h4>
+<div class="opacity-60 grayscale">
+<div class="flex items-center gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/20">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700">
+<span class="material-symbols-outlined text-xl">pill_off</span>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-bold">Amoxicillin</h4>
+<p class="text-xs text-slate-500 mt-0.5">Course completed Dec 12, 2023</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

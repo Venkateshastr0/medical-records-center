@@ -1,0 +1,43 @@
+[package]
+name = "medical-records-center"
+version = "0.1.0"
+description = "Medical Records Center - Secure Healthcare Data Management"
+authors = ["MRC Team"]
+license = "MIT"
+repository = "https://github.com/Venkateshastr0/medical-records-center"
+edition = "2024"
+
+[build-dependencies]
+tauri-build = { version = "1.0", features = ["shell-open"] }
+
+[dependencies]
+tauri = { version = "1.0", features = ["shell-open"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0" }
+tokio = { version = "1.0", features = ["full"] }
+sqlx = { version = "0.7", features = ["runtime-derive-any", "sqlite", "chrono"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.0", features = ["v4", "serde"] }
+ring = "0.16"
+rand = "0.8"
+hex = "0.4"
+jsonwebtoken = "8"
+sha2 = "0.10"
+base64 = "0.21"
+anyhow = "1.0"
+tracing = "0.1"
+thiserror = "1.0"
+
+[target.'cfg(not(any(target_os = "macos", target_os = "ios"))'.dependencies]
+tauri-build = { version = "1.0", features = ["macos-private-api"] }
+
+[profile.release]
+panic = "abort"
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.dev]
+debug = true
+incremental = true

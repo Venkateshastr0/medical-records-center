@@ -1,0 +1,285 @@
+
+<h2 class="sr-only">Full lab results history for Arun Krishnamurthy, showing all diagnostic reports across sessions from 2023 to 2026 with PDF previews, result status, and timestamps</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-sans)}
+.page{background:var(--color-background-tertiary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.topbar{display:flex;align-items:center;gap:10px;padding:13px 18px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.crumb{font-size:12px;color:var(--color-text-tertiary)}
+.crumb span.link{color:var(--color-text-secondary);cursor:pointer}
+.crumb span.link:hover{color:var(--color-text-primary)}
+.sep{margin:0 5px;color:var(--color-border-secondary)}
+.page-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);flex-wrap:wrap;gap:10px}
+.ph-left{display:flex;align-items:center;gap:12px}
+.avatar{width:40px;height:40px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#085041;flex-shrink:0}
+.ph-name{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.ph-sub{font-size:12px;color:var(--color-text-tertiary);margin-top:1px}
+.stats-row{display:flex;gap:8px;flex-wrap:wrap}
+.stat-chip{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 14px;text-align:center}
+.sc-n{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.sc-l{font-size:11px;color:var(--color-text-tertiary);margin-top:1px}
+.filters{display:flex;align-items:center;gap:8px;padding:11px 18px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);flex-wrap:wrap}
+.srch-wrap{position:relative;flex:1;min-width:180px}
+.srch-wrap input{width:100%;padding:6px 10px 6px 30px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);font-size:12px;color:var(--color-text-primary);outline:none}
+.srch-wrap input:focus{border-color:var(--color-border-primary)}
+.srch-ico{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--color-text-tertiary);pointer-events:none}
+.fbtns{display:flex;gap:4px;flex-wrap:wrap}
+.fbtn{font-size:11px;padding:5px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.fbtn.on{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+.timeline{padding:18px;display:flex;flex-direction:column;gap:24px}
+.sess-block{}
+.sess-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sess-line{flex:1;height:0.5px;background:var(--color-border-tertiary)}
+.sess-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:99px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-secondary);white-space:nowrap}
+.sess-date{font-size:11px;color:var(--color-text-tertiary);white-space:nowrap}
+.lab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.lab-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;cursor:pointer}
+.lab-card:hover{border-color:var(--color-border-secondary)}
+.lab-thumb{width:100%;height:118px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;padding:11px 13px;gap:4px;position:relative;overflow:hidden}
+.tl{height:4px;border-radius:2px}
+.tl-solid{background:var(--color-border-secondary)}
+.tl-faint{background:var(--color-border-tertiary)}
+.pdf-lbl{position:absolute;bottom:9px;right:11px;font-size:10px;font-weight:500;letter-spacing:.04em;font-family:var(--font-mono)}
+.new-lbl{position:absolute;top:8px;left:8px;font-size:10px;font-weight:500;padding:2px 6px;border-radius:99px;background:#EAF3DE;color:#27500A}
+.lab-body{padding:10px 12px}
+.lab-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.lab-lab{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}
+.lab-val{font-size:12px;font-weight:500;margin-bottom:6px}
+.lab-footer{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.badge{display:inline-flex;font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px}
+.b-normal{background:#E1F5EE;color:#085041}
+.b-high{background:#FAEEDA;color:#633806}
+.b-low{background:#E6F1FB;color:#0C447C}
+.b-danger{background:#FCEBEB;color:#791F1F}
+.b-pending{background:var(--color-background-secondary);color:var(--color-text-tertiary)}
+.lab-cat{display:inline-flex;font-size:10px;padding:2px 7px;border-radius:99px;background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.empty{padding:32px;text-align:center;color:var(--color-text-tertiary);font-size:13px}
+.trend-up{color:#D85A30}
+.trend-dn{color:#1D9E75}
+.trend-eq{color:var(--color-text-tertiary)}
+</style>
+
+<div class="page">
+
+  <div class="topbar">
+    <span class="crumb">
+      <span class="link">Patients</span><span class="sep">/</span>
+      <span class="link">Arun Krishnamurthy</span><span class="sep">/</span>
+      <span style="color:var(--color-text-primary)">Lab results</span>
+    </span>
+  </div>
+
+  <div class="page-head">
+    <div class="ph-left">
+      <div class="avatar">AK</div>
+      <div>
+        <div class="ph-name">Arun Krishnamurthy</div>
+        <div class="ph-sub">Lab results history · All sessions</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-chip"><div class="sc-n" id="st-total">0</div><div class="sc-l">Reports</div></div>
+      <div class="stat-chip"><div class="sc-n" id="st-sessions">0</div><div class="sc-l">Sessions</div></div>
+      <div class="stat-chip"><div class="sc-n" id="st-abn">0</div><div class="sc-l">Abnormal</div></div>
+      <div class="stat-chip"><div class="sc-n" id="st-normal">0</div><div class="sc-l">Normal</div></div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="srch-wrap">
+      <svg class="srch-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="srch" placeholder="Search test name, lab, value..." oninput="render()">
+    </div>
+    <div class="fbtns" id="catbtns">
+      <button class="fbtn on" data-v="All" onclick="setCat(this)">All</button>
+      <button class="fbtn" data-v="Metabolic" onclick="setCat(this)">Metabolic</button>
+      <button class="fbtn" data-v="Lipid" onclick="setCat(this)">Lipid</button>
+      <button class="fbtn" data-v="Renal" onclick="setCat(this)">Renal</button>
+      <button class="fbtn" data-v="Haematology" onclick="setCat(this)">Haematology</button>
+      <button class="fbtn" data-v="Thyroid" onclick="setCat(this)">Thyroid</button>
+      <button class="fbtn" data-v="Vitamin" onclick="setCat(this)">Vitamin</button>
+    </div>
+    <div class="fbtns" id="resbtns">
+      <button class="fbtn on" data-v="All" onclick="setRes(this)">All results</button>
+      <button class="fbtn" data-v="Normal" onclick="setRes(this)">Normal</button>
+      <button class="fbtn" data-v="Abnormal" onclick="setRes(this)">Abnormal</button>
+    </div>
+  </div>
+
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<script>
+const SESSIONS = [
+  {
+    id:14, date:'3 Apr 2026', isLatest:true,
+    labs:[
+      {name:'HbA1c panel',       lab:'Apollo Diagnostics', val:'7.8%',     cat:'Metabolic',    result:'High',    trend:'up',  thumbBg:'#FAEEDA', thumbAcc:'#BA7517', pdfCol:'#633806', isNew:true},
+      {name:'Lipid profile',     lab:'Apollo Diagnostics', val:'LDL 98',   cat:'Lipid',        result:'Normal',  trend:'dn',  thumbBg:'#E1F5EE', thumbAcc:'#1D9E75', pdfCol:'#085041', isNew:true},
+      {name:'Complete blood count',lab:'Apollo Diagnostics',val:'Hb 13.8', cat:'Haematology',  result:'Normal',  trend:'eq',  thumbBg:'#E6F1FB', thumbAcc:'#378ADD', pdfCol:'#0C447C', isNew:true},
+      {name:'Kidney function test',lab:'Apollo Diagnostics',val:'Cr 1.4',  cat:'Renal',        result:'Danger',  trend:'up',  thumbBg:'#FCEBEB', thumbAcc:'#E24B4A', pdfCol:'#791F1F', isNew:true},
+    ]
+  },
+  {
+    id:13, date:'19 Mar 2026', isLatest:false,
+    labs:[
+      {name:'Fasting blood sugar',lab:'Thyrocare',          val:'148 mg/dL',cat:'Metabolic',    result:'High',    trend:'dn',  thumbBg:'#FAEEDA', thumbAcc:'#BA7517', pdfCol:'#633806', isNew:false},
+      {name:'Urine routine',      lab:'Thyrocare',          val:'Normal',   cat:'Renal',        result:'Normal',  trend:'eq',  thumbBg:'#E1F5EE', thumbAcc:'#1D9E75', pdfCol:'#085041', isNew:false},
+    ]
+  },
+  {
+    id:12, date:'15 Feb 2026', isLatest:false,
+    labs:[
+      {name:'HbA1c panel',       lab:'Metropolis',          val:'8.1%',    cat:'Metabolic',    result:'High',    trend:'up',  thumbBg:'#FAEEDA', thumbAcc:'#BA7517', pdfCol:'#633806', isNew:false},
+      {name:'Lipid profile',     lab:'Metropolis',          val:'LDL 112', cat:'Lipid',        result:'High',    trend:'up',  thumbBg:'#FAEEDA', thumbAcc:'#BA7517', pdfCol:'#633806', isNew:false},
+      {name:'TSH',               lab:'Metropolis',          val:'3.1 mIU/L',cat:'Thyroid',     result:'Normal',  trend:'eq',  thumbBg:'#E6F1FB', thumbAcc:'#378ADD', pdfCol:'#0C447C', isNew:false},
+      {name:'Kidney function test',lab:'Metropolis',        val:'Cr 1.3',  cat:'Renal',        result:'High',    trend:'dn',  thumbBg:'#FAEEDA', thumbAcc:'#BA7517', pdfCol:'#633806', isNew:false},
+    ]
+  },
+  {
+    id:11, date:'21 Jan 2026', isLatest:false,
+    labs:[
+      {name:'Fasting blood sugar',lab:'Dr Lal PathLabs',    val:'162 mg/dL',cat:'Metabolic',   result:'High',    trend:'up',  thumbBg:'#FAEEDA', thumbAcc:'#BA7517', pdfCol:'#633806', isNew:false},
+      {name:'Complete blood count',lab:'Dr Lal PathLabs',   val:'Hb 13.5', cat:'Haematology',  result:'Normal',  trend:'eq',  thumbBg:'#E6F1FB', thumbAcc:'#378ADD', pdfCol:'#0C447C', isNew:false},
+      {name:'Vitamin D',          lab:'Dr Lal PathLabs',    val:'18 ng/mL',cat:'Vitamin',       result:'Low',     trend:'eq',  thumbBg:'#E6F1FB', thumbAcc:'#378ADD', pdfCol:'#0C447C', isNew:false},
+    ]
+  },
+  {
+    id:10, date:'10 Dec 2025', isLatest:false,
+    labs:[
+      {name:'HbA1c panel',       lab:'Thyrocare',           val:'8.4%',    cat:'Metabolic',    result:'High',    trend:'up',  thumbBg:'#FAEEDA', thumbAcc:'#BA7517', pdfCol:'#633806', isNew:false},
+      {name:'Lipid profile',     lab:'Thyrocare',           val:'LDL 118', cat:'Lipid',        result:'High',    trend:'up',  thumbBg:'#FAEEDA', thumbAcc:'#BA7517', pdfCol:'#633806', isNew:false},
+      {name:'Liver function test',lab:'Thyrocare',          val:'ALT 32',  cat:'Metabolic',    result:'Normal',  trend:'eq',  thumbBg:'#E1F5EE', thumbAcc:'#1D9E75', pdfCol:'#085041', isNew:false},
+    ]
+  },
+  {
+    id:9, date:'29 Oct 2025', isLatest:false,
+    labs:[
+      {name:'Fasting blood sugar',lab:'Apollo Diagnostics', val:'174 mg/dL',cat:'Metabolic',   result:'High',    trend:'up',  thumbBg:'#FAEEDA', thumbAcc:'#BA7517', pdfCol:'#633806', isNew:false},
+      {name:'Urine microalbumin', lab:'Apollo Diagnostics', val:'42 mg/g', cat:'Renal',        result:'High',    trend:'up',  thumbBg:'#FCEBEB', thumbAcc:'#E24B4A', pdfCol:'#791F1F', isNew:false},
+      {name:'Vitamin B12',        lab:'Apollo Diagnostics', val:'188 pg/mL',cat:'Vitamin',     result:'Low',     trend:'dn',  thumbBg:'#E6F1FB', thumbAcc:'#378ADD', pdfCol:'#0C447C', isNew:false},
+    ]
+  },
+  {
+    id:8, date:'6 Sep 2025', isLatest:false,
+    labs:[
+      {name:'HbA1c panel',       lab:'Metropolis',          val:'8.9%',    cat:'Metabolic',    result:'Danger',  trend:'up',  thumbBg:'#FCEBEB', thumbAcc:'#E24B4A', pdfCol:'#791F1F', isNew:false},
+      {name:'Complete blood count',lab:'Metropolis',        val:'Hb 12.9', cat:'Haematology',  result:'Normal',  trend:'eq',  thumbBg:'#E6F1FB', thumbAcc:'#378ADD', pdfCol:'#0C447C', isNew:false},
+      {name:'TSH',               lab:'Metropolis',          val:'3.4 mIU/L',cat:'Thyroid',     result:'Normal',  trend:'eq',  thumbBg:'#E6F1FB', thumbAcc:'#378ADD', pdfCol:'#0C447C', isNew:false},
+    ]
+  },
+  {
+    id:7, date:'13 Jul 2025', isLatest:false,
+    labs:[
+      {name:'Fasting blood sugar',lab:'Dr Lal PathLabs',    val:'188 mg/dL',cat:'Metabolic',   result:'Danger',  trend:'up',  thumbBg:'#FCEBEB', thumbAcc:'#E24B4A', pdfCol:'#791F1F', isNew:false},
+      {name:'Lipid profile',     lab:'Dr Lal PathLabs',     val:'LDL 128', cat:'Lipid',        result:'High',    trend:'up',  thumbBg:'#FAEEDA', thumbAcc:'#BA7517', pdfCol:'#633806', isNew:false},
+    ]
+  },
+];
+
+let activeCat = 'All';
+let activeRes = 'All';
+
+function setCat(btn){
+  document.querySelectorAll('#catbtns .fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  activeCat = btn.dataset.v;
+  render();
+}
+function setRes(btn){
+  document.querySelectorAll('#resbtns .fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  activeRes = btn.dataset.v;
+  render();
+}
+
+function badgeClass(r){
+  if(r==='Normal') return 'b-normal';
+  if(r==='High') return 'b-high';
+  if(r==='Low') return 'b-low';
+  if(r==='Danger') return 'b-danger';
+  return 'b-pending';
+}
+function badgeLabel(r){
+  if(r==='High') return 'Above range';
+  if(r==='Low') return 'Below range';
+  if(r==='Danger') return 'Critical';
+  if(r==='Normal') return 'Normal';
+  return r;
+}
+function trendArrow(t){
+  if(t==='up') return '<span class="trend-up" style="font-size:11px">&#8593;</span>';
+  if(t==='dn') return '<span class="trend-dn" style="font-size:11px">&#8595;</span>';
+  return '<span class="trend-eq" style="font-size:11px">&mdash;</span>';
+}
+function isAbnormal(r){ return r==='High'||r==='Low'||r==='Danger'; }
+
+function render(){
+  const q = (document.getElementById('srch').value||'').toLowerCase();
+  const tl = document.getElementById('timeline');
+  let html = '';
+  let total=0, sessCount=0, abn=0, norm=0;
+
+  for(const sess of SESSIONS){
+    const labs = sess.labs.filter(l=>{
+      if(activeCat!=='All' && l.cat!==activeCat) return false;
+      if(activeRes==='Normal' && isAbnormal(l.result)) return false;
+      if(activeRes==='Abnormal' && !isAbnormal(l.result)) return false;
+      if(q && !l.name.toLowerCase().includes(q) && !l.lab.toLowerCase().includes(q) && !l.val.toLowerCase().includes(q) && !l.cat.toLowerCase().includes(q)) return false;
+      return true;
+    });
+    if(!labs.length) continue;
+    total+=labs.length;
+    sessCount++;
+    labs.forEach(l=>{ if(isAbnormal(l.result)) abn++; else norm++; });
+
+    html+=`<div class="sess-block">
+      <div class="sess-header">
+        <div class="sess-line"></div>
+        <div style="display:flex;align-items:center;gap:7px;flex-shrink:0">
+          <span class="sess-badge">Session #${sess.id}</span>
+          <span class="sess-date">${sess.date}</span>
+          ${sess.isLatest?'<span style="font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px;background:#E1F5EE;color:#085041;">Latest</span>':''}
+        </div>
+        <div class="sess-line"></div>
+      </div>
+      <div class="lab-grid">`;
+
+    for(const l of labs){
+      html+=`<div class="lab-card">
+        <div class="lab-thumb" style="background:${l.thumbBg}">
+          <div class="tl tl-solid" style="width:85%;background:${l.thumbAcc};opacity:0.3"></div>
+          <div class="tl tl-faint" style="width:70%"></div>
+          <div class="tl tl-solid" style="width:90%;background:${l.thumbAcc};opacity:0.2"></div>
+          <div class="tl tl-faint" style="width:55%"></div>
+          <div class="tl tl-solid" style="width:75%;background:${l.thumbAcc};opacity:0.3"></div>
+          <div class="tl tl-faint" style="width:65%"></div>
+          <div class="tl tl-solid" style="width:80%;background:${l.thumbAcc};opacity:0.15"></div>
+          <div class="tl tl-faint" style="width:50%"></div>
+          <span class="pdf-lbl" style="color:${l.pdfCol}">PDF</span>
+          ${l.isNew?'<span class="new-lbl">New</span>':''}
+        </div>
+        <div class="lab-body">
+          <div class="lab-name">${l.name}</div>
+          <div class="lab-lab">${l.lab}</div>
+          <div class="lab-val" style="color:${l.pdfCol}">${l.val} ${trendArrow(l.trend)}</div>
+          <div class="lab-footer">
+            <span class="badge ${badgeClass(l.result)}">${badgeLabel(l.result)}</span>
+            <span class="lab-cat">${l.cat}</span>
+          </div>
+        </div>
+      </div>`;
+    }
+    html+=`</div></div>`;
+  }
+
+  if(!total) html='<div class="empty">No lab results match your filters.</div>';
+
+  tl.innerHTML = html;
+  document.getElementById('st-total').textContent = total;
+  document.getElementById('st-sessions').textContent = sessCount;
+  document.getElementById('st-abn').textContent = abn;
+  document.getElementById('st-normal').textContent = norm;
+}
+
+render();
+</script>

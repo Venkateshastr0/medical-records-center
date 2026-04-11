@@ -1,0 +1,178 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary)}
+.page{padding:1.5rem;max-width:820px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.page-title{font-size:20px;font-weight:500}
+.page-sub{font-size:13px;color:var(--color-text-secondary);margin-top:2px}
+.section{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:14px;overflow:hidden}
+.sec-head{padding:11px 16px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;color:var(--color-text-primary)}
+.sec-body{padding:16px;display:grid;gap:12px}
+.g2{grid-template-columns:1fr 1fr}
+.g1{grid-template-columns:1fr}
+.field label{display:block;font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+input,select,textarea{width:100%;padding:8px 11px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;background:var(--color-background-primary);color:var(--color-text-primary);font-family:var(--font-sans)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,.1)}
+textarea{resize:vertical;min-height:76px}
+.age-hint{font-size:12px;color:var(--color-text-secondary);margin-top:5px}
+.err-banner{font-size:13px;color:#A32D2D;background:#FCEBEB;border:0.5px solid #F09595;border-radius:var(--border-radius-md);padding:10px 14px;margin-bottom:14px;display:none}
+.form-footer{display:flex;justify-content:space-between;align-items:center;padding-top:6px}
+.autosave{font-size:12px;color:var(--color-text-secondary);display:flex;align-items:center;gap:5px}
+.saved-dot{width:6px;height:6px;border-radius:50%;background:#639922;flex-shrink:0}
+.actions{display:flex;gap:8px}
+.btn{padding:8px 18px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);transition:background .12s}
+.btn:hover{background:var(--color-background-secondary)}
+.btn.primary{background:#185FA5;border-color:#185FA5;color:#fff}
+.btn.primary:hover{background:#0C447C}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.required-note{font-size:12px;color:var(--color-text-secondary);margin-bottom:12px}
+</style>
+
+<div class="page">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Add new patient</div>
+      <div class="page-sub">Register a new patient record</div>
+    </div>
+    <div class="required-note">* Required fields</div>
+  </div>
+
+  <div id="errBanner" class="err-banner"></div>
+
+  <!-- Personal -->
+  <div class="section">
+    <div class="sec-head">👤 Personal information</div>
+    <div class="sec-body g2">
+      <div class="field"><label>First name *</label><input id="p_fn" placeholder="e.g. Arun" oninput="autosave()"></div>
+      <div class="field"><label>Last name *</label><input id="p_ln" placeholder="e.g. Krishnamurthy" oninput="autosave()"></div>
+      <div class="field">
+        <label>Date of birth *</label>
+        <input type="date" id="p_dob" onchange="showAge();autosave()">
+        <div class="age-hint" id="ageHint"></div>
+      </div>
+      <div class="field">
+        <label>Gender *</label>
+        <select id="p_gender" onchange="autosave()">
+          <option value="">Select gender</option>
+          <option>Male</option><option>Female</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Blood type</label>
+        <select id="p_blood" onchange="autosave()">
+          <option value="">Select</option>
+          <option>A+</option><option>B+</option><option>O+</option><option>AB+</option>
+          <option>A-</option><option>B-</option><option>O-</option><option>AB-</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="section">
+    <div class="sec-head">📞 Contact details</div>
+    <div class="sec-body g2">
+      <div class="field"><label>Phone</label><input id="p_ph" placeholder="10-digit mobile" oninput="autosave()"></div>
+      <div class="field"><label>Email</label><input id="p_em" placeholder="patient@email.com" oninput="autosave()"></div>
+      <div class="field" style="grid-column:1/-1"><label>Address</label><input id="p_addr" placeholder="Street address" oninput="autosave()"></div>
+      <div class="field"><label>City</label><input id="p_city" placeholder="Chennai" oninput="autosave()"></div>
+      <div class="field"><label>State</label><input id="p_state" placeholder="Tamil Nadu" oninput="autosave()"></div>
+      <div class="field"><label>ZIP code</label><input id="p_zip" placeholder="600001" oninput="autosave()"></div>
+      <div class="field"><label>Country</label><input id="p_country" value="India" oninput="autosave()"></div>
+    </div>
+  </div>
+
+  <!-- Medical -->
+  <div class="section">
+    <div class="sec-head">🩺 Medical information</div>
+    <div class="sec-body g1">
+      <div class="field"><label>Known allergies</label><textarea id="p_allergy" placeholder="e.g. Penicillin, Sulfa drugs…" rows="2" oninput="autosave()"></textarea></div>
+      <div class="field"><label>Medical history</label><textarea id="p_mhist" placeholder="Past diagnoses, surgeries, chronic conditions…" rows="3" oninput="autosave()"></textarea></div>
+    </div>
+  </div>
+
+  <!-- Emergency -->
+  <div class="section">
+    <div class="sec-head">🚨 Emergency contact</div>
+    <div class="sec-body g2">
+      <div class="field"><label>Contact name</label><input id="p_ecn" placeholder="Guardian / spouse name" oninput="autosave()"></div>
+      <div class="field"><label>Contact phone</label><input id="p_ecp" placeholder="10-digit mobile" oninput="autosave()"></div>
+    </div>
+  </div>
+
+  <!-- Insurance -->
+  <div class="section">
+    <div class="sec-head">🛡️ Insurance</div>
+    <div class="sec-body g2">
+      <div class="field"><label>Insurance provider</label><input id="p_ins" placeholder="e.g. Star Health" oninput="autosave()"></div>
+      <div class="field"><label>Policy number</label><input id="p_pol" placeholder="e.g. SH-20241234" oninput="autosave()"></div>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <div class="autosave"><span class="saved-dot"></span><span id="saveStatus">Draft auto-saved</span></div>
+    <div class="actions">
+      <button class="btn" onclick="clearForm()">Clear</button>
+      <button class="btn primary" id="submitBtn" onclick="submitPatient()">Create patient</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function showAge(){
+  const v=document.getElementById('p_dob').value;
+  if(!v){document.getElementById('ageHint').textContent='';return}
+  const d=new Date(v),now=new Date();
+  let a=now.getFullYear()-d.getFullYear();
+  if(now.getMonth()<d.getMonth()||(now.getMonth()===d.getMonth()&&now.getDate()<d.getDate()))a--;
+  document.getElementById('ageHint').textContent=a>=0?'Age: '+a+' years':'';
+}
+let saveTimer;
+function autosave(){
+  clearTimeout(saveTimer);
+  document.getElementById('saveStatus').textContent='Saving…';
+  saveTimer=setTimeout(()=>{document.getElementById('saveStatus').textContent='Draft auto-saved'},800);
+}
+function clearForm(){
+  ['p_fn','p_ln','p_dob','p_gender','p_blood','p_ph','p_em','p_addr','p_city','p_state','p_zip','p_allergy','p_mhist','p_ecn','p_ecp','p_ins','p_pol'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  document.getElementById('p_country').value='India';
+  document.getElementById('ageHint').textContent='';
+  document.getElementById('errBanner').style.display='none';
+}
+function showErr(msg){
+  const b=document.getElementById('errBanner');
+  b.textContent=msg;b.style.display='block';
+  b.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function submitPatient(){
+  const fn=document.getElementById('p_fn').value.trim();
+  const ln=document.getElementById('p_ln').value.trim();
+  const dob=document.getElementById('p_dob').value;
+  const gn=document.getElementById('p_gender').value;
+  const em=document.getElementById('p_em').value.trim();
+  const ph=document.getElementById('p_ph').value.trim();
+  if(!fn)return showErr('First name is required.');
+  if(!ln)return showErr('Last name is required.');
+  if(!dob)return showErr('Date of birth is required.');
+  if(!gn)return showErr('Gender is required.');
+  if(em&&!/^\S+@\S+\.\S+$/.test(em))return showErr('Invalid email format.');
+  if(ph&&ph.replace(/\D/g,'').length<10)return showErr('Phone number must be at least 10 digits.');
+  document.getElementById('errBanner').style.display='none';
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true;btn.textContent='Creating…';
+  setTimeout(()=>{
+    btn.disabled=false;btn.textContent='Create patient';
+    clearForm();
+    showToast('Patient '+fn+' '+ln+' created successfully');
+  },1200);
+}
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:20px;right:20px;background:#3B6D11;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300;font-family:var(--font-sans)';document.body.appendChild(t)}
+  t.textContent=msg;t.style.opacity='1';
+  setTimeout(()=>t.style.opacity='0',2500);
+}
+</script>

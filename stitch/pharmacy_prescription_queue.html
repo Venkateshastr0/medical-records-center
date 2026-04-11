@@ -1,0 +1,293 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary)}
+.page{padding:1.5rem;max-width:900px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.page-title{font-size:20px;font-weight:500}
+.page-sub{font-size:13px;color:var(--color-text-secondary);margin-top:2px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px 16px}
+.stat-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.stat-num{font-size:22px;font-weight:500}
+.stat-num.blue{color:#185FA5}.stat-num.green{color:#3B6D11}.stat-num.amber{color:#854F0B}
+.section-head{font-size:13px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.rx-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.rx-card:hover{border-color:var(--color-border-secondary)}
+.rx-card.open{border-color:var(--color-border-primary)}
+.rx-top{display:flex;justify-content:space-between;align-items:center}
+.rx-left{display:flex;align-items:center;gap:12px}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--color-background-info);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#185FA5;flex-shrink:0}
+.patient-name{font-size:15px;font-weight:500}
+.patient-meta{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.rx-right{display:flex;align-items:center;gap:8px}
+.badge{padding:3px 9px;border-radius:99px;font-size:11px;font-weight:500}
+.badge.active{background:#EAF3DE;color:#3B6D11}
+.badge.old{background:#FAEEDA;color:#854F0B}
+.badge.disc{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.chevron{font-size:16px;color:var(--color-text-secondary);transition:transform .2s;display:inline-block}
+.chevron.up{transform:rotate(180deg)}
+.drawer{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.drawer.open{max-height:600px}
+.drawer-inner{border-top:0.5px solid var(--color-border-tertiary);margin-top:12px;padding-top:12px}
+.drawer-doc{font-size:12px;color:var(--color-text-secondary);margin-bottom:12px}
+.med-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+.med-table th{text-align:left;font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.med-table td{padding:8px 8px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:top}
+.med-table tr:last-child td{border-bottom:none}
+.med-name{font-weight:500;font-size:13px}
+.med-dose{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.freq-pill{display:inline-block;padding:2px 7px;border-radius:99px;font-size:11px;background:var(--color-background-secondary);color:var(--color-text-primary)}
+.price{font-weight:500;text-align:right}
+.total-row{display:flex;justify-content:flex-end;padding:10px 8px 0;border-top:0.5px solid var(--color-border-tertiary);margin-top:2px}
+.total-label{font-size:13px;color:var(--color-text-secondary);margin-right:16px}
+.total-amount{font-size:16px;font-weight:500}
+.drawer-footer{display:flex;gap:8px;padding-top:14px;border-top:0.5px solid var(--color-border-tertiary);margin-top:14px;justify-content:flex-end}
+.btn{padding:7px 16px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);transition:background .12s}
+.btn:hover{background:var(--color-background-secondary)}
+.btn.primary{background:#185FA5;border-color:#185FA5;color:#fff}
+.btn.primary:hover{background:#0C447C;border-color:#0C447C}
+.btn.success{background:#3B6D11;border-color:#3B6D11;color:#fff}
+.btn.success:hover{background:#27500A;border-color:#27500A}
+.topbtn{padding:7px 14px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);transition:background .12s}
+.topbtn:hover{background:var(--color-background-secondary)}
+.filter-sel{padding:6px 10px;border-radius:var(--border-radius-md);font-size:13px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);cursor:pointer}
+.saved-toast{position:fixed;bottom:20px;right:20px;background:#3B6D11;color:#fff;padding:10px 18px;border-radius:var(--border-radius-md);font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100}
+.saved-toast.show{opacity:1}
+.empty{text-align:center;padding:2rem;color:var(--color-text-secondary);font-size:14px}
+</style>
+
+<div class="page">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Pharmacy</div>
+      <div class="page-sub">Prescription queue</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <select class="filter-sel" id="filterSel" onchange="applyFilter()">
+        <option value="all">All</option>
+        <option value="active">Active</option>
+        <option value="old">Old (&gt;24h)</option>
+        <option value="disc">Discontinued</option>
+      </select>
+      <button class="topbtn" onclick="renderCards()">↻ Refresh</button>
+      <button class="topbtn primary" style="background:#185FA5;border-color:#185FA5;color:#fff" onclick="sendPrompt('Open pharmacy inventory management')">Inventory</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Active prescriptions</div>
+      <div class="stat-num blue" id="statActive">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Completed today</div>
+      <div class="stat-num green" id="statDone">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Old (&gt;24h)</div>
+      <div class="stat-num amber" id="statOld">0</div>
+    </div>
+  </div>
+
+  <div class="section-head" id="queueLabel">Prescription queue</div>
+  <div id="rxList"></div>
+</div>
+
+<div class="saved-toast" id="toast"></div>
+
+<script>
+const now = Date.now();
+const DAY = 86400000;
+
+const prescriptions = [
+  {id:'rx001',patientId:'PT-1042',patientName:'Arun Krishnamurthy',doctor:'Dr. Meena Subramanian',status:'Active',date:now - 1*3600*1000,
+    meds:[
+      {name:'Metformin 500mg',dosage:'1 tab',freq:'M/A/N',route:'Oral',instr:'After meals',price:45},
+      {name:'Amlodipine 5mg',dosage:'1 tab',freq:'M',route:'Oral',instr:'Before breakfast',price:32},
+      {name:'Atorvastatin 10mg',dosage:'1 tab',freq:'N',route:'Oral',instr:'At bedtime',price:68},
+    ]
+  },
+  {id:'rx002',patientId:'PT-2281',patientName:'Priya Venkataraman',doctor:'Dr. Rajesh Kumar',status:'Active',date:now - 2*3600*1000,
+    meds:[
+      {name:'Amoxicillin 500mg',dosage:'1 cap',freq:'M/A/N',route:'Oral',instr:'With food',price:55},
+      {name:'Paracetamol 650mg',dosage:'1 tab',freq:'A/N',route:'Oral',instr:'If fever >38°C',price:18},
+    ]
+  },
+  {id:'rx003',patientId:'PT-0774',patientName:'Suresh Balakrishnan',doctor:'Dr. Deepa Nair',status:'Active',date:now - 28*3600*1000,
+    meds:[
+      {name:'Pantoprazole 40mg',dosage:'1 tab',freq:'M',route:'Oral',instr:'30 min before breakfast',price:42},
+      {name:'Domperidone 10mg',dosage:'1 tab',freq:'M/A/N',route:'Oral',instr:'Before meals',price:25},
+      {name:'Sucralfate 1g',dosage:'1 tab',freq:'M/A',route:'Oral',instr:'Empty stomach',price:36},
+    ]
+  },
+  {id:'rx004',patientId:'PT-3310',patientName:'Lakshmi Rajan',doctor:'Dr. Anand Pillai',status:'Discontinued',date:now - 30*3600*1000,
+    meds:[
+      {name:'Cetirizine 10mg',dosage:'1 tab',freq:'N',route:'Oral',instr:'At bedtime',price:22},
+    ]
+  },
+  {id:'rx005',patientId:'PT-0912',patientName:'Karthik Sundaram',doctor:'Dr. Meena Subramanian',status:'Active',date:now - 30*60*1000,
+    meds:[
+      {name:'Azithromycin 250mg',dosage:'2 tabs',freq:'M',route:'Oral',instr:'Day 1, then 1 tab for 4 days',price:88},
+      {name:'Montelukast 10mg',dosage:'1 tab',freq:'N',route:'Oral',instr:'At bedtime',price:54},
+    ]
+  },
+];
+
+let completed = 0;
+let openId = null;
+let filter = 'all';
+
+function initials(name){return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+function isOld(date){return (now - date) > DAY}
+function getBadge(p){
+  if(p.status==='Discontinued') return '<span class="badge disc">Discontinued</span>';
+  if(isOld(p.date)) return '<span class="badge old">Old</span>';
+  return '<span class="badge active">Active</span>';
+}
+function total(meds){return meds.reduce((s,m)=>s+m.price,0)}
+function fmt(n){return '₹'+n.toFixed(2)}
+
+function applyFilter(){filter=document.getElementById('filterSel').value;openId=null;renderCards()}
+
+function filteredRx(){
+  return prescriptions.filter(p=>{
+    if(filter==='all') return true;
+    if(filter==='active') return p.status==='Active' && !isOld(p.date);
+    if(filter==='old') return p.status==='Active' && isOld(p.date);
+    if(filter==='disc') return p.status==='Discontinued';
+    return true;
+  });
+}
+
+function updateStats(){
+  document.getElementById('statActive').textContent = prescriptions.filter(p=>p.status==='Active'&&!isOld(p.date)).length;
+  document.getElementById('statDone').textContent = completed;
+  document.getElementById('statOld').textContent = prescriptions.filter(p=>p.status==='Active'&&isOld(p.date)).length;
+}
+
+function renderCards(){
+  updateStats();
+  const list = filteredRx();
+  const el = document.getElementById('rxList');
+  if(!list.length){el.innerHTML='<div class="empty">No prescriptions found.</div>';return}
+  el.innerHTML = list.map(p=>{
+    const isOpen = openId === p.id;
+    const tot = total(p.meds);
+    const medRows = p.meds.map(m=>`
+      <tr>
+        <td><div class="med-name">${m.name}</div><div class="med-dose">${m.route}</div></td>
+        <td><span class="freq-pill">${m.freq}</span></td>
+        <td style="font-size:13px">${m.dosage}</td>
+        <td style="font-size:12px;color:var(--color-text-secondary)">${m.instr}</td>
+        <td class="price">${fmt(m.price)}</td>
+      </tr>`).join('');
+    return `
+    <div class="rx-card${isOpen?' open':''}" id="card-${p.id}">
+      <div class="rx-top" onclick="toggle('${p.id}')">
+        <div class="rx-left">
+          <div class="avatar">${initials(p.patientName)}</div>
+          <div>
+            <div class="patient-name">${p.patientName}</div>
+            <div class="patient-meta">${p.patientId} &nbsp;·&nbsp; ${p.doctor}</div>
+          </div>
+        </div>
+        <div class="rx-right">
+          ${getBadge(p)}
+          <span style="font-size:13px;color:var(--color-text-secondary)">${fmt(tot)}</span>
+          <span class="chevron${isOpen?' up':''}">&#8964;</span>
+        </div>
+      </div>
+      <div class="drawer${isOpen?' open':''}" id="drawer-${p.id}">
+        <div class="drawer-inner">
+          <div class="drawer-doc">Prescribed by <strong>${p.doctor}</strong> &nbsp;·&nbsp; ${new Date(p.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div>
+          <table class="med-table">
+            <thead>
+              <tr>
+                <th style="width:32%">Medication</th>
+                <th style="width:13%">Freq</th>
+                <th style="width:12%">Dosage</th>
+                <th style="width:30%">Instructions</th>
+                <th style="width:13%;text-align:right">MRP</th>
+              </tr>
+            </thead>
+            <tbody>${medRows}</tbody>
+          </table>
+          <div class="total-row">
+            <span class="total-label">Total bill</span>
+            <span class="total-amount">${fmt(tot)}</span>
+          </div>
+          <div class="drawer-footer">
+            ${p.status==='Active'&&isOld(p.date)?`<button class="btn" style="color:var(--color-text-danger);border-color:var(--color-border-danger)" onclick="clearRx('${p.id}')">Clear old</button>`:''}
+            <button class="btn" onclick="printRx('${p.id}')">Print</button>
+            ${p.status==='Active'?`<button class="btn success" onclick="billRx('${p.id}')">Save bill</button>`:''}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggle(id){
+  openId = openId===id ? null : id;
+  renderCards();
+}
+
+function clearRx(id){
+  if(!confirm('Clear this old prescription?')) return;
+  const i = prescriptions.findIndex(p=>p.id===id);
+  if(i>-1){prescriptions[i].status='Discontinued';openId=null;renderCards()}
+}
+
+function billRx(id){
+  const p = prescriptions.find(x=>x.id===id);
+  if(!p) return;
+  p.status='Discontinued'; completed++;
+  openId=null; renderCards();
+  showToast('Bill saved for '+p.patientName);
+}
+
+function printRx(id){
+  const p = prescriptions.find(x=>x.id===id);
+  if(!p) return;
+  const tot = total(p.meds);
+  const rows = p.meds.map(m=>`<tr><td>${m.name}</td><td>${m.freq}</td><td>${m.dosage}</td><td>${m.route}</td><td>${m.instr}</td><td style="text-align:right">₹${m.price.toFixed(2)}</td></tr>`).join('');
+  const win = window.open('','','width=680,height=760');
+  if(!win) return;
+  win.document.write(`<html><head><title>Prescription — ${p.patientName}</title>
+  <style>body{font-family:Arial,sans-serif;padding:28px;font-size:13px;color:#111}
+  h2{font-size:18px;margin-bottom:2px}.sub{color:#555;font-size:13px;margin-bottom:16px}
+  .meta{display:flex;gap:32px;margin-bottom:20px;font-size:13px}
+  .meta b{display:block;margin-bottom:2px;color:#333}
+  table{width:100%;border-collapse:collapse;margin-top:16px}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#666;border-bottom:1px solid #ccc;padding:6px 4px}
+  td{padding:8px 4px;border-bottom:1px solid #eee;vertical-align:top}
+  .total{text-align:right;margin-top:12px;font-size:14px;font-weight:bold}
+  .footer{margin-top:28px;font-size:11px;color:#888;border-top:1px solid #eee;padding-top:12px}
+  </style></head><body>
+  <h2>Medical Prescription</h2>
+  <div class="sub">Generated on ${new Date().toLocaleString('en-IN')}</div>
+  <div class="meta">
+    <div><b>Patient</b>${p.patientName}</div>
+    <div><b>Patient ID</b>${p.patientId}</div>
+    <div><b>Doctor</b>${p.doctor}</div>
+    <div><b>Date</b>${new Date(p.date).toLocaleDateString('en-IN')}</div>
+  </div>
+  <table>
+    <thead><tr><th>Medication</th><th>Freq</th><th>Dosage</th><th>Route</th><th>Instructions</th><th style="text-align:right">MRP</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <div class="total">Total: ₹${tot.toFixed(2)}</div>
+  <div class="footer">This is a computer-generated prescription. Follow instructions carefully.</div>
+  </body></html>`);
+  win.document.close(); win.print(); win.onafterprint=()=>win.close();
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+renderCards();
+</script>

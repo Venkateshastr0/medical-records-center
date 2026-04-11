@@ -1,0 +1,275 @@
+
+<h2 class="sr-only">Full prescription history for Arun Krishnamurthy, showing all sessions and medications from 2023 to 2026 with PDF previews and timestamps</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-sans)}
+.page{background:var(--color-background-tertiary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.topbar{display:flex;align-items:center;gap:10px;padding:13px 18px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.crumb{font-size:12px;color:var(--color-text-tertiary)}
+.crumb a{color:var(--color-text-secondary);cursor:pointer;text-decoration:none}
+.crumb a:hover{color:var(--color-text-primary)}
+.crumb-sep{margin:0 5px;color:var(--color-border-secondary)}
+.page-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.ph-left{display:flex;align-items:center;gap:12px}
+.avatar{width:40px;height:40px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#185FA5;flex-shrink:0}
+.ph-name{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.ph-sub{font-size:12px;color:var(--color-text-tertiary);margin-top:1px}
+.stats-row{display:flex;gap:8px}
+.stat-chip{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 12px;text-align:center}
+.sc-n{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.sc-l{font-size:11px;color:var(--color-text-tertiary);margin-top:1px}
+.filters{display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:180px}
+.search-wrap input{width:100%;padding:6px 10px 6px 30px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);font-size:12px;color:var(--color-text-primary);outline:none}
+.search-wrap input:focus{border-color:var(--color-border-primary)}
+.search-ico{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--color-text-tertiary);pointer-events:none}
+.fbtns{display:flex;gap:4px}
+.fbtn{font-size:11px;padding:5px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.fbtn.on{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+.timeline{padding:18px}
+.session-block{margin-bottom:24px}
+.session-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.session-line{flex:1;height:0.5px;background:var(--color-border-tertiary)}
+.session-label{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.session-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:99px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-secondary)}
+.session-date{font-size:11px;color:var(--color-text-tertiary)}
+.rx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.rx-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;cursor:pointer;transition:border-color .15s}
+.rx-card:hover{border-color:var(--color-border-secondary)}
+.rx-thumb{width:100%;height:120px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;padding:12px 14px;gap:5px;position:relative;overflow:hidden}
+.rx-thumb-line{height:4px;border-radius:2px;background:var(--color-border-secondary)}
+.rx-thumb-short{height:4px;border-radius:2px;background:var(--color-border-tertiary)}
+.rx-thumb-accent{height:4px;border-radius:2px}
+.rx-mark{position:absolute;bottom:10px;right:12px;font-size:22px;font-weight:500;color:var(--color-border-secondary);font-family:var(--font-serif);line-height:1}
+.rx-new-badge{position:absolute;top:8px;left:8px;font-size:10px;font-weight:500;padding:2px 6px;border-radius:99px;background:#EAF3DE;color:#27500A}
+.rx-body{padding:10px 12px}
+.rx-drug{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.rx-detail{font-size:11px;color:var(--color-text-secondary);margin-bottom:6px}
+.rx-footer{display:flex;align-items:center;justify-content:space-between}
+.rx-cat{display:inline-flex;font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px;background:#E6F1FB;color:#0C447C}
+.rx-ts{font-size:10px;color:var(--color-text-tertiary);font-family:var(--font-mono)}
+.rx-status-active{display:inline-flex;font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px;background:#EAF3DE;color:#27500A}
+.rx-status-completed{display:inline-flex;font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px;background:var(--color-background-secondary);color:var(--color-text-tertiary)}
+.rx-status-modified{display:inline-flex;font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px;background:#FAEEDA;color:#633806}
+.empty{padding:32px;text-align:center;color:var(--color-text-tertiary);font-size:13px}
+</style>
+
+<div class="page">
+
+  <div class="topbar">
+    <span class="crumb">
+      <a>Patients</a><span class="crumb-sep">/</span>
+      <a>Arun Krishnamurthy</a><span class="crumb-sep">/</span>
+      <span style="color:var(--color-text-primary)">Prescriptions</span>
+    </span>
+  </div>
+
+  <div class="page-head">
+    <div class="ph-left">
+      <div class="avatar">AK</div>
+      <div>
+        <div class="ph-name">Arun Krishnamurthy</div>
+        <div class="ph-sub">Prescription history · All sessions</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-chip"><div class="sc-n">14</div><div class="sc-l">Sessions</div></div>
+      <div class="stat-chip"><div class="sc-n">31</div><div class="sc-l">Prescriptions</div></div>
+      <div class="stat-chip"><div class="sc-n">3</div><div class="sc-l">Active now</div></div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="search-wrap">
+      <svg class="search-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="srch" placeholder="Search drug name, category..." oninput="filterRx()">
+    </div>
+    <div class="fbtns" id="catbtns">
+      <button class="fbtn on" data-cat="All" onclick="setCat(this)">All</button>
+      <button class="fbtn" data-cat="Diabetes" onclick="setCat(this)">Diabetes</button>
+      <button class="fbtn" data-cat="Hypertension" onclick="setCat(this)">Hypertension</button>
+      <button class="fbtn" data-cat="Cardiac" onclick="setCat(this)">Cardiac</button>
+      <button class="fbtn" data-cat="Supplement" onclick="setCat(this)">Supplement</button>
+    </div>
+    <div class="fbtns" id="statusbtns">
+      <button class="fbtn on" data-st="All" onclick="setSt(this)">All status</button>
+      <button class="fbtn" data-st="Active" onclick="setSt(this)">Active</button>
+      <button class="fbtn" data-st="Completed" onclick="setSt(this)">Completed</button>
+      <button class="fbtn" data-st="Modified" onclick="setSt(this)">Modified</button>
+    </div>
+  </div>
+
+  <div class="timeline" id="timeline"></div>
+
+</div>
+
+<script>
+const sessions = [
+  {
+    id: 14, date: '2 Apr 2026', isNew: true,
+    rxs: [
+      { drug: 'Metformin 500mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Active', accent: '#378ADD', isNew: true },
+      { drug: 'Amlodipine 5mg', detail: '1 tab once daily · 30 days', cat: 'Hypertension', status: 'Active', accent: '#1D9E75', isNew: false },
+      { drug: 'Atorvastatin 10mg', detail: '1 tab at night · 30 days', cat: 'Cardiac', status: 'Active', accent: '#7F77DD', isNew: false },
+    ]
+  },
+  {
+    id: 13, date: '18 Mar 2026', isNew: false,
+    rxs: [
+      { drug: 'Metformin 500mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Completed', accent: '#378ADD', isNew: false },
+      { drug: 'Amlodipine 5mg', detail: '1 tab once daily · 30 days', cat: 'Hypertension', status: 'Completed', accent: '#1D9E75', isNew: false },
+      { drug: 'Vitamin D3 60K', detail: '1 cap weekly · 8 weeks', cat: 'Supplement', status: 'Completed', accent: '#BA7517', isNew: false },
+    ]
+  },
+  {
+    id: 12, date: '14 Feb 2026', isNew: false,
+    rxs: [
+      { drug: 'Metformin 1000mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Modified', accent: '#378ADD', isNew: false },
+      { drug: 'Telmisartan 40mg', detail: '1 tab once daily · 30 days', cat: 'Hypertension', status: 'Completed', accent: '#1D9E75', isNew: false },
+      { drug: 'Atorvastatin 10mg', detail: '1 tab at night · 30 days', cat: 'Cardiac', status: 'Completed', accent: '#7F77DD', isNew: false },
+    ]
+  },
+  {
+    id: 11, date: '20 Jan 2026', isNew: false,
+    rxs: [
+      { drug: 'Metformin 1000mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Completed', accent: '#378ADD', isNew: false },
+      { drug: 'Telmisartan 40mg', detail: '1 tab once daily · 30 days', cat: 'Hypertension', status: 'Completed', accent: '#1D9E75', isNew: false },
+      { drug: 'Rosuvastatin 5mg', detail: '1 tab at night · 30 days', cat: 'Cardiac', status: 'Modified', accent: '#7F77DD', isNew: false },
+    ]
+  },
+  {
+    id: 10, date: '9 Dec 2025', isNew: false,
+    rxs: [
+      { drug: 'Metformin 1000mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Completed', accent: '#378ADD', isNew: false },
+      { drug: 'Telmisartan 40mg', detail: '1 tab once daily · 30 days', cat: 'Hypertension', status: 'Completed', accent: '#1D9E75', isNew: false },
+      { drug: 'Omega-3 1000mg', detail: '1 cap daily · 60 days', cat: 'Supplement', status: 'Completed', accent: '#BA7517', isNew: false },
+    ]
+  },
+  {
+    id: 9, date: '28 Oct 2025', isNew: false,
+    rxs: [
+      { drug: 'Metformin 500mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Completed', accent: '#378ADD', isNew: false },
+      { drug: 'Lisinopril 10mg', detail: '1 tab once daily · 30 days', cat: 'Hypertension', status: 'Modified', accent: '#1D9E75', isNew: false },
+    ]
+  },
+  {
+    id: 8, date: '5 Sep 2025', isNew: false,
+    rxs: [
+      { drug: 'Metformin 500mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Completed', accent: '#378ADD', isNew: false },
+      { drug: 'Lisinopril 5mg', detail: '1 tab once daily · 30 days', cat: 'Hypertension', status: 'Completed', accent: '#1D9E75', isNew: false },
+      { drug: 'Vitamin B12 1500mcg', detail: '1 tab daily · 30 days', cat: 'Supplement', status: 'Completed', accent: '#BA7517', isNew: false },
+    ]
+  },
+  {
+    id: 7, date: '12 Jul 2025', isNew: false,
+    rxs: [
+      { drug: 'Metformin 500mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Completed', accent: '#378ADD', isNew: false },
+      { drug: 'Amlodipine 2.5mg', detail: '1 tab once daily · 30 days', cat: 'Hypertension', status: 'Completed', accent: '#1D9E75', isNew: false },
+    ]
+  },
+  {
+    id: 6, date: '22 Apr 2025', isNew: false,
+    rxs: [
+      { drug: 'Metformin 500mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Completed', accent: '#378ADD', isNew: false },
+      { drug: 'Amlodipine 2.5mg', detail: '1 tab once daily · 30 days', cat: 'Hypertension', status: 'Completed', accent: '#1D9E75', isNew: false },
+      { drug: 'Folic Acid 5mg', detail: '1 tab daily · 30 days', cat: 'Supplement', status: 'Completed', accent: '#BA7517', isNew: false },
+    ]
+  },
+  {
+    id: 5, date: '8 Jan 2025', isNew: false,
+    rxs: [
+      { drug: 'Metformin 500mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Completed', accent: '#378ADD', isNew: false },
+      { drug: 'Losartan 50mg', detail: '1 tab once daily · 30 days', cat: 'Hypertension', status: 'Completed', accent: '#1D9E75', isNew: false },
+    ]
+  },
+];
+
+let activeCat = 'All';
+let activeSt = 'All';
+
+function setCat(btn) {
+  document.querySelectorAll('#catbtns .fbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  activeCat = btn.dataset.cat;
+  render();
+}
+
+function setSt(btn) {
+  document.querySelectorAll('#statusbtns .fbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  activeSt = btn.dataset.st;
+  render();
+}
+
+function filterRx() { render(); }
+
+function statusClass(s) {
+  if(s === 'Active') return 'rx-status-active';
+  if(s === 'Modified') return 'rx-status-modified';
+  return 'rx-status-completed';
+}
+
+function render() {
+  const q = document.getElementById('srch').value.toLowerCase();
+  const tl = document.getElementById('timeline');
+  let html = '';
+  let totalShown = 0;
+
+  for(const sess of sessions) {
+    const rxs = sess.rxs.filter(rx => {
+      if(activeCat !== 'All' && rx.cat !== activeCat) return false;
+      if(activeSt !== 'All' && rx.status !== activeSt) return false;
+      if(q && !rx.drug.toLowerCase().includes(q) && !rx.cat.toLowerCase().includes(q)) return false;
+      return true;
+    });
+    if(!rxs.length) continue;
+    totalShown += rxs.length;
+
+    html += `<div class="session-block">
+      <div class="session-header">
+        <div class="session-line"></div>
+        <div class="session-label">
+          <span class="session-badge">Session #${sess.id}</span>
+          <span class="session-date">${sess.date}</span>
+          ${sess.isNew ? '<span style="font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px;background:#E6F1FB;color:#0C447C;">Latest</span>' : ''}
+        </div>
+        <div class="session-line"></div>
+      </div>
+      <div class="rx-grid">`;
+
+    for(const rx of rxs) {
+      html += `<div class="rx-card">
+        <div class="rx-thumb">
+          <div class="rx-thumb-line" style="width:85%"></div>
+          <div class="rx-thumb-short" style="width:65%"></div>
+          <div class="rx-thumb-accent" style="width:75%;background:${rx.accent};opacity:0.35"></div>
+          <div class="rx-thumb-short" style="width:55%"></div>
+          <div class="rx-thumb-line" style="width:70%"></div>
+          <div class="rx-thumb-short" style="width:60%"></div>
+          <div class="rx-thumb-accent" style="width:40%;background:${rx.accent};opacity:0.2"></div>
+          <div class="rx-thumb-line" style="width:80%"></div>
+          <span class="rx-mark">Rx</span>
+          ${rx.isNew ? '<span class="rx-new-badge">New</span>' : ''}
+        </div>
+        <div class="rx-body">
+          <div class="rx-drug">${rx.drug}</div>
+          <div class="rx-detail">${rx.detail}</div>
+          <div class="rx-footer">
+            <span class="${statusClass(rx.status)}">${rx.status}</span>
+            <span class="rx-cat">${rx.cat}</span>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    html += `</div></div>`;
+  }
+
+  if(!totalShown) {
+    html = '<div class="empty">No prescriptions match your filters.</div>';
+  }
+
+  tl.innerHTML = html;
+}
+
+render();
+</script>

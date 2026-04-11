@@ -1,0 +1,309 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .page { max-width: 680px; margin: 0 auto; padding: 2rem 1rem 3rem; }
+  .page-header { margin-bottom: 2rem; }
+  .breadcrumb { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .breadcrumb span { color: var(--color-text-tertiary); }
+  h1 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+  .subtitle { font-size: 14px; color: var(--color-text-secondary); margin-top: 4px; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-secondary); margin-bottom: 12px; }
+  .field { margin-bottom: 1.25rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+  .field label .req { color: var(--color-text-danger); margin-left: 2px; }
+  .search-wrap { position: relative; }
+  .search-wrap input { width: 100%; padding: 9px 12px 9px 36px; font-size: 14px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); outline: none; transition: border-color 0.15s; }
+  .search-wrap input:focus { border-color: var(--color-border-primary); box-shadow: 0 0 0 3px rgba(99,99,99,0.08); }
+  .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--color-text-tertiary); pointer-events: none; }
+  .dropdown { border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); margin-top: 4px; overflow: hidden; }
+  .dropdown-item { padding: 10px 12px; font-size: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.1s; }
+  .dropdown-item:hover, .dropdown-item.active { background: var(--color-background-secondary); }
+  .dropdown-item .name { font-weight: 500; color: var(--color-text-primary); }
+  .dropdown-item .meta { font-size: 12px; color: var(--color-text-secondary); }
+  .selected-patient { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--color-background-info); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: var(--color-text-info); flex-shrink: 0; }
+  .patient-info { flex: 1; }
+  .patient-info .pname { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .patient-info .pid { font-size: 12px; color: var(--color-text-secondary); }
+  .clear-btn { font-size: 12px; color: var(--color-text-secondary); cursor: pointer; padding: 4px 8px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); background: transparent; transition: background 0.1s; }
+  .clear-btn:hover { background: var(--color-background-primary); }
+  .drop-zone { border: 1.5px dashed var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 2rem 1rem; text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--color-border-primary); background: var(--color-background-secondary); }
+  .drop-icon { width: 32px; height: 32px; margin: 0 auto 10px; color: var(--color-text-tertiary); }
+  .drop-zone p { font-size: 14px; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .drop-zone p strong { color: var(--color-text-primary); font-weight: 500; }
+  .drop-zone .hint { font-size: 12px; color: var(--color-text-tertiary); }
+  .file-preview { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); }
+  .file-icon { width: 32px; height: 32px; background: var(--color-background-danger); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .file-icon svg { width: 16px; height: 16px; color: var(--color-text-danger); }
+  .file-info { flex: 1; }
+  .file-info .fname { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .file-info .fmeta { font-size: 12px; color: var(--color-text-secondary); }
+  .text-input { width: 100%; padding: 9px 12px; font-size: 14px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); outline: none; transition: border-color 0.15s; }
+  .text-input:focus { border-color: var(--color-border-primary); box-shadow: 0 0 0 3px rgba(99,99,99,0.08); }
+  .helper { font-size: 12px; color: var(--color-text-tertiary); margin-top: 5px; }
+  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 14px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-row .skey { color: var(--color-text-secondary); }
+  .summary-row .sval { color: var(--color-text-primary); font-weight: 500; }
+  .submit-btn { width: 100%; padding: 11px; font-size: 15px; font-weight: 500; border-radius: var(--border-radius-md); border: none; background: var(--color-text-primary); color: var(--color-background-primary); cursor: pointer; transition: opacity 0.15s; margin-top: 0.5rem; }
+  .submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .submit-btn:not(:disabled):hover { opacity: 0.85; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 8px; border-radius: 99px; font-weight: 500; }
+  .badge-ok { background: var(--color-background-success); color: var(--color-text-success); }
+  .badge-req { background: var(--color-background-warning); color: var(--color-text-warning); }
+  .hidden { display: none !important; }
+  .upload-progress { height: 3px; background: var(--color-border-tertiary); border-radius: 99px; margin-top: 12px; overflow: hidden; }
+  .upload-progress-bar { height: 100%; width: 0; background: var(--color-text-primary); border-radius: 99px; transition: width 1.5s ease; }
+  .success-msg { text-align: center; padding: 2rem 1rem; }
+  .success-icon { width: 48px; height: 48px; background: var(--color-background-success); border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; }
+  .success-icon svg { width: 24px; height: 24px; color: var(--color-text-success); }
+</style>
+
+<div class="page">
+  <div class="page-header">
+    <div class="breadcrumb">
+      Medical Records
+      <span>›</span>
+      Lab Results
+      <span>›</span>
+      Upload
+    </div>
+    <h1>Upload lab result</h1>
+    <p class="subtitle">Attach a lab result file to a patient's medical record.</p>
+  </div>
+
+  <div id="main-form">
+    <div class="card">
+      <div class="section-label">1 — Patient</div>
+      <div class="field">
+        <label>Patient <span class="req">*</span></label>
+        <div id="patient-search-wrap">
+          <div class="search-wrap" id="search-area">
+            <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.5" cy="6.5" r="4"/><path d="M11 11l2.5 2.5"/></svg>
+            <input type="text" id="patient-input" placeholder="Search by name, email, or ID…" autocomplete="off" />
+            <div class="dropdown hidden" id="patient-dropdown"></div>
+          </div>
+          <div class="selected-patient hidden" id="selected-patient">
+            <div class="avatar" id="patient-avatar">—</div>
+            <div class="patient-info">
+              <div class="pname" id="patient-name-display">—</div>
+              <div class="pid" id="patient-id-display">—</div>
+            </div>
+            <button class="clear-btn" id="clear-patient">Change</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">2 — File</div>
+      <div class="field">
+        <label>Lab result file <span class="req">*</span></label>
+        <div class="drop-zone" id="drop-zone">
+          <svg class="drop-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 22V10M10 16l6-6 6 6"/><rect x="4" y="24" width="24" height="4" rx="2"/></svg>
+          <p><strong>Drag & drop</strong> or click to browse</p>
+          <p class="hint">PDF, JPG, PNG, GIF, TXT — max 10 MB</p>
+          <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png,.gif,.txt" style="display:none" />
+        </div>
+        <div class="file-preview hidden" id="file-preview">
+          <div class="file-icon">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2H4a1 1 0 00-1 1v10a1 1 0 001 1h8a1 1 0 001-1V6L9 2z"/><path d="M9 2v4h4"/></svg>
+          </div>
+          <div class="file-info">
+            <div class="fname" id="file-name-display">—</div>
+            <div class="fmeta" id="file-meta-display">—</div>
+          </div>
+          <button class="clear-btn" id="clear-file">Remove</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Display name</label>
+        <input type="text" class="text-input" id="display-name" placeholder="e.g. Blood panel – March 2025" />
+        <p class="helper">How this file will appear in the patient's records. Defaults to the original filename.</p>
+      </div>
+    </div>
+
+    <div class="card hidden" id="summary-card">
+      <div class="section-label">Summary</div>
+      <div class="summary-row"><span class="skey">Patient</span><span class="sval" id="sum-patient">—</span></div>
+      <div class="summary-row"><span class="skey">File</span><span class="sval" id="sum-file">—</span></div>
+      <div class="summary-row"><span class="skey">Display name</span><span class="sval" id="sum-display">—</span></div>
+      <div class="summary-row"><span class="skey">Upload time</span><span class="sval" id="sum-time">—</span></div>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" disabled>Upload lab result</button>
+    <div class="upload-progress hidden" id="upload-progress"><div class="upload-progress-bar" id="upload-bar"></div></div>
+  </div>
+
+  <div class="success-msg hidden" id="success-msg">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+    </div>
+    <p style="font-size:16px; font-weight:500; color:var(--color-text-primary); margin-bottom:6px;">Lab result uploaded</p>
+    <p style="font-size:14px; color:var(--color-text-secondary);" id="success-detail">—</p>
+    <button class="submit-btn" id="upload-another" style="margin-top:1.5rem; max-width:220px;">Upload another</button>
+  </div>
+</div>
+
+<script>
+const patients = [
+  { id: 'P-10042', first: 'Arjun', last: 'Mehta', email: 'arjun.mehta@email.com', dob: '1985-03-14' },
+  { id: 'P-10051', first: 'Priya', last: 'Nair', email: 'priya.nair@email.com', dob: '1992-07-22' },
+  { id: 'P-10067', first: 'Ravi', last: 'Shankar', email: 'ravi.s@email.com', dob: '1978-11-05' },
+  { id: 'P-10078', first: 'Deepa', last: 'Krishnan', email: 'deepa.k@email.com', dob: '2001-01-30' },
+  { id: 'P-10083', first: 'Samuel', last: 'Thomas', email: 's.thomas@email.com', dob: '1969-06-18' },
+  { id: 'P-10095', first: 'Ananya', last: 'Iyer', email: 'ananya.i@email.com', dob: '1997-09-11' },
+  { id: 'P-10102', first: 'Kavya', last: 'Reddy', email: 'kavya.r@email.com', dob: '1988-04-03' },
+];
+
+let selectedPatient = null;
+let selectedFile = null;
+
+const patientInput = document.getElementById('patient-input');
+const dropdown = document.getElementById('patient-dropdown');
+const searchArea = document.getElementById('search-area');
+const selectedPatientEl = document.getElementById('selected-patient');
+const submitBtn = document.getElementById('submit-btn');
+const summaryCard = document.getElementById('summary-card');
+
+function initials(p) { return (p.first[0] + p.last[0]).toUpperCase(); }
+
+function showDropdown(query) {
+  const q = query.toLowerCase();
+  const matches = patients.filter(p =>
+    p.first.toLowerCase().includes(q) ||
+    p.last.toLowerCase().includes(q) ||
+    p.email.toLowerCase().includes(q) ||
+    p.id.toLowerCase().includes(q)
+  ).slice(0, 5);
+  if (!matches.length) { dropdown.classList.add('hidden'); return; }
+  dropdown.innerHTML = matches.map((p, i) =>
+    `<div class="dropdown-item" data-idx="${i}">
+      <span class="name">${p.first} ${p.last}</span>
+      <span class="meta">${p.id} · ${p.email}</span>
+    </div>`
+  ).join('');
+  dropdown._matches = matches;
+  dropdown.querySelectorAll('.dropdown-item').forEach(el => {
+    el.addEventListener('mousedown', (e) => { e.preventDefault(); selectPatient(matches[+el.dataset.idx]); });
+  });
+  dropdown.classList.remove('hidden');
+}
+
+function selectPatient(p) {
+  selectedPatient = p;
+  dropdown.classList.add('hidden');
+  searchArea.classList.add('hidden');
+  document.getElementById('patient-avatar').textContent = initials(p);
+  document.getElementById('patient-name-display').textContent = `${p.first} ${p.last}`;
+  document.getElementById('patient-id-display').textContent = `${p.id} · ${p.email}`;
+  selectedPatientEl.classList.remove('hidden');
+  updateState();
+}
+
+document.getElementById('clear-patient').addEventListener('click', () => {
+  selectedPatient = null;
+  selectedPatientEl.classList.add('hidden');
+  searchArea.classList.remove('hidden');
+  patientInput.value = '';
+  patientInput.focus();
+  updateState();
+});
+
+patientInput.addEventListener('input', () => {
+  if (patientInput.value.length >= 2) showDropdown(patientInput.value);
+  else dropdown.classList.add('hidden');
+});
+
+patientInput.addEventListener('blur', () => {
+  setTimeout(() => dropdown.classList.add('hidden'), 150);
+});
+
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+const filePreview = document.getElementById('file-preview');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('drag-over'); handleFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
+
+function handleFile(file) {
+  if (!file) return;
+  const maxSize = 10 * 1024 * 1024;
+  const allowed = ['application/pdf','image/jpeg','image/png','image/gif','text/plain'];
+  if (file.size > maxSize) { alert('File exceeds 10 MB limit.'); return; }
+  if (!allowed.includes(file.type) && !file.name.endsWith('.txt')) { alert('Unsupported file type.'); return; }
+  selectedFile = file;
+  document.getElementById('file-name-display').textContent = file.name;
+  const kb = file.size < 1024*1024 ? `${Math.round(file.size/1024)} KB` : `${(file.size/1024/1024).toFixed(1)} MB`;
+  document.getElementById('file-meta-display').textContent = `${file.type || 'unknown type'} · ${kb}`;
+  dropZone.classList.add('hidden');
+  filePreview.classList.remove('hidden');
+  if (!document.getElementById('display-name').value) {
+    document.getElementById('display-name').value = file.name.replace(/\.[^.]+$/, '');
+  }
+  updateState();
+}
+
+document.getElementById('clear-file').addEventListener('click', () => {
+  selectedFile = null;
+  filePreview.classList.add('hidden');
+  dropZone.classList.remove('hidden');
+  fileInput.value = '';
+  updateState();
+});
+
+function updateState() {
+  const ready = selectedPatient && selectedFile;
+  submitBtn.disabled = !ready;
+  if (ready) {
+    summaryCard.classList.remove('hidden');
+    document.getElementById('sum-patient').textContent = `${selectedPatient.first} ${selectedPatient.last} (${selectedPatient.id})`;
+    document.getElementById('sum-file').textContent = selectedFile.name;
+    const dn = document.getElementById('display-name').value || selectedFile.name;
+    document.getElementById('sum-display').textContent = dn;
+    document.getElementById('sum-time').textContent = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+  } else {
+    summaryCard.classList.add('hidden');
+  }
+}
+
+document.getElementById('display-name').addEventListener('input', updateState);
+
+submitBtn.addEventListener('click', () => {
+  if (!selectedPatient || !selectedFile) return;
+  submitBtn.disabled = true;
+  const progress = document.getElementById('upload-progress');
+  const bar = document.getElementById('upload-bar');
+  progress.classList.remove('hidden');
+  setTimeout(() => { bar.style.width = '100%'; }, 50);
+  setTimeout(() => {
+    progress.classList.add('hidden');
+    document.getElementById('main-form').classList.add('hidden');
+    const detail = document.getElementById('success-detail');
+    detail.textContent = `${selectedFile.name} linked to ${selectedPatient.first} ${selectedPatient.last}.`;
+    document.getElementById('success-msg').classList.remove('hidden');
+  }, 1800);
+});
+
+document.getElementById('upload-another').addEventListener('click', () => {
+  selectedPatient = null; selectedFile = null;
+  document.getElementById('success-msg').classList.add('hidden');
+  document.getElementById('main-form').classList.remove('hidden');
+  searchArea.classList.remove('hidden');
+  selectedPatientEl.classList.add('hidden');
+  dropZone.classList.remove('hidden');
+  filePreview.classList.add('hidden');
+  summaryCard.classList.add('hidden');
+  patientInput.value = '';
+  fileInput.value = '';
+  document.getElementById('display-name').value = '';
+  submitBtn.disabled = true;
+});
+</script>

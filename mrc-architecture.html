@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MRC — Architecture Diagram</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050a0f;
+    --surface: #0d1821;
+    --surface2: #111d2b;
+    --border: #1a3048;
+    --accent: #00c6ff;
+    --accent2: #00ff9d;
+    --accent3: #ff6b6b;
+    --accent4: #ffd166;
+    --text: #e0eaf5;
+    --muted: #4a6b84;
+    --glow: rgba(0,198,255,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Starfield bg */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 15%, rgba(0,198,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 35%, rgba(0,255,157,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 75%, rgba(0,198,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 60%, rgba(255,107,107,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 90%, rgba(0,255,157,0.4) 0%, transparent 100%),
+      radial-gradient(600px circle at 10% 20%, rgba(0,198,255,0.04) 0%, transparent 60%),
+      radial-gradient(600px circle at 90% 80%, rgba(0,255,157,0.03) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 56px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .brand-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .brand-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .brand-title span {
+    color: var(--accent);
+  }
+
+  .brand-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  .meta-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-top: 4px;
+  }
+
+  .chip {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  .chip-blue { border-color: var(--accent); color: var(--accent); background: rgba(0,198,255,0.06); }
+  .chip-green { border-color: var(--accent2); color: var(--accent2); background: rgba(0,255,157,0.06); }
+  .chip-red { border-color: var(--accent3); color: var(--accent3); background: rgba(255,107,107,0.06); }
+  .chip-yellow { border-color: var(--accent4); color: var(--accent4); background: rgba(255,209,102,0.06); }
+
+  /* Section labels */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* === MAIN DIAGRAM === */
+  .diagram {
+    display: grid;
+    grid-template-columns: 1fr 56px 1fr;
+    grid-template-rows: auto auto auto auto auto;
+    gap: 0;
+    margin-bottom: 60px;
+  }
+
+  /* Zones */
+  .zone {
+    border-radius: 6px;
+    padding: 20px;
+    position: relative;
+  }
+
+  .zone-admin {
+    grid-column: 1;
+    grid-row: 1 / 7;
+    border: 1px solid rgba(0,198,255,0.25);
+    background: linear-gradient(135deg, rgba(0,198,255,0.04) 0%, transparent 60%);
+  }
+
+  .zone-lan {
+    grid-column: 3;
+    grid-row: 1 / 7;
+    border: 1px solid rgba(0,255,157,0.2);
+    background: linear-gradient(135deg, rgba(0,255,157,0.03) 0%, transparent 60%);
+  }
+
+  .zone-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 3px;
+    margin-bottom: 18px;
+    display: inline-block;
+  }
+
+  .zone-admin .zone-title { color: var(--accent); background: rgba(0,198,255,0.1); border: 1px solid rgba(0,198,255,0.2); }
+  .zone-lan .zone-title { color: var(--accent2); background: rgba(0,255,157,0.08); border: 1px solid rgba(0,255,157,0.2); }
+
+  .zone-subtitle {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  /* Nodes */
+  .node {
+    border-radius: 4px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    position: relative;
+    border: 1px solid;
+    transition: all 0.25s ease;
+    cursor: default;
+  }
+
+  .node:hover {
+    transform: translateY(-1px);
+  }
+
+  .node-icon {
+    font-size: 16px;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .node-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .node-desc {
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .node-tag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-weight: 700;
+  }
+
+  /* Node types */
+  .node-rust {
+    border-color: rgba(255,107,107,0.35);
+    background: rgba(255,107,107,0.05);
+  }
+  .node-rust:hover { border-color: rgba(255,107,107,0.6); box-shadow: 0 0 20px rgba(255,107,107,0.1); }
+  .node-rust .node-title { color: #ff8585; }
+  .node-rust .node-tag { background: rgba(255,107,107,0.15); color: #ff8585; border: 1px solid rgba(255,107,107,0.3); }
+
+  .node-next {
+    border-color: rgba(0,198,255,0.3);
+    background: rgba(0,198,255,0.05);
+  }
+  .node-next:hover { border-color: rgba(0,198,255,0.6); box-shadow: 0 0 20px rgba(0,198,255,0.1); }
+  .node-next .node-title { color: var(--accent); }
+  .node-next .node-tag { background: rgba(0,198,255,0.12); color: var(--accent); border: 1px solid rgba(0,198,255,0.3); }
+
+  .node-security {
+    border-color: rgba(255,209,102,0.3);
+    background: rgba(255,209,102,0.05);
+  }
+  .node-security:hover { border-color: rgba(255,209,102,0.6); box-shadow: 0 0 20px rgba(255,209,102,0.1); }
+  .node-security .node-title { color: var(--accent4); }
+  .node-security .node-tag { background: rgba(255,209,102,0.12); color: var(--accent4); border: 1px solid rgba(255,209,102,0.3); }
+
+  .node-db {
+    border-color: rgba(180,100,255,0.35);
+    background: rgba(180,100,255,0.05);
+  }
+  .node-db:hover { border-color: rgba(180,100,255,0.6); box-shadow: 0 0 20px rgba(180,100,255,0.12); }
+  .node-db .node-title { color: #c48eff; }
+  .node-db .node-tag { background: rgba(180,100,255,0.12); color: #c48eff; border: 1px solid rgba(180,100,255,0.3); }
+
+  .node-client {
+    border-color: rgba(0,255,157,0.25);
+    background: rgba(0,255,157,0.04);
+  }
+  .node-client:hover { border-color: rgba(0,255,157,0.5); box-shadow: 0 0 20px rgba(0,255,157,0.1); }
+  .node-client .node-title { color: var(--accent2); }
+  .node-client .node-tag { background: rgba(0,255,157,0.1); color: var(--accent2); border: 1px solid rgba(0,255,157,0.3); }
+
+  /* Connector column */
+  .connector-col {
+    grid-column: 2;
+    grid-row: 1 / 7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 80px;
+    gap: 0;
+    position: relative;
+  }
+
+  .connector-line {
+    width: 1px;
+    flex: 1;
+    background: linear-gradient(to bottom, transparent, var(--border), var(--border), transparent);
+    position: relative;
+  }
+
+  .conn-badge {
+    writing-mode: vertical-lr;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 0;
+    white-space: nowrap;
+  }
+
+  /* Arrow indicators */
+  .arrow-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 6px 0;
+    padding: 6px 8px;
+    border-radius: 3px;
+    border: 1px dashed;
+    font-size: 10px;
+  }
+
+  .arrow-row-blue { border-color: rgba(0,198,255,0.2); color: rgba(0,198,255,0.7); }
+  .arrow-row-green { border-color: rgba(0,255,157,0.2); color: rgba(0,255,157,0.7); }
+
+  .arrow-label {
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Data flow section */
+  .flow-section {
+    margin-bottom: 48px;
+  }
+
+  .flow-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .flow-step {
+    background: var(--surface);
+    padding: 16px 14px;
+    position: relative;
+  }
+
+  .flow-step::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .fs1::before { background: var(--accent); }
+  .fs2::before { background: var(--accent4); }
+  .fs3::before { background: var(--accent3); }
+  .fs4::before { background: #c48eff; }
+  .fs5::before { background: var(--accent2); }
+  .fs6::before { background: var(--accent); }
+
+  .flow-num {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    opacity: 0.12;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .flow-title {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Syne', sans-serif;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+
+  .flow-text {
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* RBAC table */
+  .rbac-section {
+    margin-bottom: 48px;
+  }
+
+  .rbac-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+
+  .role-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px;
+    background: var(--surface);
+    transition: all 0.2s;
+  }
+
+  .role-card:hover {
+    border-color: var(--accent);
+    background: rgba(0,198,255,0.04);
+  }
+
+  .role-icon { font-size: 18px; margin-bottom: 6px; display: block; }
+  .role-name { font-size: 11px; font-weight: 700; font-family: 'Syne', sans-serif; color: var(--text); margin-bottom: 4px; }
+  .role-scope { font-size: 9px; color: var(--muted); line-height: 1.5; }
+
+  .role-level {
+    display: flex;
+    gap: 2px;
+    margin-top: 8px;
+  }
+
+  .level-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  .level-dot.on { background: var(--accent); }
+  .level-dot.on-2 { background: var(--accent2); }
+  .level-dot.on-3 { background: var(--accent4); }
+
+  /* Tech stack */
+  .stack-section { margin-bottom: 48px; }
+
+  .stack-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .stack-item {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--surface);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .stack-item:hover {
+    border-color: var(--muted);
+    background: var(--surface2);
+  }
+
+  .stack-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .stack-layer-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    margin-top: 12px;
+  }
+
+  /* Compliance bar */
+  .compliance {
+    border: 1px solid rgba(0,255,157,0.2);
+    border-radius: 4px;
+    padding: 16px 20px;
+    background: rgba(0,255,157,0.03);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+
+  .compliance-badge {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--accent2);
+    border: 1px solid rgba(0,255,157,0.3);
+    padding: 6px 12px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .compliance-items {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .compliance-item {
+    font-size: 10px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .compliance-item::before {
+    content: '✓';
+    color: var(--accent2);
+    font-weight: 700;
+  }
+
+  /* Animate in */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .zone-admin { animation: fadeUp 0.5s ease 0.1s both; }
+  .zone-lan { animation: fadeUp 0.5s ease 0.2s both; }
+  .flow-section { animation: fadeUp 0.5s ease 0.3s both; }
+  .rbac-section { animation: fadeUp 0.5s ease 0.4s both; }
+  .stack-section { animation: fadeUp 0.5s ease 0.5s both; }
+
+  /* pulse dot */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent2);
+    display: inline-block;
+    animation: pulse 2s ease infinite;
+    margin-right: 6px;
+  }
+
+  /* Divider */
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  footer {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-label">Architecture Overview</div>
+      <div class="brand-title">MRC <span>Next.js</span> Migration</div>
+      <div class="brand-sub"><span class="live-dot"></span>Tauri v2 + Next.js App Router · Generated 2026-03-01</div>
+    </div>
+    <div class="meta-chips">
+      <div class="chip chip-blue">Next.js</div>
+      <div class="chip chip-red">Tauri v2</div>
+      <div class="chip chip-green">HIPAA</div>
+      <div class="chip chip-yellow">Zero-Trust</div>
+    </div>
+  </header>
+
+  <!-- System Diagram -->
+  <div class="section-label">System Topology</div>
+  <div class="diagram">
+
+    <!-- Admin Zone -->
+    <div class="zone zone-admin">
+      <div class="zone-title">Admin Host — Tauri App</div>
+      <div class="zone-subtitle">Laptop-as-Server. Hosts all data and business logic.<br>Admin accesses via native Tauri wrapper.</div>
+
+      <div class="node node-rust">
+        <span class="node-icon">⚙️</span>
+        <div class="node-title">Tauri Rust Core</div>
+        <div class="node-desc">OS-level integration. System tray, native APIs, IPC bridge to Next.js process.</div>
+        <div class="node-tag">Rust</div>
+      </div>
+
+      <div class="node node-next">
+        <span class="node-icon">▲</span>
+        <div class="node-title">Next.js App Router</div>
+        <div class="node-desc">Serves React UI and API Routes. Handles SSR for Admin views and LAN clients alike.</div>
+        <div class="node-tag">Node.js</div>
+      </div>
+
+      <div class="node node-security">
+        <span class="node-icon">🛡</span>
+        <div class="node-title">Zero-Trust Middleware</div>
+        <div class="node-desc">Per-request JWT validation, device fingerprint, IP reputation, trust-score gating.</div>
+        <div class="node-tag">Middleware</div>
+      </div>
+
+      <div class="node node-next">
+        <span class="node-icon">⚡</span>
+        <div class="node-title">Next.js API Routes</div>
+        <div class="node-desc">Migrated from Express. REST endpoints for CRUD, auth, audit log, and messenger.</div>
+        <div class="node-tag">API</div>
+      </div>
+
+      <div class="node node-db">
+        <span class="node-icon">🗄</span>
+        <div class="node-title">SQLite Database</div>
+        <div class="node-desc">AES-256 field-level encryption for PII/PHI. 60,000+ records. Local-first residency.</div>
+        <div class="node-tag">SQLite</div>
+      </div>
+
+      <div class="node node-security">
+        <span class="node-icon">📋</span>
+        <div class="node-title">Audit Engine</div>
+        <div class="node-desc">Tamper-evident, automated PHI access and modification logging for HIPAA compliance.</div>
+        <div class="node-tag">Logging</div>
+      </div>
+
+      <div style="margin-top:8px;">
+        <div class="arrow-row arrow-row-blue">
+          <span>↕</span>
+          <span class="arrow-label">Socket.io — Real-time Messaging (WebSocket)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connector -->
+    <div class="connector-col">
+      <div class="connector-line"></div>
+      <div class="conn-badge">LAN · HTTP · WS</div>
+      <div class="connector-line"></div>
+    </div>
+
+    <!-- LAN Zone -->
+    <div class="zone zone-lan">
+      <div class="zone-title">LAN Clients — Browsers</div>
+      <div class="zone-subtitle">Staff access via IP/hostname on local network.<br>No installation required on client machines.</div>
+
+      <div class="node node-client">
+        <span class="node-icon">🖥</span>
+        <div class="node-title">Doctor Dashboard</div>
+        <div class="node-desc">Clinical entry and view for assigned hospitals. Encounter, Rx, lab result entry.</div>
+        <div class="node-tag">Role: Doctor</div>
+      </div>
+
+      <div class="node node-client">
+        <span class="node-icon">📋</span>
+        <div class="node-title">Receptionist Portal</div>
+        <div class="node-desc">Patient registration, queue management, and appointment scheduling.</div>
+        <div class="node-tag">Role: Reception</div>
+      </div>
+
+      <div class="node node-client">
+        <span class="node-icon">📊</span>
+        <div class="node-title">Analyst / SIP Workspace</div>
+        <div class="node-desc">Data analysis, processing workflows for Team Lead, Analyst, Production roles.</div>
+        <div class="node-tag">Role: SIP</div>
+      </div>
+
+      <div class="node node-next" style="border-color:rgba(0,198,255,0.2);">
+        <span class="node-icon">⚛️</span>
+        <div class="node-title">React UI (Shared)</div>
+        <div class="node-desc">Tailwind + GSD Design System. Context/Hooks state. All roles share the same Next.js frontend.</div>
+        <div class="node-tag">React</div>
+      </div>
+
+      <div class="node node-client">
+        <span class="node-icon">💬</span>
+        <div class="node-title">Secure Messenger</div>
+        <div class="node-desc">WebSocket-based real-time messaging. Role-aware channels between staff.</div>
+        <div class="node-tag">Socket.io</div>
+      </div>
+
+      <div style="margin-top: 8px;">
+        <div class="arrow-row arrow-row-green">
+          <span>→</span>
+          <span class="arrow-label">HTTP Fetch → Next.js API Routes</span>
+        </div>
+        <div class="arrow-row arrow-row-green">
+          <span>⇄</span>
+          <span class="arrow-label">WebSocket → Socket.io Server</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Flow -->
+  <div class="flow-section">
+    <div class="section-label">Request Data Flow</div>
+    <div class="flow-steps">
+      <div class="flow-step fs1">
+        <div class="flow-num">01</div>
+        <div class="flow-title">User Action</div>
+        <div class="flow-text">Staff interacts with React UI — search, form submit, or message send.</div>
+      </div>
+      <div class="flow-step fs2">
+        <div class="flow-num">02</div>
+        <div class="flow-title">API / WS Call</div>
+        <div class="flow-text">Fetch or Socket.io emits request to Next.js server over LAN.</div>
+      </div>
+      <div class="flow-step fs3">
+        <div class="flow-num">03</div>
+        <div class="flow-title">Zero-Trust Check</div>
+        <div class="flow-text">Middleware validates JWT, device fingerprint, IP trust score.</div>
+      </div>
+      <div class="flow-step fs4">
+        <div class="flow-num">04</div>
+        <div class="flow-title">DB Query</div>
+        <div class="flow-text">API Route runs RBAC-gated SQLite query via business logic layer.</div>
+      </div>
+      <div class="flow-step fs5">
+        <div class="flow-num">05</div>
+        <div class="flow-title">Decrypt PHI</div>
+        <div class="flow-text">AES-256 fields decrypted on-the-fly for authorized requester only.</div>
+      </div>
+      <div class="flow-step fs6">
+        <div class="flow-num">06</div>
+        <div class="flow-title">Audit + Respond</div>
+        <div class="flow-text">Access logged to Audit Engine. Data returned to UI for render.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RBAC -->
+  <div class="rbac-section">
+    <div class="section-label">Role-Based Access Control — 7 Roles</div>
+    <div class="rbac-grid">
+      <div class="role-card">
+        <span class="role-icon">👨‍⚕️</span>
+        <div class="role-name">Doctor</div>
+        <div class="role-scope">Clinical entry & view for assigned hospitals</div>
+        <div class="role-level">
+          <div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot"></div><div class="level-dot"></div>
+        </div>
+      </div>
+      <div class="role-card">
+        <span class="role-icon">🗂</span>
+        <div class="role-name">Receptionist</div>
+        <div class="role-scope">Registration and queue management</div>
+        <div class="role-level">
+          <div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot"></div><div class="level-dot"></div><div class="level-dot"></div>
+        </div>
+      </div>
+      <div class="role-card">
+        <span class="role-icon">🔧</span>
+        <div class="role-name">Admin</div>
+        <div class="role-scope">System config & user management (Tauri host)</div>
+        <div class="role-level">
+          <div class="level-dot on-3"></div><div class="level-dot on-3"></div><div class="level-dot on-3"></div><div class="level-dot on-3"></div><div class="level-dot on-3"></div>
+        </div>
+      </div>
+      <div class="role-card">
+        <span class="role-icon">📈</span>
+        <div class="role-name">Team Lead</div>
+        <div class="role-scope">SIP workflow oversight and data processing</div>
+        <div class="role-level">
+          <div class="level-dot on-2"></div><div class="level-dot on-2"></div><div class="level-dot on-2"></div><div class="level-dot on-2"></div><div class="level-dot"></div>
+        </div>
+      </div>
+      <div class="role-card">
+        <span class="role-icon">🔬</span>
+        <div class="role-name">Analyst</div>
+        <div class="role-scope">Data analysis and reporting workflows</div>
+        <div class="role-level">
+          <div class="level-dot on-2"></div><div class="level-dot on-2"></div><div class="level-dot on-2"></div><div class="level-dot"></div><div class="level-dot"></div>
+        </div>
+      </div>
+      <div class="role-card">
+        <span class="role-icon">⚙️</span>
+        <div class="role-name">Production</div>
+        <div class="role-scope">SIP data processing operations</div>
+        <div class="role-level">
+          <div class="level-dot on-2"></div><div class="level-dot on-2"></div><div class="level-dot"></div><div class="level-dot"></div><div class="level-dot"></div>
+        </div>
+      </div>
+      <div class="role-card">
+        <span class="role-icon">💻</span>
+        <div class="role-name">Developer</div>
+        <div class="role-scope">System maintenance and debugging access</div>
+        <div class="role-level">
+          <div class="level-dot on-3"></div><div class="level-dot on-3"></div><div class="level-dot on-3"></div><div class="level-dot on-3"></div><div class="level-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compliance -->
+  <div class="compliance">
+    <div class="compliance-badge">HIPAA COMPLIANT</div>
+    <div class="compliance-items">
+      <div class="compliance-item">AES-256 at-rest encryption</div>
+      <div class="compliance-item">Full PHI audit trail</div>
+      <div class="compliance-item">JWT + MFA authentication</div>
+      <div class="compliance-item">Zero-Trust per-request verification</div>
+      <div class="compliance-item">Local-first data residency</div>
+      <div class="compliance-item">Role-based access controls</div>
+    </div>
+  </div>
+
+  <!-- Tech Stack -->
+  <div class="stack-section">
+    <div class="section-label">Technology Stack</div>
+
+    <div class="stack-layer-label">Native Layer</div>
+    <div class="stack-row">
+      <div class="stack-item"><div class="stack-dot" style="background:#ff8585"></div>Tauri v2 (Rust)</div>
+      <div class="stack-item"><div class="stack-dot" style="background:#ff8585"></div>System Tray Plugin</div>
+      <div class="stack-item"><div class="stack-dot" style="background:#ff8585"></div>Native OS APIs</div>
+      <div class="stack-item"><div class="stack-dot" style="background:#ff8585"></div>Rust AES Encryption (optional)</div>
+    </div>
+
+    <div class="stack-layer-label">Server / API Layer</div>
+    <div class="stack-row">
+      <div class="stack-item"><div class="stack-dot" style="background:var(--accent)"></div>Next.js App Router</div>
+      <div class="stack-item"><div class="stack-dot" style="background:var(--accent)"></div>Next.js API Routes</div>
+      <div class="stack-item"><div class="stack-dot" style="background:var(--accent)"></div>Next.js Middleware</div>
+      <div class="stack-item"><div class="stack-dot" style="background:var(--accent)"></div>Socket.io</div>
+      <div class="stack-item"><div class="stack-dot" style="background:#c48eff"></div>SQLite3</div>
+    </div>
+
+    <div class="stack-layer-label">Frontend Layer</div>
+    <div class="stack-row">
+      <div class="stack-item"><div class="stack-dot" style="background:var(--accent2)"></div>React (Hooks + Context)</div>
+      <div class="stack-item"><div class="stack-dot" style="background:var(--accent2)"></div>Tailwind CSS</div>
+      <div class="stack-item"><div class="stack-dot" style="background:var(--accent2)"></div>GSD Design System</div>
+    </div>
+
+    <div class="stack-layer-label">Security Layer</div>
+    <div class="stack-row">
+      <div class="stack-item"><div class="stack-dot" style="background:var(--accent4)"></div>JWT Sessions + MFA</div>
+      <div class="stack-item"><div class="stack-dot" style="background:var(--accent4)"></div>Device Fingerprinting</div>
+      <div class="stack-item"><div class="stack-dot" style="background:var(--accent4)"></div>IP Reputation / VPN Detection</div>
+      <div class="stack-item"><div class="stack-dot" style="background:var(--accent4)"></div>AES-256 Field Encryption</div>
+    </div>
+  </div>
+
+  <hr>
+  <footer>MRC Architecture · Tauri v2 + Next.js Migration · Generated 2026-03-01 · Internal Reference Only</footer>
+</div>
+</body>
+</html>

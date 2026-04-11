@@ -1,4 +1,0 @@
-module.exports = {
-  ENCRYPTION_KEY: "12345678901234567890123456789012", // 32 bytes
-  IV_LENGTH: 16
-};

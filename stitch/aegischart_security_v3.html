@@ -1,0 +1,489 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+  :root {
+    --s0: hsl(222,28%,8%);
+    --s1: hsl(222,24%,11%);
+    --s2: hsl(222,20%,14%);
+    --s3: hsl(222,18%,18%);
+    --bd: hsl(222,18%,22%);
+    --tp: hsl(210,20%,96%);
+    --ts: hsl(215,15%,60%);
+    --tm: hsl(215,12%,40%);
+    --brand: hsl(210,100%,56%);
+    --success: hsl(152,69%,42%);
+    --warning: hsl(38,95%,55%);
+    --danger: hsl(0,72%,58%);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .page {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--s0);
+    min-height: 600px;
+    padding: 1.5rem;
+    color: var(--tp);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+  }
+  .page-title { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; color: var(--tp); line-height: 1.2; }
+  .page-sub { font-size: 0.8rem; color: var(--ts); margin-top: 0.25rem; }
+  .header-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.875rem; margin-bottom: 1.5rem; }
+  .stat-card {
+    background: var(--s1); border: 1px solid var(--bd); border-radius: 12px;
+    padding: 1rem 1.125rem; position: relative; overflow: hidden; transition: border-color 0.2s;
+  }
+  .stat-card::after {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    border-radius:12px 12px 0 0; background:var(--accent,var(--brand)); opacity:0.7;
+  }
+  .stat-card:hover { border-color: var(--accent,var(--brand)); }
+  .stat-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.625rem; }
+  .stat-icon { width:32px; height:32px; border-radius:8px; background:var(--accent-bg,hsl(210,100%,56%,0.12)); display:flex; align-items:center; justify-content:center; color:var(--accent,var(--brand)); }
+  .stat-icon .material-symbols-outlined { font-size:16px; }
+  .stat-num { font-size:1.625rem; font-weight:800; letter-spacing:-0.04em; color:var(--tp); line-height:1; font-variant-numeric:tabular-nums; }
+  .stat-label { font-size:0.68rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--tm); margin-top:0.25rem; }
+  .stat-badge { font-size:0.65rem; font-weight:700; padding:0.15rem 0.45rem; border-radius:99px; background:var(--accent-bg,hsl(210,100%,56%,0.12)); color:var(--accent,var(--brand)); }
+
+  .approval-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.45rem 0.875rem;
+    background: hsl(38,95%,55%,0.12);
+    border: 1px solid hsl(38,95%,55%,0.35);
+    border-radius: 8px;
+    font-size: 0.78rem; font-weight: 700;
+    color: hsl(38,95%,68%);
+    cursor: pointer; transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .approval-btn:hover { background: hsl(38,95%,55%,0.2); border-color: hsl(38,95%,55%,0.6); color: hsl(38,95%,78%); }
+  .approval-btn .material-symbols-outlined { font-size: 15px; }
+  .approval-count-pill {
+    background: var(--warning); color: hsl(30,80%,15%);
+    font-size: 0.65rem; font-weight: 800;
+    padding: 0.1rem 0.4rem; border-radius: 99px; line-height: 1.4;
+  }
+
+  .tabs-bar { display:flex; align-items:center; gap:0.25rem; padding:0.3rem; background:var(--s1); border:1px solid var(--bd); border-radius:10px; margin-bottom:1.25rem; width:fit-content; }
+  .tab-btn { display:flex; align-items:center; gap:0.4rem; padding:0.45rem 0.875rem; border-radius:7px; font-size:0.8rem; font-weight:600; border:none; cursor:pointer; transition:all 0.15s; color:var(--ts); background:transparent; font-family:'Inter',sans-serif; text-transform:uppercase; letter-spacing:0.06em; }
+  .tab-btn .material-symbols-outlined { font-size:15px; }
+  .tab-btn.active { background:var(--s3); color:var(--tp); box-shadow:0 1px 3px rgba(0,0,0,0.3); }
+  .tab-dot { width:6px; height:6px; border-radius:50%; background:var(--warning); animation:pulse-w 1.5s ease-out infinite; }
+  @keyframes pulse-w { 0%{box-shadow:0 0 0 0 hsl(38,95%,55%,0.4)} 70%{box-shadow:0 0 0 6px hsl(38,95%,55%,0)} 100%{box-shadow:0 0 0 0 hsl(38,95%,55%,0)} }
+
+  .data-card { background:var(--s1); border:1px solid var(--bd); border-radius:12px; overflow:hidden; }
+  .card-head { padding:0.875rem 1.25rem; border-bottom:1px solid var(--bd); display:flex; align-items:center; justify-content:space-between; gap:1rem; background:var(--s2); }
+  .card-head-left { display:flex; align-items:center; gap:0.625rem; }
+  .card-head-icon { width:28px; height:28px; border-radius:7px; background:hsl(210,100%,56%,0.1); display:flex; align-items:center; justify-content:center; color:var(--brand); }
+  .card-head-icon .material-symbols-outlined { font-size:14px; }
+  .card-head-title { font-size:0.875rem; font-weight:600; color:var(--tp); }
+  .card-head-sub { font-size:0.72rem; color:var(--tm); margin-top:1px; }
+  .card-head-right { display:flex; align-items:center; gap:0.5rem; }
+
+  .search-wrap { position:relative; }
+  .search-wrap .material-symbols-outlined { position:absolute; left:0.55rem; top:50%; transform:translateY(-50%); font-size:14px; color:var(--tm); pointer-events:none; }
+  .search-input { background:var(--s3); border:1px solid var(--bd); border-radius:7px; padding:0.4rem 0.75rem 0.4rem 1.875rem; font-size:0.8rem; color:var(--tp); outline:none; font-family:'Inter',sans-serif; width:180px; transition:border-color 0.15s, box-shadow 0.15s; }
+  .search-input::placeholder { color:var(--tm); }
+  .search-input:focus { border-color:var(--brand); box-shadow:0 0 0 3px hsl(210,100%,56%,0.12); }
+
+  .sort-wrap { position:relative; }
+  .sort-btn { display:flex; align-items:center; gap:0.35rem; padding:0.4rem 0.75rem; background:var(--s3); border:1px solid var(--bd); border-radius:7px; font-size:0.78rem; font-weight:500; color:var(--ts); cursor:pointer; transition:all 0.15s; font-family:'Inter',sans-serif; white-space:nowrap; }
+  .sort-btn:hover { border-color:hsl(222,18%,30%); color:var(--tp); }
+  .sort-btn .material-symbols-outlined { font-size:14px; }
+  .sort-btn.open { border-color:var(--brand); color:var(--tp); }
+
+  .sort-dropdown { display:none; position:absolute; top:calc(100% + 6px); right:0; background:var(--s1); border:1px solid var(--bd); border-radius:10px; padding:0.375rem; min-width:200px; z-index:100; box-shadow:0 8px 32px rgba(0,0,0,0.45); }
+  .sort-dropdown.open { display:block; }
+  .sort-section-label { font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--tm); padding:0.4rem 0.625rem 0.25rem; }
+  .sort-divider { height:1px; background:var(--bd); margin:0.3rem 0; }
+  .sort-option { display:flex; align-items:center; gap:0.5rem; padding:0.45rem 0.625rem; border-radius:6px; font-size:0.8rem; font-weight:500; color:var(--ts); cursor:pointer; transition:all 0.12s; font-family:'Inter',sans-serif; }
+  .sort-option:hover { background:var(--s3); color:var(--tp); }
+  .sort-option.active { background:hsl(210,100%,56%,0.1); color:var(--brand); }
+  .sort-option .material-symbols-outlined { font-size:14px; }
+  .sort-check { margin-left:auto; font-size:13px; color:var(--brand); }
+
+  .data-table { width:100%; border-collapse:collapse; }
+  .data-table th { padding:0.6rem 1rem; font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--tm); text-align:left; border-bottom:1px solid var(--bd); background:var(--s2); white-space:nowrap; }
+  .data-table td { padding:0.8rem 1rem; font-size:0.84rem; color:var(--tp); border-bottom:1px solid var(--bd); vertical-align:middle; }
+  .data-table tbody tr:last-child td { border-bottom:none; }
+  .data-table tbody tr { transition:background 0.1s; }
+  .data-table tbody tr:hover { background:var(--s2); }
+
+  .avatar { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; color:white; flex-shrink:0; }
+  .user-cell { display:flex; align-items:center; gap:0.625rem; }
+  .user-name-text { font-size:0.84rem; font-weight:600; color:var(--tp); }
+  .user-email { font-size:0.72rem; color:var(--ts); }
+
+  .badge { display:inline-flex; align-items:center; gap:0.2rem; padding:0.18rem 0.55rem; border-radius:99px; font-size:0.68rem; font-weight:700; white-space:nowrap; letter-spacing:0.03em; }
+  .badge-purple { background:hsl(250,100%,65%,0.15); color:hsl(250,100%,78%); }
+  .badge-blue   { background:hsl(210,100%,56%,0.15); color:hsl(210,100%,72%); }
+  .badge-green  { background:hsl(152,69%,42%,0.15);  color:hsl(152,69%,62%); }
+  .badge-orange { background:hsl(38,95%,55%,0.15);   color:hsl(38,95%,68%); }
+  .badge-red    { background:hsl(0,72%,58%,0.15);    color:hsl(0,72%,70%); }
+  .badge-gray   { background:var(--s3); color:var(--tm); }
+
+  .status-row { display:flex; align-items:center; gap:0.375rem; }
+  .status-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .dot-green  { background:var(--success); animation:pulse-g 2s ease-out infinite; }
+  .dot-orange { background:var(--warning); }
+  @keyframes pulse-g { 0%{box-shadow:0 0 0 0 hsl(152,69%,42%,0.4)} 70%{box-shadow:0 0 0 5px hsl(152,69%,42%,0)} 100%{box-shadow:0 0 0 0 hsl(152,69%,42%,0)} }
+  .status-text { font-size:0.75rem; font-weight:600; letter-spacing:0.04em; }
+  .text-success { color:hsl(152,69%,60%); }
+  .text-warning { color:hsl(38,95%,68%); }
+
+  .toggle-wrap { display:flex; align-items:center; gap:0.5rem; }
+  .toggle { position:relative; width:38px; height:20px; cursor:pointer; display:inline-block; }
+  .toggle input { opacity:0; width:0; height:0; position:absolute; }
+  .toggle-track { position:absolute; inset:0; background:var(--s3); border:1px solid var(--bd); border-radius:99px; transition:all 0.2s; }
+  .toggle input:checked ~ .toggle-track { background:hsl(152,69%,42%,0.3); border-color:var(--success); }
+  .toggle-thumb { position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:var(--tm); transition:all 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.4); pointer-events:none; }
+
+  .action-btn { width:28px; height:28px; border-radius:6px; background:transparent; border:1px solid transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--tm); transition:all 0.15s; }
+  .action-btn:hover { background:hsl(0,72%,58%,0.1); color:var(--danger); border-color:hsl(0,72%,58%,0.25); }
+  .action-btn.disabled { opacity:0.3; pointer-events:none; }
+  .action-btn .material-symbols-outlined { font-size:15px; }
+
+  .mono { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--ts); }
+
+  .btn { display:inline-flex; align-items:center; gap:0.4rem; padding:0.45rem 0.875rem; border-radius:8px; font-size:0.8rem; font-weight:500; border:none; cursor:pointer; transition:all 0.15s; font-family:'Inter',sans-serif; }
+  .btn .material-symbols-outlined { font-size:15px; }
+  .btn-ghost { background:var(--s2); color:var(--ts); border:1px solid var(--bd); }
+  .btn-ghost:hover { background:var(--s3); color:var(--tp); }
+
+  .activity-wrap { display:flex; align-items:center; gap:0.5rem; }
+  .activity-glow { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .activity-text { font-size:0.8rem; font-weight:600; letter-spacing:0.06em; font-family:'JetBrains Mono',monospace; }
+
+  .hidden { display:none; }
+  tr.pending-row td { background:hsl(38,95%,55%,0.03); }
+</style>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">Admin &amp; Security</div>
+      <div class="page-sub">Manage hospital staff, account approvals, and system access logs.</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost">
+        <span class="material-symbols-outlined">download</span>
+        Export
+      </button>
+      <button class="approval-btn" onclick="scrollToApprovals()">
+        <span class="material-symbols-outlined">pending_actions</span>
+        Approvals Required
+        <span class="approval-count-pill" id="approval-pill">3</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card" style="--accent:hsl(210,100%,56%);--accent-bg:hsl(210,100%,56%,0.1)">
+      <div class="stat-top">
+        <div class="stat-icon"><span class="material-symbols-outlined">group</span></div>
+        <span class="stat-badge">+2 today</span>
+      </div>
+      <div class="stat-num">24</div>
+      <div class="stat-label">Total Staff</div>
+    </div>
+    <div class="stat-card" style="--accent:hsl(38,95%,55%);--accent-bg:hsl(38,95%,55%,0.1)">
+      <div class="stat-top">
+        <div class="stat-icon" style="background:hsl(38,95%,55%,0.12);color:hsl(38,95%,55%)"><span class="material-symbols-outlined">pending_actions</span></div>
+        <span class="stat-badge" style="background:hsl(38,95%,55%,0.15);color:hsl(38,95%,68%)">Needs review</span>
+      </div>
+      <div class="stat-num">3</div>
+      <div class="stat-label">Pending Approvals</div>
+    </div>
+    <div class="stat-card" style="--accent:hsl(152,69%,42%);--accent-bg:hsl(152,69%,42%,0.1)">
+      <div class="stat-top">
+        <div class="stat-icon" style="background:hsl(152,69%,42%,0.12);color:hsl(152,69%,55%)"><span class="material-symbols-outlined">verified_user</span></div>
+        <span class="stat-badge" style="background:hsl(152,69%,42%,0.15);color:hsl(152,69%,62%)">Active</span>
+      </div>
+      <div class="stat-num">21</div>
+      <div class="stat-label">Authorized Users</div>
+    </div>
+    <div class="stat-card" style="--accent:hsl(0,72%,58%);--accent-bg:hsl(0,72%,58%,0.1)">
+      <div class="stat-top">
+        <div class="stat-icon" style="background:hsl(0,72%,58%,0.12);color:hsl(0,72%,68%)"><span class="material-symbols-outlined">lock_person</span></div>
+        <span class="stat-badge" style="background:hsl(0,72%,58%,0.15);color:hsl(0,72%,70%)">Last 24h</span>
+      </div>
+      <div class="stat-num">2</div>
+      <div class="stat-label">Failed Logins</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" id="tab-users" onclick="switchTab('users')">
+      <span class="material-symbols-outlined">manage_accounts</span>
+      User Management
+      <div class="tab-dot"></div>
+    </button>
+    <button class="tab-btn" id="tab-logs" onclick="switchTab('logs')">
+      <span class="material-symbols-outlined">shield_lock</span>
+      Security Logs
+    </button>
+  </div>
+
+  <!-- USER MANAGEMENT -->
+  <div id="view-users">
+    <div class="data-card">
+      <div class="card-head">
+        <div class="card-head-left">
+          <div class="card-head-icon"><span class="material-symbols-outlined">badge</span></div>
+          <div>
+            <div class="card-head-title">Hospital Staff Registry</div>
+            <div class="card-head-sub">24 members across all departments</div>
+          </div>
+        </div>
+        <div class="card-head-right">
+          <div class="search-wrap">
+            <span class="material-symbols-outlined">search</span>
+            <input class="search-input" type="text" placeholder="Search staff…" oninput="filterUsers(this.value)">
+          </div>
+          <div class="sort-wrap" id="sort-wrap-users">
+            <button class="sort-btn" id="sort-btn-users" onclick="toggleSort('users')">
+              <span class="material-symbols-outlined">swap_vert</span>
+              Sort by
+              <span class="material-symbols-outlined" style="font-size:12px;margin-left:2px">expand_more</span>
+            </button>
+            <div class="sort-dropdown" id="sort-dropdown-users">
+              <div class="sort-section-label">Name</div>
+              <div class="sort-option active" id="so-name-az" onclick="setSort('name-az')">
+                <span class="material-symbols-outlined">sort_by_alpha</span>Name A → Z
+                <span class="sort-check material-symbols-outlined" id="check-name-az">check</span>
+              </div>
+              <div class="sort-option" id="so-name-za" onclick="setSort('name-za')">
+                <span class="material-symbols-outlined">sort_by_alpha</span>Name Z → A
+                <span class="sort-check material-symbols-outlined hidden" id="check-name-za">check</span>
+              </div>
+              <div class="sort-divider"></div>
+              <div class="sort-section-label">Status</div>
+              <div class="sort-option" id="so-pending-first" onclick="setSort('pending-first')">
+                <span class="material-symbols-outlined">pending_actions</span>Pending first
+                <span class="sort-check material-symbols-outlined hidden" id="check-pending-first">check</span>
+              </div>
+              <div class="sort-option" id="so-authorized-first" onclick="setSort('authorized-first')">
+                <span class="material-symbols-outlined">verified_user</span>Authorized first
+                <span class="sort-check material-symbols-outlined hidden" id="check-authorized-first">check</span>
+              </div>
+              <div class="sort-divider"></div>
+              <div class="sort-section-label">Role</div>
+              <div class="sort-option" id="so-role" onclick="setSort('role')">
+                <span class="material-symbols-outlined">badge</span>Role (A → Z)
+                <span class="sort-check material-symbols-outlined hidden" id="check-role">check</span>
+              </div>
+              <div class="sort-divider"></div>
+              <div class="sort-section-label">Date</div>
+              <div class="sort-option" id="so-newest" onclick="setSort('newest')">
+                <span class="material-symbols-outlined">calendar_today</span>Newest joined
+                <span class="sort-check material-symbols-outlined hidden" id="check-newest">check</span>
+              </div>
+              <div class="sort-option" id="so-oldest" onclick="setSort('oldest')">
+                <span class="material-symbols-outlined">history</span>Oldest joined
+                <span class="sort-check material-symbols-outlined hidden" id="check-oldest">check</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Staff Member</th><th>Role</th><th>Status</th><th>Access Control</th><th>Joined</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="users-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECURITY LOGS -->
+  <div id="view-logs" class="hidden">
+    <div class="data-card">
+      <div class="card-head">
+        <div class="card-head-left">
+          <div class="card-head-icon"><span class="material-symbols-outlined">history</span></div>
+          <div>
+            <div class="card-head-title">System Access Logs</div>
+            <div class="card-head-sub">Real-time authentication &amp; activity trail</div>
+          </div>
+        </div>
+        <div class="card-head-right">
+          <div class="search-wrap">
+            <span class="material-symbols-outlined">search</span>
+            <input class="search-input" type="text" placeholder="Filter logs…">
+          </div>
+          <div class="sort-wrap" id="sort-wrap-logs">
+            <button class="sort-btn" id="sort-btn-logs" onclick="toggleSort('logs')">
+              <span class="material-symbols-outlined">swap_vert</span>
+              Sort by
+              <span class="material-symbols-outlined" style="font-size:12px;margin-left:2px">expand_more</span>
+            </button>
+            <div class="sort-dropdown" id="sort-dropdown-logs">
+              <div class="sort-section-label">Time</div>
+              <div class="sort-option active" onclick="closeSort('logs')">
+                <span class="material-symbols-outlined">schedule</span>Newest first
+                <span class="sort-check material-symbols-outlined">check</span>
+              </div>
+              <div class="sort-option" onclick="closeSort('logs')">
+                <span class="material-symbols-outlined">history</span>Oldest first
+                <span class="sort-check material-symbols-outlined hidden">check</span>
+              </div>
+              <div class="sort-divider"></div>
+              <div class="sort-section-label">Result</div>
+              <div class="sort-option" onclick="closeSort('logs')">
+                <span class="material-symbols-outlined">check_circle</span>Success first
+                <span class="sort-check material-symbols-outlined hidden">check</span>
+              </div>
+              <div class="sort-option" onclick="closeSort('logs')">
+                <span class="material-symbols-outlined">cancel</span>Failed first
+                <span class="sort-check material-symbols-outlined hidden">check</span>
+              </div>
+              <div class="sort-divider"></div>
+              <div class="sort-section-label">Activity</div>
+              <div class="sort-option" onclick="closeSort('logs')">
+                <span class="material-symbols-outlined">login</span>Login events
+                <span class="sort-check material-symbols-outlined hidden">check</span>
+              </div>
+              <div class="sort-option" onclick="closeSort('logs')">
+                <span class="material-symbols-outlined">key</span>Auth events
+                <span class="sort-check material-symbols-outlined hidden">check</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr><th>User</th><th>Activity</th><th>Result</th><th style="text-align:right">Timestamp</th></tr>
+        </thead>
+        <tbody id="logs-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const USERS = [
+  { initials:'SA', name:'Dr. Sarah Ahmed',  email:'s.ahmed@hospital.org',   role:'admin',       status:'authorized', joined:'2022-03-14', isAdmin:true },
+  { initials:'JL', name:'Dr. James Liu',    email:'j.liu@hospital.org',      role:'doctor',      status:'authorized', joined:'2023-01-08' },
+  { initials:'MK', name:'Maya Krishnan',    email:'m.krishnan@hospital.org', role:'nurse',       status:'authorized', joined:'2023-06-22' },
+  { initials:'RP', name:'Robert Patel',     email:'r.patel@hospital.org',    role:'radiologist', status:'pending',    joined:'2024-11-03' },
+  { initials:'EN', name:'Elena Novak',      email:'e.novak@hospital.org',    role:'doctor',      status:'pending',    joined:'2024-11-15' },
+  { initials:'TC', name:'Tom Chen',         email:'t.chen@hospital.org',     role:'technician',  status:'pending',    joined:'2024-12-01' },
+  { initials:'AL', name:'Aisha Larbi',      email:'a.larbi@hospital.org',    role:'nurse',       status:'authorized', joined:'2023-09-10' },
+  { initials:'BW', name:'Ben Wallace',      email:'b.wallace@hospital.org',  role:'doctor',      status:'authorized', joined:'2022-11-30' },
+];
+const LOGS = [
+  { name:'Dr. Sarah Ahmed', username:'s.ahmed',    activity:'LOGIN',          status:'success', time:'2024-12-01 09:14:32' },
+  { name:'Robert Patel',    username:'r.patel',    activity:'LOGIN_ATTEMPT',  status:'failed',  time:'2024-12-01 09:02:17' },
+  { name:'Dr. James Liu',   username:'j.liu',      activity:'LOGIN',          status:'success', time:'2024-12-01 08:55:44' },
+  { name:'Maya Krishnan',   username:'m.krishnan', activity:'PASSWORD_RESET', status:'success', time:'2024-11-30 18:22:09' },
+  { name:'Tom Chen',        username:'t.chen',     activity:'LOGIN_ATTEMPT',  status:'failed',  time:'2024-11-30 17:48:01' },
+  { name:'Aisha Larbi',     username:'a.larbi',    activity:'LOGIN',          status:'success', time:'2024-11-30 08:30:55' },
+  { name:'Ben Wallace',     username:'b.wallace',  activity:'PROFILE_UPDATE', status:'success', time:'2024-11-29 15:12:38' },
+  { name:'Elena Novak',     username:'e.novak',    activity:'LOGIN',          status:'success', time:'2024-11-29 12:04:19' },
+];
+const ROLE_BADGES = { admin:'<span class="badge badge-purple">admin</span>', doctor:'<span class="badge badge-blue">doctor</span>', nurse:'<span class="badge badge-green">nurse</span>', radiologist:'<span class="badge badge-orange">radiologist</span>', technician:'<span class="badge badge-gray">technician</span>' };
+const GRADIENTS = ['linear-gradient(135deg,hsl(210,100%,56%),hsl(250,100%,65%))','linear-gradient(135deg,hsl(152,60%,38%),hsl(180,70%,45%))','linear-gradient(135deg,hsl(280,80%,55%),hsl(210,100%,60%))','linear-gradient(135deg,hsl(0,72%,52%),hsl(30,90%,55%))'];
+const SORT_IDS = ['name-az','name-za','pending-first','authorized-first','role','newest','oldest'];
+let currentSort = 'name-az', currentSearch = '';
+
+function applySort(list, sort) {
+  const s = [...list];
+  if (sort==='name-az')          return s.sort((a,b)=>a.name.localeCompare(b.name));
+  if (sort==='name-za')          return s.sort((a,b)=>b.name.localeCompare(a.name));
+  if (sort==='pending-first')    return s.sort((a,b)=>(a.status==='pending'?0:1)-(b.status==='pending'?0:1));
+  if (sort==='authorized-first') return s.sort((a,b)=>(a.status==='authorized'?0:1)-(b.status==='authorized'?0:1));
+  if (sort==='role')             return s.sort((a,b)=>a.role.localeCompare(b.role));
+  if (sort==='newest')           return s.sort((a,b)=>b.joined.localeCompare(a.joined));
+  if (sort==='oldest')           return s.sort((a,b)=>a.joined.localeCompare(b.joined));
+  return s;
+}
+
+function renderUsers(list) {
+  document.getElementById('users-body').innerHTML = list.map(u => {
+    const oi = USERS.indexOf(u);
+    const isPending = u.status==='pending', isAuth = u.status==='authorized';
+    const statusHtml = isPending
+      ? `<div class="status-row"><div class="status-dot dot-orange"></div><span class="status-text text-warning">PENDING</span></div>`
+      : `<div class="status-row"><div class="status-dot dot-green"></div><span class="status-text text-success">AUTHORIZED</span></div>`;
+    const toggleHtml = `<div class="toggle-wrap" style="${u.isAdmin?'opacity:0.35;pointer-events:none':''}">
+      <label class="toggle"><input type="checkbox" ${isAuth?'checked':''} onchange="toggleAccess(${oi},this.checked)">
+      <div class="toggle-track"></div><div class="toggle-thumb" id="th-${oi}"></div></label>
+      <span class="toggle-label ${isAuth?'text-success':''}">${isAuth?'GRANT':'REVOKE'}</span></div>`;
+    const delBtn = u.isAdmin
+      ? `<button class="action-btn disabled"><span class="material-symbols-outlined">delete</span></button>`
+      : `<button class="action-btn"><span class="material-symbols-outlined">delete</span></button>`;
+    return `<tr class="${isPending?'pending-row':''}">
+      <td><div class="user-cell"><div class="avatar" style="background:${GRADIENTS[oi%GRADIENTS.length]}">${u.initials}</div>
+        <div><div class="user-name-text">${u.name}</div><div class="user-email">${u.email}</div></div></div></td>
+      <td>${ROLE_BADGES[u.role]||`<span class="badge badge-gray">${u.role}</span>`}</td>
+      <td>${statusHtml}</td><td>${toggleHtml}</td>
+      <td><span class="mono">${u.joined}</span></td><td>${delBtn}</td></tr>`;
+  }).join('');
+  list.forEach(u => { const t=document.getElementById('th-'+USERS.indexOf(u)); if(t&&u.status==='authorized') t.style.transform='translateX(18px)'; });
+}
+
+function refreshTable() {
+  let list = currentSearch ? USERS.filter(u=>u.name.toLowerCase().includes(currentSearch)||u.email.toLowerCase().includes(currentSearch)||u.role.toLowerCase().includes(currentSearch)) : [...USERS];
+  renderUsers(applySort(list, currentSort));
+}
+function filterUsers(q) { currentSearch=q.toLowerCase(); refreshTable(); }
+function setSort(key) {
+  currentSort=key;
+  SORT_IDS.forEach(id=>{ const el=document.getElementById('so-'+id),ch=document.getElementById('check-'+id); if(el)el.classList.toggle('active',id===key); if(ch)ch.classList.toggle('hidden',id!==key); });
+  closeSort('users'); refreshTable();
+}
+function toggleAccess(idx,val) {
+  USERS[idx].status=val?'authorized':'pending';
+  document.getElementById('approval-pill').textContent=USERS.filter(u=>u.status==='pending').length;
+  refreshTable();
+}
+function toggleSort(which) {
+  const dd=document.getElementById('sort-dropdown-'+which), btn=document.getElementById('sort-btn-'+which), isOpen=dd.classList.contains('open');
+  document.querySelectorAll('.sort-dropdown').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('open'));
+  if(!isOpen){dd.classList.add('open');btn.classList.add('open');}
+}
+function closeSort(which) { document.getElementById('sort-dropdown-'+which).classList.remove('open'); document.getElementById('sort-btn-'+which).classList.remove('open'); }
+document.addEventListener('click',e=>{ if(!e.target.closest('.sort-wrap')){ document.querySelectorAll('.sort-dropdown').forEach(d=>d.classList.remove('open')); document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('open')); }});
+function scrollToApprovals() { switchTab('users'); setSort('pending-first'); }
+function switchTab(tab) {
+  document.getElementById('view-users').classList.toggle('hidden',tab!=='users');
+  document.getElementById('view-logs').classList.toggle('hidden',tab!=='logs');
+  document.getElementById('tab-users').classList.toggle('active',tab==='users');
+  document.getElementById('tab-logs').classList.toggle('active',tab==='logs');
+}
+function renderLogs() {
+  document.getElementById('logs-body').innerHTML = LOGS.map(l => {
+    const isLogin=l.activity==='LOGIN', isSuccess=l.status==='success';
+    return `<tr><td><div><div style="font-size:0.84rem;font-weight:600;color:var(--tp)">${l.name}</div>
+      <div style="font-size:0.72rem;color:var(--tm);font-family:'JetBrains Mono',monospace">@${l.username}</div></div></td>
+      <td><div class="activity-wrap"><div class="activity-glow" style="background:${isLogin?'hsl(210,100%,56%)':'var(--warning)'}"></div>
+      <span class="activity-text" style="color:${isLogin?'hsl(210,100%,70%)':'hsl(38,95%,68%)'}">${l.activity}</span></div></td>
+      <td>${isSuccess?'<span class="badge badge-green">SUCCESS</span>':'<span class="badge badge-red">FAILED</span>'}</td>
+      <td style="text-align:right"><span class="mono">${l.time}</span></td></tr>`;
+  }).join('');
+}
+refreshTable(); renderLogs();
+</script>

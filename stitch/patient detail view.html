@@ -1,0 +1,428 @@
+
+<h2 class="sr-only">Patient detail page showing demographics, vitals chart with blood sugar, blood pressure and temperature, plus prescription and lab result document lists</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-sans)}
+.shell{display:grid;grid-template-columns:280px 1fr;min-height:900px;background:var(--color-background-tertiary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.sidebar{background:var(--color-background-primary);border-right:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;overflow-y:auto}
+.main{display:flex;flex-direction:column;gap:0;overflow-y:auto}
+.topbar{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);grid-column:1/-1}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;padding:5px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent}
+.back-btn:hover{background:var(--color-background-secondary)}
+.apt{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:3px 9px;border-radius:99px;background:var(--color-background-success);color:var(--color-text-success);margin-left:auto}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--color-text-success)}
+.avatar-section{padding:20px 16px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;flex-direction:column;align-items:center;gap:10px}
+.avatar{width:68px;height:68px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:500;color:#185FA5;flex-shrink:0}
+.pt-name{font-size:15px;font-weight:500;color:var(--color-text-primary);text-align:center}
+.pt-id{font-size:11px;color:var(--color-text-tertiary);text-align:center;font-family:var(--font-mono)}
+.info-section{padding:14px 16px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.sec-label{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px}
+.info-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;gap:8px}
+.info-key{font-size:12px;color:var(--color-text-secondary)}
+.info-val{font-size:12px;font-weight:500;color:var(--color-text-primary);text-align:right}
+.blood-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500;background:#FCEBEB;color:#791F1F}
+.allergy-tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:99px;background:#FAEEDA;color:#633806;margin:2px 2px 0 0}
+.vital-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:var(--border-radius-md);font-weight:500}
+.vb-ok{background:#EAF3DE;color:#27500A}
+.vb-warn{background:#FAEEDA;color:#633806}
+.vb-danger{background:#FCEBEB;color:#791F1F}
+.main-inner{padding:16px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.card-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.chart-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--color-text-secondary)}
+.leg-item{display:flex;align-items:center;gap:4px}
+.leg-sq{width:10px;height:3px;border-radius:2px}
+.range-btns{display:flex;gap:4px}
+.rbtn{font-size:11px;padding:3px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.rbtn.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+.docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;padding:14px 16px}
+.doc-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;cursor:pointer;background:var(--color-background-primary)}
+.doc-card:hover{border-color:var(--color-border-secondary)}
+.doc-thumb{width:100%;height:110px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;border-bottom:0.5px solid var(--color-border-tertiary);position:relative;overflow:hidden}
+.doc-thumb-inner{display:flex;flex-direction:column;gap:4px;padding:10px;width:100%}
+.doc-line{height:5px;border-radius:2px;background:var(--color-border-secondary)}
+.doc-line-short{height:5px;border-radius:2px;background:var(--color-border-tertiary)}
+.doc-rx-mark{position:absolute;top:8px;right:8px;font-size:18px;font-weight:500;color:var(--color-text-tertiary)}
+.doc-meta{padding:10px 12px}
+.doc-name{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.doc-ts{font-size:11px;color:var(--color-text-tertiary)}
+.doc-badge{display:inline-flex;font-size:10px;padding:2px 6px;border-radius:99px;margin-top:4px}
+.doc-badge-rx{background:#E6F1FB;color:#0C447C}
+.doc-badge-lab{background:#E1F5EE;color:#085041}
+.doc-new{position:absolute;top:8px;left:8px;font-size:10px;font-weight:500;padding:2px 6px;border-radius:99px;background:#EAF3DE;color:#27500A}
+.docs-list{display:flex;flex-direction:column;gap:0}
+.doc-list-item{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer}
+.doc-list-item:last-child{border-bottom:none}
+.doc-list-item:hover{background:var(--color-background-secondary)}
+.doc-list-thumb{width:44px;height:56px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);display:flex;flex-direction:column;gap:3px;padding:6px;flex-shrink:0;overflow:hidden;position:relative}
+.pdf-icon{position:absolute;bottom:4px;right:4px;font-size:9px;font-weight:500;color:var(--color-text-tertiary);font-family:var(--font-mono)}
+.dl-line{height:3px;border-radius:1px;background:var(--color-border-secondary)}
+.dl-short{height:3px;border-radius:1px;background:var(--color-border-tertiary)}
+.doc-list-body{flex:1;min-width:0}
+.doc-list-name{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.doc-list-sub{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.doc-list-ts{font-size:11px;color:var(--color-text-tertiary);white-space:nowrap;flex-shrink:0}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.section-divider{padding:12px 16px;border-top:0.5px solid var(--color-border-tertiary);font-size:11px;color:var(--color-text-tertiary)}
+</style>
+
+<div style="padding:1rem 0">
+<div class="shell">
+
+<div style="grid-column:1/-1" class="topbar">
+  <button class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    Patients
+  </button>
+  <span style="font-size:13px;color:var(--color-text-secondary)">/ Arun Krishnamurthy</span>
+  <span class="apt"><span class="dot"></span>Active</span>
+</div>
+
+<div class="sidebar">
+  <div class="avatar-section">
+    <div class="avatar">AK</div>
+    <div>
+      <div class="pt-name">Arun Krishnamurthy</div>
+      <div class="pt-id">#a3f82b1c</div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
+      <span class="vital-badge vb-ok">BP stable</span>
+      <span class="vital-badge vb-warn">Sugar elevated</span>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="sec-label">Personal</div>
+    <div class="info-row"><span class="info-key">Age</span><span class="info-val">47 years</span></div>
+    <div class="info-row"><span class="info-key">Date of birth</span><span class="info-val">12 Mar 1977</span></div>
+    <div class="info-row"><span class="info-key">Gender</span><span class="info-val">Male</span></div>
+    <div class="info-row"><span class="info-key">Blood type</span><span class="info-val"><span class="blood-badge">O+</span></span></div>
+  </div>
+
+  <div class="info-section">
+    <div class="sec-label">Contact</div>
+    <div class="info-row"><span class="info-key">Phone</span><span class="info-val">+91 98410 55231</span></div>
+    <div class="info-row"><span class="info-key">Email</span><span class="info-val" style="font-size:11px">arun.k@gmail.com</span></div>
+    <div class="info-row"><span class="info-key">City</span><span class="info-val">Chennai, TN</span></div>
+    <div class="info-row"><span class="info-key">Country</span><span class="info-val">India</span></div>
+  </div>
+
+  <div class="info-section">
+    <div class="sec-label">Medical</div>
+    <div class="info-row"><span class="info-key">Insurance</span><span class="info-val">Star Health</span></div>
+    <div class="info-row"><span class="info-key">Policy no.</span><span class="info-val" style="font-family:var(--font-mono);font-size:11px">SH-20241187</span></div>
+    <div style="margin-top:6px">
+      <div class="info-key" style="margin-bottom:5px">Allergies</div>
+      <span class="allergy-tag">Penicillin</span>
+      <span class="allergy-tag">Sulfa drugs</span>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="sec-label">Emergency contact</div>
+    <div class="info-row"><span class="info-key">Name</span><span class="info-val">Meena Krishnamurthy</span></div>
+    <div class="info-row"><span class="info-key">Phone</span><span class="info-val">+91 98411 76320</span></div>
+  </div>
+
+  <div class="info-section" style="border-bottom:none">
+    <div class="sec-label">Medical history</div>
+    <p style="font-size:12px;color:var(--color-text-secondary);line-height:1.6">Type 2 diabetes (2019), hypertension (2021). Prior appendectomy (2015). Family history of cardiac disease.</p>
+  </div>
+</div>
+
+<div class="main">
+  <div class="main-inner">
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Vitals over time</div>
+          <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px">Blood sugar · Blood pressure · Temperature</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="chart-legend">
+            <span class="leg-item"><span class="leg-sq" style="background:#378ADD;height:3px"></span>Sugar (mg/dL)</span>
+            <span class="leg-item"><span class="leg-sq" style="background:#D85A30;height:3px;border-top:1px dashed #D85A30;background:none;border-top:2px dashed #D85A30"></span>BP sys</span>
+            <span class="leg-item"><span class="leg-sq" style="background:#1D9E75;height:3px"></span>Temp (°F×10)</span>
+          </div>
+          <div class="range-btns">
+            <button class="rbtn active" id="r1m">1M</button>
+            <button class="rbtn" id="r3m">3M</button>
+            <button class="rbtn" id="r6m">6M</button>
+          </div>
+        </div>
+      </div>
+      <div style="padding:12px 16px 16px">
+        <div style="position:relative;width:100%;height:220px">
+          <canvas id="vitalsChart" role="img" aria-label="Line chart showing blood sugar, blood pressure systolic and temperature over the past month">Blood sugar ranges 145–195 mg/dL, BP systolic 118–138 mmHg, temperature 97.8–99.2 F over 8 weeks.</canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+
+      <div class="card">
+        <div class="card-head" style="justify-content:space-between">
+          <div>
+            <div class="card-title">Prescriptions</div>
+            <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px">Last session — 3 items</div>
+          </div>
+          <button onclick="sendPrompt('Show me the full prescription history for patient Arun Krishnamurthy')" style="font-size:11px;padding:4px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer">View all ↗</button>
+        </div>
+        <div class="docs-list">
+          <div class="doc-list-item">
+            <div class="doc-list-thumb">
+              <div class="dl-line" style="width:80%"></div>
+              <div class="dl-short" style="width:60%"></div>
+              <div class="dl-line" style="width:70%"></div>
+              <div class="dl-short" style="width:50%"></div>
+              <div class="dl-line" style="width:65%"></div>
+              <span class="pdf-icon">Rx</span>
+            </div>
+            <div class="doc-list-body">
+              <div class="doc-list-name">Metformin 500mg</div>
+              <div class="doc-list-sub">Dr. Ramesh Iyer · Session #14</div>
+              <span class="doc-badge doc-badge-rx">Prescription</span>
+            </div>
+            <div class="doc-list-ts">2 Apr 2026</div>
+          </div>
+          <div class="doc-list-item">
+            <div class="doc-list-thumb">
+              <div class="dl-line" style="width:80%"></div>
+              <div class="dl-short" style="width:60%"></div>
+              <div class="dl-line" style="width:70%"></div>
+              <div class="dl-short" style="width:50%"></div>
+              <div class="dl-line" style="width:65%"></div>
+              <span class="pdf-icon">Rx</span>
+            </div>
+            <div class="doc-list-body">
+              <div class="doc-list-name">Amlodipine 5mg</div>
+              <div class="doc-list-sub">Dr. Ramesh Iyer · Session #14</div>
+              <span class="doc-badge doc-badge-rx">Prescription</span>
+            </div>
+            <div class="doc-list-ts">2 Apr 2026</div>
+          </div>
+          <div class="doc-list-item">
+            <div class="doc-list-thumb">
+              <div class="dl-line" style="width:80%"></div>
+              <div class="dl-short" style="width:60%"></div>
+              <div class="dl-line" style="width:70%"></div>
+              <div class="dl-short" style="width:50%"></div>
+              <div class="dl-line" style="width:65%"></div>
+              <span class="pdf-icon">Rx</span>
+            </div>
+            <div class="doc-list-body">
+              <div class="doc-list-name">Atorvastatin 10mg</div>
+              <div class="doc-list-sub">Dr. Ramesh Iyer · Session #13</div>
+              <span class="doc-badge doc-badge-rx">Prescription</span>
+            </div>
+            <div class="doc-list-ts">18 Mar 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head" style="justify-content:space-between">
+          <div>
+            <div class="card-title">Lab results</div>
+            <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px">This session — 4 reports</div>
+          </div>
+          <button onclick="sendPrompt('Show me the full lab results history for patient Arun Krishnamurthy')" style="font-size:11px;padding:4px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer">View all ↗</button>
+        </div>
+        <div class="docs-list">
+          <div class="doc-list-item">
+            <div class="doc-list-thumb" style="background:#E6F1FB">
+              <div class="dl-line" style="width:80%;background:#85B7EB"></div>
+              <div class="dl-short" style="width:60%;background:#B5D4F4"></div>
+              <div class="dl-line" style="width:70%;background:#85B7EB"></div>
+              <div class="dl-short" style="width:50%;background:#B5D4F4"></div>
+              <span class="pdf-icon" style="color:#185FA5">PDF</span>
+            </div>
+            <div class="doc-list-body">
+              <div class="doc-list-name">HbA1c panel</div>
+              <div class="doc-list-sub">Apollo Diagnostics · 7.8% result</div>
+              <span style="display:inline-flex;font-size:10px;padding:2px 6px;border-radius:99px;background:#FAEEDA;color:#633806;margin-top:4px">Borderline high</span>
+            </div>
+            <div class="doc-list-ts">3 Apr 2026</div>
+          </div>
+          <div class="doc-list-item">
+            <div class="doc-list-thumb" style="background:#E1F5EE">
+              <div class="dl-line" style="width:80%;background:#5DCAA5"></div>
+              <div class="dl-short" style="width:60%;background:#9FE1CB"></div>
+              <div class="dl-line" style="width:70%;background:#5DCAA5"></div>
+              <div class="dl-short" style="width:50%;background:#9FE1CB"></div>
+              <span class="pdf-icon" style="color:#0F6E56">PDF</span>
+            </div>
+            <div class="doc-list-body">
+              <div class="doc-list-name">Lipid profile</div>
+              <div class="doc-list-sub">Apollo Diagnostics · LDL 98</div>
+              <span class="doc-badge doc-badge-lab">Normal</span>
+            </div>
+            <div class="doc-list-ts">3 Apr 2026</div>
+          </div>
+          <div class="doc-list-item">
+            <div class="doc-list-thumb" style="background:#E6F1FB">
+              <div class="dl-line" style="width:80%;background:#85B7EB"></div>
+              <div class="dl-short" style="width:60%;background:#B5D4F4"></div>
+              <div class="dl-line" style="width:70%;background:#85B7EB"></div>
+              <div class="dl-short" style="width:50%;background:#B5D4F4"></div>
+              <span class="pdf-icon" style="color:#185FA5">PDF</span>
+            </div>
+            <div class="doc-list-body">
+              <div class="doc-list-name">Complete blood count</div>
+              <div class="doc-list-sub">Apollo Diagnostics</div>
+              <span class="doc-badge doc-badge-lab">Normal</span>
+            </div>
+            <div class="doc-list-ts">3 Apr 2026</div>
+          </div>
+          <div class="doc-list-item">
+            <div class="doc-list-thumb" style="background:#FCEBEB">
+              <div class="dl-line" style="width:80%;background:#F09595"></div>
+              <div class="dl-short" style="width:60%;background:#F7C1C1"></div>
+              <div class="dl-line" style="width:70%;background:#F09595"></div>
+              <div class="dl-short" style="width:50%;background:#F7C1C1"></div>
+              <span class="pdf-icon" style="color:#A32D2D">PDF</span>
+            </div>
+            <div class="doc-list-body">
+              <div class="doc-list-name">Kidney function test</div>
+              <div class="doc-list-sub">Apollo Diagnostics · Creatinine 1.4</div>
+              <span style="display:inline-flex;font-size:10px;padding:2px 6px;border-radius:99px;background:#FCEBEB;color:#791F1F;margin-top:4px">Above range</span>
+            </div>
+            <div class="doc-list-ts">3 Apr 2026</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const datasets = {
+  '1M': {
+    labels: ['Week 1','Week 2','Week 3','Week 4','Week 5','Week 6','Week 7','Week 8'],
+    sugar: [182, 195, 178, 185, 172, 169, 158, 161],
+    bp: [138, 134, 130, 132, 126, 122, 124, 118],
+    temp: [986, 990, 984, 992, 988, 978, 984, 980]
+  },
+  '3M': {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].slice(0,12),
+    sugar: [195,188,182,178,172,165,170,168,162,158,155,160],
+    bp: [140,136,134,130,128,124,126,122,120,118,120,116],
+    temp: [992,988,986,990,984,978,986,980,982,978,984,980]
+  },
+  '6M': {
+    labels: ['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'],
+    sugar: [210,202,195,190,182,175,168,162,158,155,150,148],
+    bp: [145,140,136,134,130,126,122,120,118,116,115,114],
+    temp: [994,990,986,988,984,980,978,982,980,976,978,974]
+  }
+};
+
+let activeRange = '1M';
+let chart;
+
+function buildChart(range) {
+  const d = datasets[range];
+  if(chart) chart.destroy();
+  chart = new Chart(document.getElementById('vitalsChart'), {
+    type: 'line',
+    data: {
+      labels: d.labels,
+      datasets: [
+        {
+          label: 'Blood sugar (mg/dL)',
+          data: d.sugar,
+          borderColor: '#378ADD',
+          backgroundColor: 'rgba(55,138,221,0.08)',
+          borderWidth: 2,
+          pointRadius: 3,
+          pointBackgroundColor: '#378ADD',
+          tension: 0.35,
+          fill: true,
+          borderDash: []
+        },
+        {
+          label: 'BP systolic (mmHg)',
+          data: d.bp,
+          borderColor: '#D85A30',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderDash: [5, 3],
+          pointRadius: 3,
+          pointBackgroundColor: '#D85A30',
+          tension: 0.35,
+          fill: false
+        },
+        {
+          label: 'Temp (°F ×10)',
+          data: d.temp,
+          borderColor: '#1D9E75',
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          pointRadius: 2,
+          pointBackgroundColor: '#1D9E75',
+          tension: 0.35,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#fff',
+          borderColor: 'rgba(0,0,0,0.1)',
+          borderWidth: 1,
+          titleColor: '#1a1a1a',
+          bodyColor: '#555',
+          padding: 10,
+          callbacks: {
+            label: function(ctx) {
+              if(ctx.datasetIndex === 2) return ' Temp: ' + (ctx.raw / 10).toFixed(1) + '°F';
+              if(ctx.datasetIndex === 1) return ' BP sys: ' + ctx.raw + ' mmHg';
+              return ' Sugar: ' + ctx.raw + ' mg/dL';
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(0,0,0,0.04)' },
+          ticks: { font: { size: 11 }, color: '#888', autoSkip: false, maxRotation: 0 }
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.04)' },
+          ticks: { font: { size: 11 }, color: '#888' },
+          min: 90
+        }
+      }
+    }
+  });
+}
+
+buildChart('1M');
+
+['1M','3M','6M'].forEach(r => {
+  document.getElementById('r'+r.replace('M','')+'m') && null;
+});
+
+document.getElementById('r1m').addEventListener('click', function() { setRange('1M'); });
+document.getElementById('r3m').addEventListener('click', function() { setRange('3M'); });
+document.getElementById('r6m').addEventListener('click', function() { setRange('6M'); });
+
+function setRange(r) {
+  activeRange = r;
+  document.querySelectorAll('.rbtn').forEach(b => b.classList.remove('active'));
+  const ids = {'1M':'r1m','3M':'r3m','6M':'r6m'};
+  document.getElementById(ids[r]).classList.add('active');
+  buildChart(r);
+}
+</script>
