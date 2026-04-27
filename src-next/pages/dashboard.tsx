@@ -231,6 +231,10 @@ export default function DashboardPage() {
               )}
               {user?.role === 'nurse' && (
                 <>
+                  <button className="btn btn-primary" style={{ fontSize: '0.8rem', padding: '0.5rem 1.25rem' }} onClick={() => router.push('/patients/add')}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>person_add</span>
+                    ADD PATIENT
+                  </button>
                   <button className="btn btn-primary" style={{ fontSize: '0.8rem', padding: '0.5rem 1.25rem' }} onClick={() => router.push('/lab-results/add')}>
                     <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>science</span>
                     ADD LAB RESULT

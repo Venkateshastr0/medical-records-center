@@ -30,6 +30,22 @@ interface Patient {
   updated_at: string
 }
 
+interface PrescriptionRx {
+  drug: string
+  detail: string
+  cat: string
+  status: string
+  accent: string
+  isNew: boolean
+}
+
+interface PrescriptionSession {
+  id: number
+  date: string
+  isNew: boolean
+  rxs: PrescriptionRx[]
+}
+
 export default function PatientDetailPage() {
   const router = useRouter()
   const { id } = router.query
@@ -99,6 +115,67 @@ export default function PatientDetailPage() {
             status: 'COMPLETED'
           }
         ];
+      }
+    },
+    enabled: !!id
+  });
+
+  // Real prescription data for web version
+  const { data: prescriptionsData, isLoading: prescriptionsLoading, error: prescriptionsError } = useQuery<PrescriptionSession[]>({
+    queryKey: ['patient-prescriptions', id],
+    queryFn: async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/prescriptions?patient_id=${id}`, {
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to fetch prescriptions (${response.status})`);
+        }
+        const prescriptions = await response.json();
+        
+        // Group prescriptions by date to create sessions
+        const prescriptionsByDate: Record<string, PrescriptionSession> = prescriptions.reduce((acc, prescription: any) => {
+          const date = new Date(prescription.prescription_date).toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric' 
+          });
+          
+          if (!acc[date]) {
+            acc[date] = {
+              id: Date.now() + Math.random(), // unique session id
+              date: date,
+              isNew: false,
+              rxs: []
+            };
+          }
+          
+          acc[date].rxs.push({
+            drug: prescription.medication_name,
+            detail: `${prescription.dosage} · ${prescription.frequency} · ${prescription.duration}`,
+            cat: 'Prescription', // You might want to categorize this based on medication
+            status: prescription.status || 'Active',
+            accent: '#378ADD',
+            isNew: false
+          });
+          
+          return acc;
+        }, {});
+        
+        // Convert to array and mark the latest as new
+        const sessions = Object.values(prescriptionsByDate);
+        if (sessions.length > 0) {
+          sessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          sessions[0].isNew = true;
+          sessions[0].rxs.forEach((rx) => rx.isNew = true);
+        }
+        
+        return sessions;
+      } catch (err) {
+        console.error('Error fetching prescriptions:', err);
+        // Return empty array on error
+        return [];
       }
     },
     enabled: !!id
@@ -243,24 +320,7 @@ export default function PatientDetailPage() {
     return activeRange === '1M' ? data1M : activeRange === '3M' ? data3M : data6M;
   }, [activeRange]);
 
-  const mockPrescriptions = [
-    {
-      id: 14, date: '2 Apr 2026', isNew: true,
-      rxs: [
-        { drug: 'Metformin 500mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Active', accent: '#378ADD', isNew: true },
-        { drug: 'Amlodipine 5mg', detail: '1 tab once daily · 30 days', cat: 'Hypertension', status: 'Active', accent: '#1D9E75', isNew: false },
-        { drug: 'Atorvastatin 10mg', detail: '1 tab at night · 30 days', cat: 'Cardiac', status: 'Active', accent: '#7F77DD', isNew: false },
-      ]
-    },
-    {
-      id: 13, date: '18 Mar 2026', isNew: false,
-      rxs: [
-        { drug: 'Metformin 500mg', detail: '1 tab twice daily · 30 days', cat: 'Diabetes', status: 'Completed', accent: '#378ADD', isNew: false },
-        { drug: 'Vitamin D3 60K', detail: '1 cap weekly · 8 weeks', cat: 'Supplement', status: 'Completed', accent: '#BA7517', isNew: false },
-      ]
-    }
-  ];
-
+  
   const mockLabResults = [
     {
       id: 14, date: '3 Apr 2026', isLatest: true,
@@ -386,7 +446,7 @@ export default function PatientDetailPage() {
                 <button onClick={() => setActiveView('prescriptions')} className="view-all-btn">View all ↗</button>
               </div>
               <div className="docs-list">
-                {mockPrescriptions[0].rxs.map((rx, idx) => (
+                {prescriptionsData && prescriptionsData.length > 0 && prescriptionsData[0].rxs.map((rx, idx) => (
                   <div key={idx} className="doc-list-item">
                     <div className="doc-list-thumb">
                       <div className="dl-line" style={{ width: '80%' }}></div>
@@ -396,10 +456,10 @@ export default function PatientDetailPage() {
                     </div>
                     <div className="doc-list-body">
                       <div className="doc-list-name">{rx.drug}</div>
-                      <div className="doc-list-sub">Dr. Ramesh Iyer · Session #{mockPrescriptions[0].id}</div>
+                      <div className="doc-list-sub">Dr. Ramesh Iyer · Session #{prescriptionsData[0].id}</div>
                       <span className="doc-badge doc-badge-rx">Prescription</span>
                     </div>
-                    <div className="doc-list-ts">{mockPrescriptions[0].date}</div>
+                    <div className="doc-list-ts">{prescriptionsData[0].date}</div>
                   </div>
                 ))}
               </div>
@@ -446,7 +506,9 @@ export default function PatientDetailPage() {
     let htmlContent = [];
     let totalShown = 0;
 
-    mockPrescriptions.forEach(sess => {
+    const prescriptions = prescriptionsData || [];
+
+    prescriptions.forEach(sess => {
       const filteredRxs = sess.rxs.filter(rx => {
         if (rxCatFilter !== 'All' && rx.cat !== rxCatFilter) return false;
         if (rxStatusFilter !== 'All' && rx.status !== rxStatusFilter) return false;
@@ -537,7 +599,17 @@ export default function PatientDetailPage() {
         </div>
 
         <div className="timeline">
-          {totalShown > 0 ? <>{htmlContent}</> : <div className="empty">No prescriptions match your filters.</div>}
+          {prescriptionsLoading ? (
+            <div className="empty">Loading prescriptions...</div>
+          ) : prescriptionsError ? (
+            <div className="empty" style={{ color: 'red' }}>Error loading prescriptions</div>
+          ) : !prescriptionsData?.length ? (
+            <div className="empty">No prescriptions found for this patient.</div>
+          ) : totalShown > 0 ? (
+            <>{htmlContent}</>
+          ) : (
+            <div className="empty">No prescriptions match your filters.</div>
+          )}
         </div>
       </div>
     );

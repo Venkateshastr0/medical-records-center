@@ -1,6 +1,35 @@
 
 <h2 class="sr-only">Full lab results history for Arun Krishnamurthy, showing all diagnostic reports across sessions from 2023 to 2026 with PDF previews, result status, and timestamps</h2>
 <style>
+:root {
+  --brand: 210 100% 56%;
+  --surface-0: 222 28% 8%;
+  --surface-1: 222 24% 11%;
+  --surface-2: 222 20% 14%;
+  --surface-3: 222 18% 18%;
+  --border: 222 18% 22%;
+  --text-primary: 210 20% 96%;
+  --text-secondary: 215 15% 60%;
+  --text-muted: 215 12% 40%;
+  --success: 152 69% 42%;
+  --warning: 38 95% 55%;
+  --danger: 0 72% 58%;
+  
+  /* CSS variables for lab results history */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --color-background-primary: hsl(var(--surface-0));
+  --color-background-secondary: hsl(var(--surface-1));
+  --color-background-tertiary: hsl(var(--surface-2));
+  --color-border-primary: hsl(var(--brand));
+  --color-border-secondary: hsl(var(--border));
+  --color-border-tertiary: hsl(var(--surface-3));
+  --color-text-primary: hsl(var(--text-primary));
+  --color-text-secondary: hsl(var(--text-secondary));
+  --color-text-tertiary: hsl(var(--text-muted));
+  --border-radius-md: 0.375rem;
+  --border-radius-lg: 0.5rem;
+}
+
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-sans)}
 .page{background:var(--color-background-tertiary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
 .topbar{display:flex;align-items:center;gap:10px;padding:13px 18px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary)}
@@ -10,7 +39,7 @@
 .sep{margin:0 5px;color:var(--color-border-secondary)}
 .page-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);flex-wrap:wrap;gap:10px}
 .ph-left{display:flex;align-items:center;gap:12px}
-.avatar{width:40px;height:40px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#085041;flex-shrink:0}
+.avatar{width:40px;height:40px;border-radius:50%;background:hsl(var(--surface-3));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:hsl(var(--text-primary));flex-shrink:0}
 .ph-name{font-size:15px;font-weight:500;color:var(--color-text-primary)}
 .ph-sub{font-size:12px;color:var(--color-text-tertiary);margin-top:1px}
 .stats-row{display:flex;gap:8px;flex-wrap:wrap}
@@ -26,7 +55,6 @@
 .fbtn{font-size:11px;padding:5px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer}
 .fbtn.on{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
 .timeline{padding:18px;display:flex;flex-direction:column;gap:24px}
-.sess-block{}
 .sess-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .sess-line{flex:1;height:0.5px;background:var(--color-border-tertiary)}
 .sess-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:99px;background:var(--color-background-secondary);color:var(--color-text-secondary);border:0.5px solid var(--color-border-secondary);white-space:nowrap}
@@ -39,22 +67,22 @@
 .tl-solid{background:var(--color-border-secondary)}
 .tl-faint{background:var(--color-border-tertiary)}
 .pdf-lbl{position:absolute;bottom:9px;right:11px;font-size:10px;font-weight:500;letter-spacing:.04em;font-family:var(--font-mono)}
-.new-lbl{position:absolute;top:8px;left:8px;font-size:10px;font-weight:500;padding:2px 6px;border-radius:99px;background:#EAF3DE;color:#27500A}
+.new-lbl{position:absolute;top:8px;left:8px;font-size:10px;font-weight:500;padding:2px 6px;border-radius:99px;background:hsl(var(--success) / 0.15);color:hsl(var(--success))}
 .lab-body{padding:10px 12px}
 .lab-name{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
 .lab-lab{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}
 .lab-val{font-size:12px;font-weight:500;margin-bottom:6px}
 .lab-footer{display:flex;align-items:center;justify-content:space-between;gap:4px}
 .badge{display:inline-flex;font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px}
-.b-normal{background:#E1F5EE;color:#085041}
-.b-high{background:#FAEEDA;color:#633806}
-.b-low{background:#E6F1FB;color:#0C447C}
-.b-danger{background:#FCEBEB;color:#791F1F}
+.b-normal{background:hsl(var(--success) / 0.15);color:hsl(var(--success))}
+.b-high{background:hsl(var(--warning) / 0.15);color:hsl(var(--warning))}
+.b-low{background:hsl(210 100% 56% / 0.15);color:hsl(210 100% 70%)}
+.b-danger{background:hsl(var(--danger) / 0.15);color:hsl(var(--danger))}
 .b-pending{background:var(--color-background-secondary);color:var(--color-text-tertiary)}
 .lab-cat{display:inline-flex;font-size:10px;padding:2px 7px;border-radius:99px;background:var(--color-background-secondary);color:var(--color-text-secondary)}
 .empty{padding:32px;text-align:center;color:var(--color-text-tertiary);font-size:13px}
-.trend-up{color:#D85A30}
-.trend-dn{color:#1D9E75}
+.trend-up{color:hsl(var(--warning))}
+.trend-dn{color:hsl(var(--success))}
 .trend-eq{color:var(--color-text-tertiary)}
 </style>
 

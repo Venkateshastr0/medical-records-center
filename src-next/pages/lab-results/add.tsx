@@ -43,7 +43,7 @@ export default function AddLabResultPage() {
   const [isDragOver, setIsDragOver] = useState(false)
 
   // Real patients data from API
-  const { data: patientsResponse, isLoading: patientsLoading, error: patientsError } = useQuery({
+  const { data: patientsResponse, isLoading: patientsLoading, error: patientsError } = useQuery<any>({
     queryKey: ['patients'],
     queryFn: async () => {
       try {
@@ -68,7 +68,11 @@ export default function AddLabResultPage() {
         console.error('Error fetching patients:', error);
         throw error;
       }
-    }
+    },
+    staleTime: 30 * 1000, // 30 seconds
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true
   });
 
   // Extract patients array from response
@@ -303,23 +307,23 @@ export default function AddLabResultPage() {
   const isFormReady = selectedPatient && formData.file_data
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-background-secondary, #f9fafb)' }}>
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-background-secondary, hsl(222 24% 11%))' }}>
       <div className="max-w-[680px] mx-auto px-4 py-8 sm:px-6 lg:px-8" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
         {/* Header */}
         <div style={{ marginBottom: '2rem' }}>
           <div className="flex items-center mb-2">
-            <div className="text-xs" style={{ color: 'var(--color-text-secondary, #6b7280)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div className="text-xs" style={{ color: 'var(--color-text-secondary, hsl(215 15% 60%))', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               Medical Records
-              <span style={{ color: 'var(--color-text-tertiary, #9ca3af)' }}>›</span>
+              <span style={{ color: 'var(--color-text-tertiary, hsl(215 12% 40%))' }}>›</span>
               Lab Results
-              <span style={{ color: 'var(--color-text-tertiary, #9ca3af)' }}>›</span>
+              <span style={{ color: 'var(--color-text-tertiary, hsl(215 12% 40%))' }}>›</span>
               Upload
             </div>
           </div>
-          <h1 style={{ fontSize: '22px', fontWeight: '500', color: 'var(--color-text-primary, #111827)' }}>
+          <h1 style={{ fontSize: '22px', fontWeight: '500', color: 'var(--color-text-primary, hsl(210 20% 96%))' }}>
             Upload lab result
           </h1>
-          <p className="subtitle" style={{ fontSize: '14px', color: 'var(--color-text-secondary, #6b7280)', marginTop: '4px' }}>
+          <p className="subtitle" style={{ fontSize: '14px', color: 'var(--color-text-secondary, hsl(215 15% 60%))', marginTop: '4px' }}>
             Attach a lab result file to a patient's medical record.
           </p>
         </div>
@@ -332,8 +336,8 @@ export default function AddLabResultPage() {
                 <path d="M5 13l4 4L19 7"/>
               </svg>
             </div>
-            <h2 style={{ fontSize: '16px', fontWeight: '500', color: 'var(--color-text-primary, #111827)', marginBottom: '6px' }}>Lab result uploaded</h2>
-            <p style={{ fontSize: '14px', color: 'var(--color-text-secondary, #6b7280)' }}>
+            <h2 style={{ fontSize: '16px', fontWeight: '500', color: 'var(--color-text-primary, hsl(210 20% 96%))', marginBottom: '6px' }}>Lab result uploaded</h2>
+            <p style={{ fontSize: '14px', color: 'var(--color-text-secondary, hsl(215 15% 60%))' }}>
               {formData.file_name} linked to {selectedPatient?.first_name} {selectedPatient?.last_name}.
             </p>
             <button
@@ -347,14 +351,14 @@ export default function AddLabResultPage() {
         ) : (
           <form onSubmit={handleSubmit}>
             {/* Patient Selection Card */}
-            <div className="card" style={{ background: 'var(--color-background-primary, #ffffff)', border: '0.5px solid var(--color-border-tertiary, #e5e7eb)', borderRadius: 'var(--border-radius-lg, 0.5rem)', padding: '1.5rem', marginBottom: '1rem' }}>
-              <div className="section-label" style={{ fontSize: '11px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-text-secondary, #6b7280)', marginBottom: '12px' }}>
+            <div className="card" style={{ background: 'var(--color-background-primary, hsl(222 28% 8%))', border: '0.5px solid var(--color-border-tertiary, hsl(222 18% 18%))', borderRadius: 'var(--border-radius-lg, 0.5rem)', padding: '1.5rem', marginBottom: '1rem' }}>
+              <div className="section-label" style={{ fontSize: '11px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-text-secondary, hsl(215 15% 60%))', marginBottom: '12px' }}>
                 1 {'\u2014'} Patient
               </div>
               
               {!selectedPatient ? (
                 <div>
-                  <label className="block" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--color-text-primary, #111827)', marginBottom: '6px' }}>
+                  <label className="block" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--color-text-primary, hsl(210 20% 96%))', marginBottom: '6px' }}>
                     Patient <span className="req" style={{ color: 'var(--color-text-danger, #dc2626)', marginLeft: '2px' }}>*</span>
                   </label>
                   <div className="relative">
@@ -363,17 +367,17 @@ export default function AddLabResultPage() {
                       <input
                         type="text"
                         className="text-input"
-                        style={{ width: '100%', padding: '9px 12px 9px 36px', fontSize: '14px', border: '0.5px solid var(--color-border-secondary, #d1d5db)', borderRadius: 'var(--border-radius-md, 0.375rem)', backgroundColor: 'var(--color-background-primary, #ffffff)', color: 'var(--color-text-primary, #111827)', outline: 'none', transition: 'border-color 0.15s' }}
+                        style={{ width: '100%', padding: '9px 12px 9px 36px', fontSize: '14px', border: '0.5px solid var(--color-border-secondary, hsl(222 18% 22%))', borderRadius: 'var(--border-radius-md, 0.375rem)', backgroundColor: 'var(--color-background-primary, hsl(222 28% 8%))', color: 'var(--color-text-primary, hsl(210 20% 96%))', outline: 'none', transition: 'border-color 0.15s' }}
                         value={patientSearchQuery}
                         onChange={handlePatientSearchChange}
                         onFocus={(e) => {
                           handlePatientInputFocus()
-                          e.target.style.borderColor = 'var(--color-border-primary, #3b82f6)'
+                          e.target.style.borderColor = 'var(--color-border-primary, hsl(210 100% 56%))'
                           e.target.style.boxShadow = '0 0 0 3px rgba(99,99,99,0.08)'
                         }}
                         onBlur={(e) => {
                           handlePatientInputBlur()
-                          e.target.style.borderColor = 'var(--color-border-secondary, #d1d5db)'
+                          e.target.style.borderColor = 'var(--color-border-secondary, hsl(222 18% 22%))'
                           e.target.style.boxShadow = 'none'
                         }}
                         onKeyDown={handleKeyDown}
@@ -384,21 +388,21 @@ export default function AddLabResultPage() {
                     
                     {/* Dropdown */}
                     {showPatientDropdown && filteredPatients.length > 0 && (
-                      <div className="dropdown" style={{ border: '0.5px solid var(--color-border-secondary, #d1d5db)', borderRadius: 'var(--border-radius-md, 0.375rem)', backgroundColor: 'var(--color-background-primary, #ffffff)', marginTop: '4px', overflow: 'hidden', position: 'absolute', zIndex: 10, width: '100%', maxHeight: '240px', overflow: 'auto' }}>
+                      <div className="dropdown" style={{ border: '0.5px solid var(--color-border-secondary, hsl(222 18% 22%))', borderRadius: 'var(--border-radius-md, 0.375rem)', backgroundColor: 'var(--color-background-primary, hsl(222 28% 8%))', marginTop: '4px', overflow: 'hidden', position: 'absolute', zIndex: 10, width: '100%', maxHeight: '240px', overflow: 'auto' }}>
                         {filteredPatients.map((patient, index) => (
                           <div
                             key={patient.patient_id}
                             className={`dropdown-item ${
                               highlightedIndex === index ? 'active' : ''
                             }`}
-                            style={{ padding: '10px 12px', fontSize: '14px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'background 0.1s', backgroundColor: highlightedIndex === index ? 'var(--color-background-secondary, #f9fafb)' : 'transparent' }}
+                            style={{ padding: '10px 12px', fontSize: '14px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'background 0.1s', backgroundColor: highlightedIndex === index ? 'var(--color-background-secondary, hsl(222 24% 11%))' : 'transparent' }}
                             onClick={() => handlePatientSelect(patient)}
                             onMouseEnter={() => setHighlightedIndex(index)}
                           >
-                            <span className="name" style={{ fontWeight: '500', color: 'var(--color-text-primary, #111827)' }}>
+                            <span className="name" style={{ fontWeight: '500', color: 'var(--color-text-primary, hsl(210 20% 96%))' }}>
                               {patient.first_name} {patient.last_name}
                             </span>
-                            <span className="meta" style={{ fontSize: '12px', color: 'var(--color-text-secondary, #6b7280)' }}>
+                            <span className="meta" style={{ fontSize: '12px', color: 'var(--color-text-secondary, hsl(215 15% 60%))' }}>
                               {patient.patient_id} \u00b7 {patient.email}
                             </span>
                           </div>
@@ -408,8 +412,8 @@ export default function AddLabResultPage() {
                     
                     {/* No results */}
                     {showPatientDropdown && patientSearchQuery.length > 0 && filteredPatients.length === 0 && (
-                      <div className="dropdown" style={{ border: '0.5px solid var(--color-border-secondary, #d1d5db)', borderRadius: 'var(--border-radius-md, 0.375rem)', backgroundColor: 'var(--color-background-primary, #ffffff)', marginTop: '4px', overflow: 'hidden', position: 'absolute', zIndex: 10, width: '100%' }}>
-                        <div className="dropdown-item" style={{ padding: '10px 12px', fontSize: '14px', color: 'var(--color-text-secondary, #6b7280)' }}>
+                      <div className="dropdown" style={{ border: '0.5px solid var(--color-border-secondary, hsl(222 18% 22%))', borderRadius: 'var(--border-radius-md, 0.375rem)', backgroundColor: 'var(--color-background-primary, hsl(222 28% 8%))', marginTop: '4px', overflow: 'hidden', position: 'absolute', zIndex: 10, width: '100%' }}>
+                        <div className="dropdown-item" style={{ padding: '10px 12px', fontSize: '14px', color: 'var(--color-text-secondary, hsl(215 15% 60%))' }}>
                           No patients found matching "{patientSearchQuery}"
                         </div>
                       </div>
@@ -417,15 +421,15 @@ export default function AddLabResultPage() {
                   </div>
                 </div>
               ) : (
-                <div className="selected-patient" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', backgroundColor: 'var(--color-background-secondary, #f9fafb)', border: '0.5px solid var(--color-border-tertiary, #e5e7eb)', borderRadius: 'var(--border-radius-md, 0.375rem)' }}>
+                <div className="selected-patient" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', backgroundColor: 'var(--color-background-secondary, hsl(222 24% 11%))', border: '0.5px solid var(--color-border-tertiary, hsl(222 18% 18%))', borderRadius: 'var(--border-radius-md, 0.375rem)' }}>
                   <div className="avatar" style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--color-background-info, #dbeafe)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '500', color: 'var(--color-text-info, #1e40af)', flexShrink: 0 }}>
                     {getPatientInitials(selectedPatient)}
                   </div>
                   <div className="patient-info" style={{ flex: 1 }}>
-                    <div className="pname" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--color-text-primary, #111827)' }}>
+                    <div className="pname" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--color-text-primary, hsl(210 20% 96%))' }}>
                       {selectedPatient.first_name} {selectedPatient.last_name}
                     </div>
-                    <div className="pid" style={{ fontSize: '12px', color: 'var(--color-text-secondary, #6b7280)' }}>
+                    <div className="pid" style={{ fontSize: '12px', color: 'var(--color-text-secondary, hsl(215 15% 60%))' }}>
                       {selectedPatient.patient_id} \u00b7 {selectedPatient.email}
                     </div>
                   </div>
@@ -433,8 +437,8 @@ export default function AddLabResultPage() {
                     type="button"
                     onClick={handleClearPatient}
                     className="clear-btn"
-                    style={{ fontSize: '12px', color: 'var(--color-text-secondary, #6b7280)', cursor: 'pointer', padding: '4px 8px', borderRadius: 'var(--border-radius-md, 0.375rem)', border: '0.5px solid var(--color-border-tertiary, #e5e7eb)', backgroundColor: 'transparent', transition: 'background 0.1s' }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-background-primary, #ffffff)'}
+                    style={{ fontSize: '12px', color: 'var(--color-text-secondary, hsl(215 15% 60%))', cursor: 'pointer', padding: '4px 8px', borderRadius: 'var(--border-radius-md, 0.375rem)', border: '0.5px solid var(--color-border-tertiary, hsl(222 18% 18%))', backgroundColor: 'transparent', transition: 'background 0.1s' }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-background-primary, hsl(222 28% 8%))'}
                     onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                   >
                     Change
@@ -444,32 +448,32 @@ export default function AddLabResultPage() {
             </div>
 
             {/* File Upload Card */}
-            <div className="card" style={{ background: 'var(--color-background-primary, #ffffff)', border: '0.5px solid var(--color-border-tertiary, #e5e7eb)', borderRadius: 'var(--border-radius-lg, 0.5rem)', padding: '1.5rem', marginBottom: '1rem' }}>
-              <div className="section-label" style={{ fontSize: '11px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-text-secondary, #6b7280)', marginBottom: '12px' }}>
+            <div className="card" style={{ background: 'var(--color-background-primary, hsl(222 28% 8%))', border: '0.5px solid var(--color-border-tertiary, hsl(222 18% 18%))', borderRadius: 'var(--border-radius-lg, 0.5rem)', padding: '1.5rem', marginBottom: '1rem' }}>
+              <div className="section-label" style={{ fontSize: '11px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-text-secondary, hsl(215 15% 60%))', marginBottom: '12px' }}>
                 2 {'\u2014'} File
               </div>
               
               {!formData.file_name ? (
                 <div>
-                  <label className="block" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--color-text-primary, #111827)', marginBottom: '6px' }}>
+                  <label className="block" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--color-text-primary, hsl(210 20% 96%))', marginBottom: '6px' }}>
                     Lab result file <span className="req" style={{ color: 'var(--color-text-danger, #dc2626)', marginLeft: '2px' }}>*</span>
                   </label>
                   <div
                     className={`drop-zone ${isDragOver ? 'drag-over' : ''}`}
-                    style={{ border: '1.5px dashed var(--color-border-secondary, #d1d5db)', borderRadius: 'var(--border-radius-md, 0.375rem)', padding: '2rem 1rem', textAlign: 'center', cursor: 'pointer', transition: 'border-color 0.15s, background 0.15s', borderColor: isDragOver ? 'var(--color-border-primary, #3b82f6)' : 'var(--color-border-secondary, #d1d5db)', backgroundColor: isDragOver ? 'var(--color-background-secondary, #f9fafb)' : 'transparent' }}
+                    style={{ border: '1.5px dashed var(--color-border-secondary, hsl(222 18% 22%))', borderRadius: 'var(--border-radius-md, 0.375rem)', padding: '2rem 1rem', textAlign: 'center', cursor: 'pointer', transition: 'border-color 0.15s, background 0.15s', borderColor: isDragOver ? 'var(--color-border-primary, hsl(210 100% 56%))' : 'var(--color-border-secondary, hsl(222 18% 22%))', backgroundColor: isDragOver ? 'var(--color-background-secondary, hsl(222 24% 11%))' : 'transparent' }}
                     onClick={() => fileInputRef.current?.click()}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
                   >
-                    <svg className="drop-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ width: '32px', height: '32px', margin: '0 auto 10px', color: 'var(--color-text-tertiary, #9ca3af)' }}>
+                    <svg className="drop-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ width: '32px', height: '32px', margin: '0 auto 10px', color: 'var(--color-text-tertiary, hsl(215 12% 40%))' }}>
                       <path d="M16 22V10M10 16l6-6 6 6"/>
                       <rect x="4" y="24" width="24" height="4" rx="2"/>
                     </svg>
-                    <p style={{ fontSize: '14px', color: 'var(--color-text-secondary, #6b7280)', marginBottom: '4px' }}>
+                    <p style={{ fontSize: '14px', color: 'var(--color-text-secondary, hsl(215 15% 60%))', marginBottom: '4px' }}>
                       <strong>Drag & drop</strong> or click to browse
                     </p>
-                    <p className="hint" style={{ fontSize: '12px', color: 'var(--color-text-tertiary, #9ca3af)' }}>
+                    <p className="hint" style={{ fontSize: '12px', color: 'var(--color-text-tertiary, hsl(215 12% 40%))' }}>
                       PDF, JPG, PNG, GIF, TXT \u2014 max 10 MB
                     </p>
                     <input
@@ -483,15 +487,15 @@ export default function AddLabResultPage() {
                 </div>
               ) : (
                 <div>
-                  <div className="file-preview" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', backgroundColor: 'var(--color-background-secondary, #f9fafb)', border: '0.5px solid var(--color-border-tertiary, #e5e7eb)', borderRadius: 'var(--border-radius-md, 0.375rem)', marginBottom: '1rem' }}>
+                  <div className="file-preview" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', backgroundColor: 'var(--color-background-secondary, hsl(222 24% 11%))', border: '0.5px solid var(--color-border-tertiary, hsl(222 18% 18%))', borderRadius: 'var(--border-radius-md, 0.375rem)', marginBottom: '1rem' }}>
                     <div className="file-icon" style={{ width: '32px', height: '32px', backgroundColor: 'var(--color-background-danger, #fef2f2)', borderRadius: 'var(--border-radius-md, 0.375rem)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <DocumentIcon style={{ width: '16px', height: '16px', color: 'var(--color-text-danger, #dc2626)' }} />
                     </div>
                     <div className="file-info" style={{ flex: 1 }}>
-                      <div className="fname" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--color-text-primary, #111827)' }}>
+                      <div className="fname" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--color-text-primary, hsl(210 20% 96%))' }}>
                         {formData.file_name}
                       </div>
-                      <div className="fmeta" style={{ fontSize: '12px', color: 'var(--color-text-secondary, #6b7280)' }}>
+                      <div className="fmeta" style={{ fontSize: '12px', color: 'var(--color-text-secondary, hsl(215 15% 60%))' }}>
                         {formData.mime_type} \u00b7 {formData.file_data ? `${(formData.file_data.length / 1024).toFixed(1)} KB` : 'Unknown size'}
                       </div>
                     </div>
@@ -499,8 +503,8 @@ export default function AddLabResultPage() {
                       type="button"
                       onClick={handleRemoveFile}
                       className="clear-btn"
-                      style={{ fontSize: '12px', color: 'var(--color-text-secondary, #6b7280)', cursor: 'pointer', padding: '4px 8px', borderRadius: 'var(--border-radius-md, 0.375rem)', border: '0.5px solid var(--color-border-tertiary, #e5e7eb)', backgroundColor: 'transparent', transition: 'background 0.1s' }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-background-primary, #ffffff)'}
+                      style={{ fontSize: '12px', color: 'var(--color-text-secondary, hsl(215 15% 60%))', cursor: 'pointer', padding: '4px 8px', borderRadius: 'var(--border-radius-md, 0.375rem)', border: '0.5px solid var(--color-border-tertiary, hsl(222 18% 18%))', backgroundColor: 'transparent', transition: 'background 0.1s' }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--color-background-primary, hsl(222 28% 8%))'}
                       onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                     >
                       Remove
@@ -508,26 +512,26 @@ export default function AddLabResultPage() {
                   </div>
                   
                   <div>
-                    <label className="block" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--color-text-primary, #111827)', marginBottom: '6px' }}>
+                    <label className="block" style={{ fontSize: '14px', fontWeight: '500', color: 'var(--color-text-primary, hsl(210 20% 96%))', marginBottom: '6px' }}>
                       Display name
                     </label>
                     <input
                       type="text"
                       className="text-input"
-                      style={{ width: '100%', padding: '9px 12px', fontSize: '14px', border: '0.5px solid var(--color-border-secondary, #d1d5db)', borderRadius: 'var(--border-radius-md, 0.375rem)', backgroundColor: 'var(--color-background-primary, #ffffff)', color: 'var(--color-text-primary, #111827)', outline: 'none', transition: 'border-color 0.15s' }}
+                      style={{ width: '100%', padding: '9px 12px', fontSize: '14px', border: '0.5px solid var(--color-border-secondary, hsl(222 18% 22%))', borderRadius: 'var(--border-radius-md, 0.375rem)', backgroundColor: 'var(--color-background-primary, hsl(222 28% 8%))', color: 'var(--color-text-primary, hsl(210 20% 96%))', outline: 'none', transition: 'border-color 0.15s' }}
                       value={formData.display_name || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, display_name: e.target.value }))}
                       onFocus={(e) => {
-                        e.target.style.borderColor = 'var(--color-border-primary, #3b82f6)'
+                        e.target.style.borderColor = 'var(--color-border-primary, hsl(210 100% 56%))'
                         e.target.style.boxShadow = '0 0 0 3px rgba(99,99,99,0.08)'
                       }}
                       onBlur={(e) => {
-                        e.target.style.borderColor = 'var(--color-border-secondary, #d1d5db)'
+                        e.target.style.borderColor = 'var(--color-border-secondary, hsl(222 18% 22%))'
                         e.target.style.boxShadow = 'none'
                       }}
                       placeholder="e.g. Blood panel \u2013 March 2025"
                     />
-                    <p className="helper" style={{ fontSize: '12px', color: 'var(--color-text-tertiary, #9ca3af)', marginTop: '5px' }}>
+                    <p className="helper" style={{ fontSize: '12px', color: 'var(--color-text-tertiary, hsl(215 12% 40%))', marginTop: '5px' }}>
                       How this file will appear in the patient's records. Defaults to the original filename.
                     </p>
                   </div>
@@ -537,29 +541,29 @@ export default function AddLabResultPage() {
 
             {/* Summary Card */}
             {isFormReady && (
-              <div className="card" id="summary-card" style={{ background: 'var(--color-background-primary, #ffffff)', border: '0.5px solid var(--color-border-tertiary, #e5e7eb)', borderRadius: 'var(--border-radius-lg, 0.5rem)', padding: '1.5rem', marginBottom: '1rem' }}>
-                <div className="section-label" style={{ fontSize: '11px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-text-secondary, #6b7280)', marginBottom: '12px' }}>
+              <div className="card" id="summary-card" style={{ background: 'var(--color-background-primary, hsl(222 28% 8%))', border: '0.5px solid var(--color-border-tertiary, hsl(222 18% 18%))', borderRadius: 'var(--border-radius-lg, 0.5rem)', padding: '1.5rem', marginBottom: '1rem' }}>
+                <div className="section-label" style={{ fontSize: '11px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-text-secondary, hsl(215 15% 60%))', marginBottom: '12px' }}>
                   Summary
                 </div>
-                <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', fontSize: '14px', borderBottom: '0.5px solid var(--color-border-tertiary, #e5e7eb)' }}>
-                  <span className="skey" style={{ color: 'var(--color-text-secondary, #6b7280)' }}>Patient</span>
-                  <span className="sval" style={{ color: 'var(--color-text-primary, #111827)', fontWeight: '500' }}>
+                <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', fontSize: '14px', borderBottom: '0.5px solid var(--color-border-tertiary, hsl(222 18% 18%))' }}>
+                  <span className="skey" style={{ color: 'var(--color-text-secondary, hsl(215 15% 60%))' }}>Patient</span>
+                  <span className="sval" style={{ color: 'var(--color-text-primary, hsl(210 20% 96%))', fontWeight: '500' }}>
                     {selectedPatient.first_name} {selectedPatient.last_name} ({selectedPatient.patient_id})
                   </span>
                 </div>
-                <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', fontSize: '14px', borderBottom: '0.5px solid var(--color-border-tertiary, #e5e7eb)' }}>
-                  <span className="skey" style={{ color: 'var(--color-text-secondary, #6b7280)' }}>File</span>
-                  <span className="sval" style={{ color: 'var(--color-text-primary, #111827)', fontWeight: '500' }}>{formData.file_name}</span>
+                <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', fontSize: '14px', borderBottom: '0.5px solid var(--color-border-tertiary, hsl(222 18% 18%))' }}>
+                  <span className="skey" style={{ color: 'var(--color-text-secondary, hsl(215 15% 60%))' }}>File</span>
+                  <span className="sval" style={{ color: 'var(--color-text-primary, hsl(210 20% 96%))', fontWeight: '500' }}>{formData.file_name}</span>
                 </div>
-                <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', fontSize: '14px', borderBottom: '0.5px solid var(--color-border-tertiary, #e5e7eb)' }}>
-                  <span className="skey" style={{ color: 'var(--color-text-secondary, #6b7280)' }}>Display name</span>
-                  <span className="sval" style={{ color: 'var(--color-text-primary, #111827)', fontWeight: '500' }}>
+                <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', fontSize: '14px', borderBottom: '0.5px solid var(--color-border-tertiary, hsl(222 18% 18%))' }}>
+                  <span className="skey" style={{ color: 'var(--color-text-secondary, hsl(215 15% 60%))' }}>Display name</span>
+                  <span className="sval" style={{ color: 'var(--color-text-primary, hsl(210 20% 96%))', fontWeight: '500' }}>
                     {formData.display_name || formData.file_name}
                   </span>
                 </div>
                 <div className="summary-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', fontSize: '14px' }}>
-                  <span className="skey" style={{ color: 'var(--color-text-secondary, #6b7280)' }}>Upload time</span>
-                  <span className="sval" style={{ color: 'var(--color-text-primary, #111827)', fontWeight: '500' }}>
+                  <span className="skey" style={{ color: 'var(--color-text-secondary, hsl(215 15% 60%))' }}>Upload time</span>
+                  <span className="sval" style={{ color: 'var(--color-text-primary, hsl(210 20% 96%))', fontWeight: '500' }}>
                     {new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
                   </span>
                 </div>
@@ -568,10 +572,10 @@ export default function AddLabResultPage() {
 
             {/* Upload Progress */}
             {isSubmitting && (
-              <div className="upload-progress" style={{ height: '3px', background: 'var(--color-border-tertiary, #e5e7eb)', borderRadius: '99px', marginTop: '12px', overflow: 'hidden', marginBottom: '1rem' }}>
+              <div className="upload-progress" style={{ height: '3px', background: 'var(--color-border-tertiary, hsl(222 18% 18%))', borderRadius: '99px', marginTop: '12px', overflow: 'hidden', marginBottom: '1rem' }}>
                 <div 
                   className="upload-progress-bar"
-                  style={{ height: '100%', width: `${uploadProgress}%`, background: 'var(--color-text-primary, #111827)', borderRadius: '99px', transition: 'width 1.5s ease' }}
+                  style={{ height: '100%', width: `${uploadProgress}%`, background: 'var(--color-text-primary, hsl(210 20% 96%))', borderRadius: '99px', transition: 'width 1.5s ease' }}
                 />
               </div>
             )}
@@ -580,7 +584,7 @@ export default function AddLabResultPage() {
             <button
               type="submit"
               className="submit-btn"
-              style={{ width: '100%', padding: '11px', fontSize: '15px', fontWeight: '500', borderRadius: 'var(--border-radius-md, 0.375rem)', border: 'none', background: 'var(--color-text-primary, #111827)', color: 'var(--color-background-primary, #ffffff)', cursor: 'pointer', transition: 'opacity 0.15s', marginTop: '0.5rem', opacity: (!isFormReady || isSubmitting) ? 0.35 : 1, cursor: (!isFormReady || isSubmitting) ? 'not-allowed' : 'pointer' }}
+              style={{ width: '100%', padding: '11px', fontSize: '15px', fontWeight: '500', borderRadius: 'var(--border-radius-md, 0.375rem)', border: 'none', background: 'var(--color-text-primary, hsl(210 20% 96%))', color: 'var(--color-background-primary, hsl(222 28% 8%))', cursor: (!isFormReady || isSubmitting) ? 'not-allowed' : 'pointer', transition: 'opacity 0.15s', marginTop: '0.5rem', opacity: (!isFormReady || isSubmitting) ? 0.35 : 1 }}
               disabled={!isFormReady || isSubmitting}
               onMouseEnter={(e) => {
                 if (isFormReady && !isSubmitting) {

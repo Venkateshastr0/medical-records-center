@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
       let baseQuery = `
         FROM patients p
-        LEFT JOIN (
+        RIGHT JOIN (
           SELECT mr1.*
           FROM medical_records mr1
           INNER JOIN (

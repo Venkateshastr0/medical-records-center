@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Layout from '../../components/Layout'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface PatientFormData {
   first_name: string
@@ -25,6 +26,7 @@ interface PatientFormData {
 
 export default function AddPatientPage() {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [saveStatus, setSaveStatus] = useState('Draft auto-saved')
@@ -104,6 +106,8 @@ export default function AddPatientPage() {
       const data = await response.json()
       if (response.ok) {
         localStorage.removeItem('patientForm')
+        // Invalidate patients cache to refresh lab results dropdown
+        queryClient.invalidateQueries({ queryKey: ['patients'] })
         router.push('/patients')
       } else {
         setError(data.error || 'Failed to create patient')

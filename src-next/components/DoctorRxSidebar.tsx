@@ -258,7 +258,7 @@ export default function DoctorRxSidebar({ onClose, doctorId, initialPatient = nu
             }
         })
         setMedications(newMedications)
-    }, [medications.map(m => `${m.frequency}-${m.duration}`).join(','), frequencyEdited, durationEdited])
+    }, [medications.map(m => `${m.frequency}-${m.duration}`).join(','), frequencyEdited, durationEdited, frequencyModes, intervalHours])
 
     useEffect(() => {
         const newMedications = [...medications]
@@ -271,7 +271,7 @@ export default function DoctorRxSidebar({ onClose, doctorId, initialPatient = nu
             }
         })
         setMedications(newMedications)
-    }, [medications.map(m => `${m.frequency}-${m.quantity}`).join(','), frequencyEdited, quantityEdited])
+    }, [medications.map(m => `${m.frequency}-${m.quantity}`).join(','), frequencyEdited, quantityEdited, frequencyModes, intervalHours])
 
     const updateMedication = (index: number, field: keyof Medication, value: string) => {
         const newMeds = [...medications];

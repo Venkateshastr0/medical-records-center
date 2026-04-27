@@ -2,12 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/login": "pages/login.js",
   "/dashboard": "pages/dashboard.js",
-  "/lab-results/add": "pages/lab-results/add.js",
-  "/api/admin/stats": "pages/api/admin/stats.js",
-  "/patients": "pages/patients.js",
-  "/api/patients": "pages/api/patients.js",
-  "/api/patients/[id]": "pages/api/patients/[id].js",
-  "/patients/[id]": "pages/patients/[id].js",
-  "/api/patients/[id]/encounters": "pages/api/patients/[id]/encounters.js"
+  "/patients/add": "pages/patients/add.js",
+  "/patients": "pages/patients.js"
 }
